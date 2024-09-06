@@ -9,16 +9,19 @@ class ProofOfWork:
         self.target_bits = target_bits
 
     def find_nonce(self, block, difficulty):
-        target = '0' * difficulty
+        target = self.calculate_target(difficulty)
         while block.hash[:difficulty] != target:
             block.nonce += 1
             block.hash = block.calculate_hash()
         return block.nonce
 
     def validate_proof(self, block, difficulty):
-        target = '0' * difficulty
+        target = self.calculate_target(difficulty)
         return block.hash[:difficulty] == target
 
     def calculate_target(self, difficulty):
-        # Placeholder for target calculation
-        pass
+        # todo Placeholder for target calculation
+        # Implement the target calculation logic here
+        target = '0' * difficulty
+        return target
+
