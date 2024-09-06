@@ -41,16 +41,4 @@ class Blockchain:
         return True
 
 
-class ProofOfWork:
-    @staticmethod
-    def find_nonce(block, difficulty):
-        target = '0' * difficulty
-        while block.hash[:difficulty] != target:
-            block.nonce += 1
-            block.hash = block.calculate_hash()
-        return block.nonce
 
-    @staticmethod
-    def validate_proof(block, difficulty):
-        target = '0' * difficulty
-        return block.hash[:difficulty] == target
