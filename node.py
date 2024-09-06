@@ -12,7 +12,7 @@ class Node:
     def broadcast_transaction(self, transaction):
         # todo Implement the transaction broadcasting logic here
         for node in self.blockchain.nodes:
-            node.receive_transaction(transaction)
+            node.broadcast_transaction(transaction)
         return True
 
 
@@ -20,13 +20,16 @@ class Node:
     def broadcast_block(self, block):
         # todo Placeholder for broadcasting block
         for node in self.blockchain.nodes:
-            node.receive_block(block)
+            node.broadcast_block(block)
         return True
 
 
     def receive_transaction(self, transaction):
-        # Placeholder for receiving transaction
-        pass
+        # todo Placeholder for receiving transaction
+        for node in self.blockchain.nodes:
+            node.receive_transaction(transaction)
+        return True
+
 
     def receive_block(self, block):
         # Placeholder for receiving block
