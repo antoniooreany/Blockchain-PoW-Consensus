@@ -10,11 +10,23 @@ class MerkleTree:
         self.nodes = []
 
     def build_tree(self):
-        # Placeholder for building Merkle tree
-        pass
+        # Implement the Merkle tree building logic here
+        for leaf in self.leaves:
+            self.nodes.append(leaf)
+        while len(self.nodes) > 1:
+            new_nodes = []
+            for i in range(0, len(self.nodes), 2):
+                node = self.nodes[i]
+                if i + 1 < len(self.nodes):
+                    node += self.nodes[i + 1]
+                new_nodes.append(node)
+            self.nodes = new_nodes
+        return self.nodes[0]
+
 
     def get_root(self):
-        # Placeholder for getting Merkle root
+        # todo Placeholder for getting Merkle root
+        # Implement the Merkle root calculation logic here
         return "merkle_root"
 
     def get_proof(self, leaf):
