@@ -124,5 +124,5 @@ class MerkleTree:
         return current_hash == self.root
 
     def update_tree(self, new_leaf):
-        # Placeholder for updating tree
+        # todo Placeholder for updating tree
         pass

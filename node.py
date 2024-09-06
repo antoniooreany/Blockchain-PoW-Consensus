@@ -10,8 +10,12 @@ class Node:
         self.blockchain = blockchain
 
     def broadcast_transaction(self, transaction):
-        # Placeholder for broadcasting transaction
-        pass
+        # todo Implement the transaction broadcasting logic here
+        for node in self.blockchain.nodes:
+            node.receive_transaction(transaction)
+        return True
+
+
 
     def broadcast_block(self, block):
         # Placeholder for broadcasting block
