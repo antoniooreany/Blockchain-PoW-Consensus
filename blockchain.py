@@ -4,12 +4,9 @@
 #   This code is for a blockchain.py and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
-
-import hashlib
 import time
 
 from block import Block
-
 
 class Blockchain:
     def __init__(self, difficulty):
