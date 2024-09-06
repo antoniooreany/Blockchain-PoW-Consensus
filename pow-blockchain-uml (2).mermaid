@@ -1,0 +1,80 @@
+classDiagram
+    class Block {
+        -int index
+        -string timestamp
+        -string data
+        -string previous_hash
+        -string hash
+        -int nonce
+        -string merkle_root
+        +calculate_hash()
+        +mine_block(difficulty)
+        +calculate_merkle_root()
+    }
+    
+    class Blockchain {
+        -list chain
+        -int difficulty
+        -float block_reward
+        -int halving_interval
+        +create_genesis_block()
+        +get_latest_block()
+        +add_block(new_block)
+        +is_chain_valid()
+        +adjust_difficulty()
+        +calculate_block_reward()
+    }
+    
+    class ProofOfWork {
+        +find_nonce(block, difficulty)
+        +validate_proof(block, difficulty)
+        -calculate_target(difficulty)
+    }
+    
+    class Transaction {
+        -string sender
+        -string recipient
+        -float amount
+        -string signature
+        +sign(private_key)
+        +verify_signature(public_key)
+    }
+    
+    class Wallet {
+        -string public_key
+        -string private_key
+        -float balance
+        +generate_keys()
+        +create_transaction(recipient, amount)
+        +sign_transaction(transaction)
+    }
+    
+    class Node {
+        -string address
+        -Blockchain blockchain
+        -list peers
+        +broadcast_transaction(transaction)
+        +broadcast_block(block)
+        +sync_chain()
+        +validate_transaction(transaction)
+    }
+    
+    class MerkleTree {
+        -list transactions
+        -string root
+        +build_tree()
+        +get_root()
+        +get_proof(transaction)
+        +verify_proof(transaction, proof)
+    }
+    
+    Blockchain "1" --* "many" Block : contains
+    Blockchain --> ProofOfWork : uses
+    Block --> ProofOfWork : uses
+    Block "1" --* "many" Transaction : contains
+    Block --> MerkleTree : uses
+    Transaction --> Wallet : created by
+    Node "1" --* "1" Blockchain : manages
+    Node "1" --* "many" Wallet : manages
+    Node "1" -- "many" Node : connects to
+    MerkleTree "1" --* "many" Transaction : contains
