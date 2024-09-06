@@ -1,0 +1,197 @@
+classDiagram
+    class Block {
+        -int index
+        -string timestamp
+        -Transaction[] transactions
+        -string previous_hash
+        -string merkle_root
+        -string hash
+        -int nonce
+        -int version
+        -Bytes extra_data
+        +calculate_hash()
+        +mine_block(difficulty)
+        +calculate_merkle_root()
+        +serialize()
+        +deserialize(data)
+    }
+    
+    class Blockchain {
+        -Block[] chain
+        -int difficulty
+        -TransactionPool mempool
+        -Wallet coinbase_wallet
+        -Fork[] forks
+        +create_genesis_block()
+        +get_latest_block()
+        +add_block(new_block)
+        +is_chain_valid()
+        +adjust_difficulty()
+        +mine_pending_transactions(miner_address)
+        +get_balance(address)
+        +resolve_forks()
+        +apply_fork(fork)
+    }
+    
+    class ProofOfWork {
+        +find_nonce(block, difficulty)
+        +validate_proof(block, difficulty)
+        +calculate_target(difficulty)
+        +estimate_hash_rate()
+    }
+    
+    class Transaction {
+        -string from_address
+        -string to_address
+        -float amount
+        -string signature
+        -float fee
+        -int nonce
+        -TransactionType type
+        +calculate_hash()
+        +sign_transaction(signing_key)
+        +is_valid()
+        +serialize()
+        +deserialize(data)
+    }
+    
+    class TransactionPool {
+        -Transaction[] pending_transactions
+        -PriorityQueue transaction_queue
+        +add_transaction(transaction)
+        +get_pending_transactions()
+        +clear_transactions()
+        +prioritize_transactions()
+        +remove_conflicting_transactions(block)
+    }
+    
+    class Wallet {
+        -string public_key
+        -string private_key
+        -HDWallet hd_wallet
+        +generate_key_pair()
+        +get_balance(blockchain)
+        +create_transaction(to_address, amount, blockchain)
+        +sign(data)
+        +derive_child_key(index)
+        +export_wallet()
+        +import_wallet(data)
+    }
+    
+    class Node {
+        -Blockchain blockchain
+        -TransactionPool mempool
+        -Wallet[] wallets
+        -Node[] peers
+        -ConsensusProtocol consensus
+        -NetworkProtocol network
+        -API api
+        +broadcast_transaction(transaction)
+        +broadcast_block(block)
+        +sync_blockchain()
+        +validate_and_add_block(block)
+        +handle_fork()
+        +ban_peer(peer)
+    }
+    
+    class MerkleTree {
+        -string[] leaves
+        -string root
+        +build_tree()
+        +get_root()
+        +get_proof(leaf)
+        +verify_proof(leaf, proof)
+        +update_tree(new_leaf)
+    }
+
+    class ConsensusProtocol {
+        <<interface>>
+        +validate_block(block)
+        +finalize_block(block)
+    }
+
+    class PoWConsensus {
+        -ProofOfWork pow
+        +validate_block(block)
+        +finalize_block(block)
+    }
+
+    class NetworkProtocol {
+        <<interface>>
+        +send_message(peer, message)
+        +receive_message()
+        +handle_connection(peer)
+    }
+
+    class P2PNetwork {
+        -Socket[] connections
+        +send_message(peer, message)
+        +receive_message()
+        +handle_connection(peer)
+        +discover_peers()
+    }
+
+    class API {
+        -RESTfulEndpoints endpoints
+        -WebSocketServer ws_server
+        +handle_request(request)
+        +send_update(update)
+    }
+
+    class SmartContract {
+        -Bytes bytecode
+        -Address contract_address
+        -ABI abi
+        +deploy()
+        +execute(function_name, params)
+        +get_state()
+    }
+
+    class Fork {
+        -Block fork_point
+        -Block[] fork_chain
+        +is_valid()
+        +get_length()
+        +get_accumulated_difficulty()
+    }
+
+    class HDWallet {
+        -string mnemonic
+        -string seed
+        -string master_key
+        +generate_mnemonic()
+        +derive_child_key(path)
+        +sign_transaction(transaction, key_index)
+    }
+
+    class TransactionType {
+        <<enumeration>>
+        REGULAR
+        COINBASE
+        CONTRACT_CREATION
+        CONTRACT_EXECUTION
+    }
+
+    Blockchain "1" --* "many" Block : contains
+    Blockchain --> ProofOfWork : uses
+    Block --> ProofOfWork : uses
+    Block "1" --* "many" Transaction : contains
+    Blockchain "1" -- "1" TransactionPool : has
+    TransactionPool "1" --* "many" Transaction : contains
+    Node "1" -- "1" Blockchain : manages
+    Node "1" -- "1" TransactionPool : manages
+    Node "1" --* "many" Wallet : manages
+    Node "1" -- "many" Node : connects to
+    Wallet ..> Transaction : creates
+    Block ..> MerkleTree : uses for transactions
+    Transaction ..> Wallet : is signed by
+    Node "1" -- "1" ConsensusProtocol : implements
+    ConsensusProtocol <|.. PoWConsensus : implements
+    PoWConsensus --> ProofOfWork : uses
+    Node "1" -- "1" NetworkProtocol : uses
+    NetworkProtocol <|.. P2PNetwork : implements
+    Node "1" -- "1" API : exposes
+    Blockchain "1" --* "many" SmartContract : executes
+    Blockchain "1" --* "many" Fork : manages
+    Wallet "1" -- "1" HDWallet : uses
+    Transaction "1" -- "1" TransactionType : has
