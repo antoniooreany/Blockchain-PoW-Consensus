@@ -1,0 +1,29 @@
+classDiagram
+    class Block {
+        -int index
+        -string timestamp
+        -string data
+        -string previous_hash
+        -string hash
+        -int nonce
+        +calculate_hash()
+        +mine_block(difficulty)
+    }
+    
+    class Blockchain {
+        -list chain
+        -int difficulty
+        +create_genesis_block()
+        +get_latest_block()
+        +add_block(new_block)
+        +is_chain_valid()
+    }
+    
+    class ProofOfWork {
+        +find_nonce(block, difficulty)
+        +validate_proof(block, difficulty)
+    }
+    
+    Blockchain "1" --* "many" Block : contains
+    Blockchain --> ProofOfWork : uses
+    Block --> ProofOfWork : uses
