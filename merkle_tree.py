@@ -25,9 +25,10 @@ class MerkleTree:
 
 
     def get_root(self):
-        # todo Placeholder for getting Merkle root
         # Implement the Merkle root calculation logic here
-        return "merkle_root"
+        self.build_tree()
+        return self.nodes[0]
+
 
     def get_proof(self, leaf):
         # Placeholder for getting proof
