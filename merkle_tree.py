@@ -82,16 +82,33 @@ class MerkleTree:
         self.nodes = []  # Initialize nodes as an empty list
         self.root = self.build_tree()
 
+    # def build_tree(self):
+    #     self.nodes = self.leaves[:]
+    #     while len(self.nodes) > 1:
+    #         temp_nodes = []
+    #         for i in range(0, len(self.nodes), 2):
+    #             left = self.nodes[i]
+    #             right = self.nodes[i + 1] if i + 1 < len(self.nodes) else left
+    #             temp_nodes.append(self.hash_pair(left, right))
+    #         self.nodes = temp_nodes
+    #     return self.nodes[0] if self.nodes else None
+
     def build_tree(self):
         self.nodes = self.leaves[:]
+        tree = []
         while len(self.nodes) > 1:
+            level = []
             temp_nodes = []
             for i in range(0, len(self.nodes), 2):
                 left = self.nodes[i]
                 right = self.nodes[i + 1] if i + 1 < len(self.nodes) else left
+                level.append((left, right))
                 temp_nodes.append(self.hash_pair(left, right))
+            tree.append(level)
             self.nodes = temp_nodes
-        return self.nodes[0] if self.nodes else None
+        tree.append([self.nodes[0] if self.nodes else None])
+        return tree
+
 
     def hash_pair(self, left, right):
         sha = hashlib.sha256()
