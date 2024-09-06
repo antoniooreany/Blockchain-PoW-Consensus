@@ -18,8 +18,11 @@ class Node:
 
 
     def broadcast_block(self, block):
-        # Placeholder for broadcasting block
-        pass
+        # todo Placeholder for broadcasting block
+        for node in self.blockchain.nodes:
+            node.receive_block(block)
+        return True
+
 
     def receive_transaction(self, transaction):
         # Placeholder for receiving transaction
