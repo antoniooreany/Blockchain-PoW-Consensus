@@ -1,0 +1,91 @@
+classDiagram
+    class Block {
+        -int index
+        -string timestamp
+        -TransactionPool transactions
+        -string previous_hash
+        -string merkle_root
+        -string hash
+        -int nonce
+        +calculate_hash()
+        +mine_block(difficulty)
+        +validate_transactions()
+    }
+
+    class Blockchain {
+        -list~Block~ chain
+        -int difficulty
+        -TransactionPool pending_transactions
+        -list~Node~ nodes
+        +create_genesis_block()
+        +get_latest_block()
+        +add_block(new_block)
+        +is_chain_valid()
+        +adjust_difficulty()
+        +add_node(node)
+        +consensus()
+    }
+
+    class ProofOfWork {
+        -int target_bits
+        +find_nonce(block, difficulty)
+        +validate_proof(block, difficulty)
+        +calculate_target(difficulty)
+    }
+
+    class Transaction {
+        -string sender
+        -string recipient
+        -float amount
+        -string signature
+        +sign(private_key)
+        +verify_signature(public_key)
+    }
+
+    class TransactionPool {
+        -list~Transaction~ transactions
+        +add_transaction(transaction)
+        +remove_transaction(transaction)
+        +get_transactions()
+        +clear_transactions()
+    }
+
+    class Wallet {
+        -string public_key
+        -string private_key
+        +generate_keys()
+        +create_transaction(recipient, amount)
+        +get_balance(blockchain)
+    }
+
+    class Node {
+        -string address
+        -Blockchain blockchain
+        +broadcast_transaction(transaction)
+        +broadcast_block(block)
+        +receive_transaction(transaction)
+        +receive_block(block)
+        +validate_and_add_block(block)
+    }
+
+    class MerkleTree {
+        -list~string~ leaves
+        -list~string~ nodes
+        +build_tree()
+        +get_root()
+        +get_proof(leaf)
+        +verify_proof(leaf, proof)
+    }
+
+    Blockchain "1" --* "many" Block : contains
+    Blockchain --> ProofOfWork : uses
+    Block --> ProofOfWork : uses
+    Block "1" --* "many" Transaction : contains
+    Block --> MerkleTree : uses
+    Blockchain "1" --* "1" TransactionPool : has
+    TransactionPool "1" --* "many" Transaction : contains
+    Wallet --> Transaction : creates
+    Wallet --> Blockchain : interacts
+    Node "1" --* "1" Blockchain : maintains
+    Node "1" --o "many" Node : connects to
+    Blockchain "1" --o "many" Node : synchronized across
