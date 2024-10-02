@@ -186,9 +186,9 @@ class ProofOfWork:
 
 
 if __name__ == "__main__":
-    blockchain = Blockchain(difficulty=4)
+    blockchain = Blockchain(difficulty=4)  # Set the difficulty of the blockchain
 
-    for i in range(10):
+    for i in range(1, 10):  # Start from 1 to avoid creating another genesis block
         blockchain.add_block(Block(i, time.time(), f"Block {i} Data"))
         print("Blockchain valid?", blockchain.is_chain_valid())
 
