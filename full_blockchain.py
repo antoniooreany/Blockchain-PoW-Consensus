@@ -85,7 +85,7 @@ class Block:
             sha.update(base_hash_data + str(self.nonce).encode('utf-8'))
             self.hash = sha.hexdigest()  # how many letters in that hashcode alphabet? 16
         logger.info(
-            f"Mined: Block(index:{self.index}, hash:{self.hash}, previous hash:{self.previous_hash}, nonce:{self.nonce})")
+            f"Mined: Block(index:{self.index}, hash:{self.hash}, prev_hash:{self.previous_hash}, nonce:{self.nonce})")
 
 
 class Blockchain:
