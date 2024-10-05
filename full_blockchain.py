@@ -396,6 +396,8 @@
 
 import hashlib
 import time
+from venv import logger
+
 
 class Block:
     def __init__(self, index: int, timestamp: float, data: str, previous_hash: str = '') -> None:
@@ -439,13 +441,15 @@ class Blockchain:
         self.chain.append(new_block)
         self.adjust_difficulty()
 
-    def adjust_difficulty(self, coefficient=2) -> None:
+    def adjust_difficulty(self, coefficient=1.1) -> None:
         if len(self.chain) < 2:
             return  # No adjustment needed for genesis block
         last_block = self.chain[-1]
         prev_block = self.chain[-2]
         time_taken = last_block.timestamp - prev_block.timestamp
         expected_time = self.target_block_time
+        # todo log time taken and expected time
+        logger.error(f"Time taken: {time_taken}, Expected time: {expected_time}")
 
         if time_taken < expected_time / coefficient:
             self.difficulty += 1
