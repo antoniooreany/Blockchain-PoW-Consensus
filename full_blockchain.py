@@ -404,6 +404,7 @@ from colorama import Fore, Style, init
 # Initialize colorama
 init(autoreset=True)
 
+
 class ColorFormatter(logging.Formatter):
     COLORS = {
         'DEBUG': Fore.BLUE,
@@ -438,6 +439,7 @@ def setup_logger():
 
     return logger
 
+
 # # Example usage
 # if __name__ == "__main__":
 #     logger = setup_logger('my_logger')
@@ -469,7 +471,9 @@ class Block:
         while self.hash[:difficulty] != target:
             self.nonce += 1
             self.hash = self.calculate_hash()
-        print(f"Block mined: {self.hash}")
+        # print(f"Block mined: {self.hash}")
+        logger.info(f"Block mined: {self.hash}")
+
 
 class Blockchain:
     def __init__(self, difficulty: int, target_block_time=1) -> None:
@@ -518,6 +522,7 @@ class Blockchain:
 
         return True
 
+
 class ProofOfWork:
     @staticmethod
     def find_nonce(block: Block, difficulty: int) -> int:
@@ -532,14 +537,22 @@ class ProofOfWork:
         target = '0' * difficulty
         return block.hash[:difficulty] == target
 
+
+def log_blockchain_state(blockchain_chain):
+    logger.info("")
+    logger.info("Blockchain of the current state:")
+    for block in blockchain_chain:
+        logger.info(
+            f"Index: {block.index}, Hash: {block.hash}, Previous Hash: {block.previous_hash}, Nonce: {block.nonce}")
+
+
 if __name__ == "__main__":
     logger = setup_logger()
     blockchain = Blockchain(difficulty=3)  # Set the initial difficulty of the blockchain
+    logger.error(f"Difficulty: {blockchain.difficulty}")
+    logger.info(f"Blockchain valid? {blockchain.is_chain_valid()}")
 
     for i in range(1, 10):  # Limit the number of blocks to mine
         blockchain.add_block(Block(i, time.time(), f"Block {i} Data"))
         logger.info(f"Blockchain valid? {blockchain.is_chain_valid()}")
-
-    for block in blockchain.chain:
-        logger.info(f"Index: {block.index}, Hash: {block.hash}, Previous Hash: {block.previous_hash}, Nonce: {block.nonce}")
-
+    log_blockchain_state(blockchain.chain)
