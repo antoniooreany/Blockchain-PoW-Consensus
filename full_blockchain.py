@@ -114,7 +114,7 @@ class Blockchain:
         prev_block: Block = self.chain[-2]
         time_taken: float = last_block.timestamp - prev_block.timestamp
         expected_time: float = self.target_block_time  # Expected time in seconds
-        logger.info(
+        logger.error(
             f"Time taken: {time_taken:.2f}s, Expected time: {expected_time}s")  # todo adjust by coefficient = log n (expected_time / time_taken),
         # todo n - number of letters in the hashcode alphabet, e.g. "0b116fa85b68ce2b6445bcb6c986acfdb4d10e31655c9d7ff9eef5e8bf9ba191", -> n = 16
 
@@ -182,7 +182,7 @@ def log_validity(blockchain: Blockchain) -> None:
 if __name__ == "__main__":
     logger: logging.Logger = setup_logger()
 
-    blockchain: Blockchain = Blockchain(initial_difficulty=2,
+    blockchain: Blockchain = Blockchain(initial_difficulty=4,
                                         target_block_time=0.01,
                                         # target_block_time=TARGET_BLOCK_TIME,
                                         )  # Set the initial difficulty and target block time
