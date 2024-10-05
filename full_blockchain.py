@@ -16,7 +16,7 @@ from colorama import Fore, Style, init
 
 TARGET_BLOCK_TIME = 0.01
 
-MAX_INT = 2 ** 63 - 1
+MAX_INT = 2 ** 256 - 1
 
 # Initialize colorama
 init(autoreset=True)
@@ -123,7 +123,8 @@ class Blockchain:
         time_taken: float = last_block.timestamp - prev_block.timestamp
         expected_time: float = self.target_block_time  # Expected time in seconds
         logger.error(
-            f"Actual time to mine: {time_taken:.35f}s,\n Expected time to mine: {expected_time}s\n"
+            f"Actual mining time: {time_taken:.35f}s,\n "
+            f"                                        Expected mining time: {expected_time}s\n"
         )
 
         self.adjust_difficulty_by_coefficient(time_taken, expected_time, difficulty_coefficient)
@@ -137,19 +138,12 @@ class Blockchain:
 
     # todo adjust by coefficient = log n (expected_time / time_taken),
     # todo n - number of letters in the hashcode alphabet, e.g. "0b116fa85b68ce2b6445bcb6c986acfdb4d10e31655c9d7ff9eef5e8bf9ba191", -> n = 16
-    # todo # sha.hexdigest alphabet length: n = len(set(sha.hexdigest()) = 16
+    # todo # sha.hexdigest alphabet length: n = len(set(sha.hexdigest()) = 16, length of the hashword is 64, 16^64 = 2^256
     def adjust_difficulty_by_coefficient(self, time_taken, expected_time, difficulty_coefficient):
         if time_taken < expected_time / difficulty_coefficient:
             self.difficulty += 1
         elif time_taken > expected_time * difficulty_coefficient and self.difficulty > 1:
             self.difficulty -= 1
-
-    # def adjust_difficulty_by_coefficient(self, difficulty_coefficient, expected_time, time_taken):
-    #     n = 16 # number of letters in the hashcode alphabet
-    #     # if time_taken == 0:
-    #     #     time_taken = 0.001
-    #     self.difficulty = math.log(expected_time / time_taken, n)
-    #     logger.critical(f"Difficulty: {self.difficulty}")
 
     def is_chain_valid(self) -> bool:
         for i in range(1, len(self.chain)):
@@ -210,6 +204,10 @@ if __name__ == "__main__":
         # target_block_time=0.01,
         # target_block_time=TARGET_BLOCK_TIME,
     )  # Set the initial difficulty and target block time
+
+    logger.warning(
+        "##################################################################################################################################################")
+
     log_validity(blockchain)
     logger.debug(f"Difficulty: {blockchain.difficulty}")
 
@@ -218,4 +216,4 @@ if __name__ == "__main__":
                 difficulty_coefficient=16,  # The number of leading zeroes in the hashcode
                 # difficulty_coefficient=1.5,
                 )
-    log_blockchain_state(blockchain.chain)
+    # log_blockchain_state(blockchain.chain)
