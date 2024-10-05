@@ -476,7 +476,7 @@ class Block:
 
 
 class Blockchain:
-    def __init__(self, difficulty: int, target_block_time=1) -> None:
+    def __init__(self, difficulty: int, target_block_time=0.02) -> None:
         self.chain = [self.create_genesis_block()]
         self.difficulty = difficulty
         self.target_block_time = target_block_time  # Target block time in seconds
