@@ -90,7 +90,7 @@ class Blockchain:
 
         # Adjust difficulty smoothly, reducing sudden large jumps
         if ratio < 1.0:  # If the block was mined too fast
-            self.difficulty += (1.0 - ratio) * difficulty_coefficient  # Increase difficulty slightly
+            self.difficulty += (1.0 - ratio) * difficulty_coefficient  # Increase difficulty slightly todo why slightly?
         elif ratio > 1.0:  # If the block was mined too slowly
             self.difficulty -= (ratio - 1.0) * difficulty_coefficient  # Decrease difficulty slightly
 
@@ -132,4 +132,3 @@ if __name__ == "__main__":
                 num_blocks=5,  # Number of blocks to mine
                 difficulty_coefficient=0.1,  # Smoothing factor for difficulty adjustment
                 )
-
