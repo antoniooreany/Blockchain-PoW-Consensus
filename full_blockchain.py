@@ -398,6 +398,55 @@ import hashlib
 import time
 from venv import logger
 
+import logging
+from colorama import Fore, Style, init
+
+# Initialize colorama
+init(autoreset=True)
+
+class ColorFormatter(logging.Formatter):
+    COLORS = {
+        'DEBUG': Fore.BLUE,
+        'INFO': Fore.GREEN,
+        'WARNING': Fore.YELLOW,
+        'ERROR': Fore.RED,
+        'CRITICAL': Fore.RED + Style.BRIGHT
+    }
+
+    def format(self, record):
+        log_color = self.COLORS.get(record.levelname, Fore.WHITE)
+        log_message = super().format(record)
+        return f"{log_color}{log_message}{Style.RESET_ALL}"
+
+
+def setup_logger():
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
+
+    # Create console handler and set level to debug
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.DEBUG)
+
+    # Create formatter
+    formatter = ColorFormatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+    # Add formatter to ch
+    ch.setFormatter(formatter)
+
+    # Add ch to logger
+    logger.addHandler(ch)
+
+    return logger
+
+# # Example usage
+# if __name__ == "__main__":
+#     logger = setup_logger('my_logger')
+#     logger.debug("This is a debug message")
+#     logger.info("This is an info message")
+#     logger.warning("This is a warning message")
+#     logger.error("This is an error message")
+#     logger.critical("This is a critical message")
+
 
 class Block:
     def __init__(self, index: int, timestamp: float, data: str, previous_hash: str = '') -> None:
@@ -441,24 +490,20 @@ class Blockchain:
         self.chain.append(new_block)
         self.adjust_difficulty()
 
-    def adjust_difficulty(self, coefficient=1.1) -> None:
+    def adjust_difficulty(self, coefficient=1.5) -> None:
         if len(self.chain) < 2:
             return  # No adjustment needed for genesis block
         last_block = self.chain[-1]
         prev_block = self.chain[-2]
         time_taken = last_block.timestamp - prev_block.timestamp
         expected_time = self.target_block_time
-        # todo log time taken and expected time
-        logger.error(f"Time taken: {time_taken}, Expected time: {expected_time}")
+        logger.info(f"Time taken: {time_taken:.2f}s, Expected time: {expected_time}s")
 
         if time_taken < expected_time / coefficient:
             self.difficulty += 1
-            print(f"Difficulty increased to {self.difficulty}")
         elif time_taken > expected_time * coefficient and self.difficulty > 1:
             self.difficulty -= 1
-            print(f"Difficulty decreased to {self.difficulty}")
-        else:
-            print(f"Difficulty maintained at {self.difficulty}")
+        logger.error(f"Difficulty: {self.difficulty}")
 
     def is_chain_valid(self) -> bool:
         for i in range(1, len(self.chain)):
@@ -488,12 +533,13 @@ class ProofOfWork:
         return block.hash[:difficulty] == target
 
 if __name__ == "__main__":
+    logger = setup_logger()
     blockchain = Blockchain(difficulty=3)  # Set the initial difficulty of the blockchain
 
     for i in range(1, 10):  # Limit the number of blocks to mine
         blockchain.add_block(Block(i, time.time(), f"Block {i} Data"))
-        print("Blockchain valid?", blockchain.is_chain_valid())
+        logger.info(f"Blockchain valid? {blockchain.is_chain_valid()}")
 
     for block in blockchain.chain:
-        print(f"Index: {block.index}, Hash: {block.hash}, Previous Hash: {block.previous_hash}, Nonce: {block.nonce}")
+        logger.info(f"Index: {block.index}, Hash: {block.hash}, Previous Hash: {block.previous_hash}, Nonce: {block.nonce}")
 
