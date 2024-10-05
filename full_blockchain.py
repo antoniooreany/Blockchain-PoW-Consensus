@@ -5,9 +5,11 @@
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
 
+from venv import logger
+
 import hashlib
 import time
-from venv import logger
+import random
 
 import logging
 from colorama import Fore, Style, init
@@ -51,45 +53,6 @@ def setup_logger():
     logger.addHandler(ch)
 
     return logger
-
-
-# # Example usage
-# if __name__ == "__main__":
-#     logger = setup_logger('my_logger')
-#     logger.debug("This is a debug message")
-#     logger.info("This is an info message")
-#     logger.warning("This is a warning message")
-#     logger.error("This is an error message")
-#     logger.critical("This is a critical message")
-
-
-# class Block:
-#     def __init__(self, index: int, timestamp: float, data: str, previous_hash: str = '') -> None:
-#         self.index = index
-#         self.timestamp = timestamp
-#         self.data = data
-#         self.previous_hash = previous_hash
-#         self.nonce = 0  # Initialize nonce before calculating hash
-#         self.hash = self.calculate_hash()
-#
-#     def calculate_hash(self) -> str:
-#         sha = hashlib.sha256()
-#         sha.update(
-#             (str(self.index) + str(self.timestamp) + str(self.data) + str(self.previous_hash) + str(self.nonce)).encode(
-#                 'utf-8'))
-#         return sha.hexdigest()
-#
-#     def mine_block(self, difficulty: int) -> None:
-#         target = '0' * difficulty
-#         while self.hash[:difficulty] != target:
-#             self.nonce += 1
-#             self.hash = self.calculate_hash()
-#         logger.info(f"Block mined: {self.hash}")
-
-
-import hashlib
-import time
-import random
 
 
 class Block:
