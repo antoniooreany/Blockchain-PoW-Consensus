@@ -60,7 +60,8 @@ def setup_logger(level=logging.DEBUG, console_level=logging.DEBUG):
 class Block:
     def __init__(self, index: int, timestamp: float, data: str, previous_hash: str = '') -> None:
         self.index = index
-        self.timestamp = timestamp
+        self.timestamp = time.perf_counter()  # Use high precision timer
+        # self.timestamp = timestamp
         self.data = data
         self.previous_hash = previous_hash
         self.nonce = 0  # Initialize nonce before calculating hash
@@ -75,7 +76,9 @@ class Block:
 
     def mine(self, difficulty: int) -> None:
         self.nonce = random.randint(0, MAX_INT)  # Start from a random nonce
-        target = '0' * difficulty
+        target = '0' * difficulty  # todo Target hash with leading zeroes, can be changed to any float number, meaning the number of leading zeroes
+        # todo be rewritten not an integer number of leading zeroes, but as a number, as a maximum barrier (even as a float number) of the hashcode
+        # todo to be found by the miner.
         base_hash_data = (
                 str(self.index) + str(self.timestamp) + str(self.data) + str(self.previous_hash)
         ).encode('utf-8')
@@ -85,7 +88,12 @@ class Block:
             sha.update(base_hash_data + str(self.nonce).encode('utf-8'))
             self.hash = sha.hexdigest()  # how many letters in that hashcode alphabet? 16
         logger.info(
-            f"Mined: Block(index:{self.index}, hash:{self.hash}, prev_hash:{self.previous_hash}, nonce:{self.nonce})")
+            f"Mined: Block(\n"
+            f"                                                     index:{self.index}, \n"
+            f"                                                     hash:{self.hash}, \n"
+            f"                                                     prev_hash:{self.previous_hash}, \n"
+            f"                                                     nonce:{self.nonce}\n)"
+            f"                                                     ")
 
 
 class Blockchain:
@@ -115,20 +123,33 @@ class Blockchain:
         time_taken: float = last_block.timestamp - prev_block.timestamp
         expected_time: float = self.target_block_time  # Expected time in seconds
         logger.error(
-            f"Time taken: {time_taken:.2f}s, Expected time: {expected_time}s")  # todo adjust by coefficient = log n (expected_time / time_taken),
-        # todo n - number of letters in the hashcode alphabet, e.g. "0b116fa85b68ce2b6445bcb6c986acfdb4d10e31655c9d7ff9eef5e8bf9ba191", -> n = 16
+            f"Actual time to mine: {time_taken:.35f}s,\n Expected time to mine: {expected_time}s\n"
+        )
 
-        if time_taken < expected_time / difficulty_coefficient:
-            self.difficulty += 1
-        elif time_taken > expected_time * difficulty_coefficient and self.difficulty > 1:
-            self.difficulty -= 1
+        self.adjust_difficulty_by_coefficient(time_taken, expected_time, difficulty_coefficient)
 
         logger.warning(
             "##################################################################################################################################################")
 
         log_validity(blockchain)
 
-        logger.debug(f"Current difficulty: {self.difficulty}")
+        logger.debug(f"Difficulty: {self.difficulty}")
+
+    # todo adjust by coefficient = log n (expected_time / time_taken),
+    # todo n - number of letters in the hashcode alphabet, e.g. "0b116fa85b68ce2b6445bcb6c986acfdb4d10e31655c9d7ff9eef5e8bf9ba191", -> n = 16
+    # todo # sha.hexdigest alphabet length: n = len(set(sha.hexdigest()) = 16
+    def adjust_difficulty_by_coefficient(self, time_taken, expected_time, difficulty_coefficient):
+        if time_taken < expected_time / difficulty_coefficient:
+            self.difficulty += 1
+        elif time_taken > expected_time * difficulty_coefficient and self.difficulty > 1:
+            self.difficulty -= 1
+
+    # def adjust_difficulty_by_coefficient(self, difficulty_coefficient, expected_time, time_taken):
+    #     n = 16 # number of letters in the hashcode alphabet
+    #     # if time_taken == 0:
+    #     #     time_taken = 0.001
+    #     self.difficulty = math.log(expected_time / time_taken, n)
+    #     logger.critical(f"Difficulty: {self.difficulty}")
 
     def is_chain_valid(self) -> bool:
         for i in range(1, len(self.chain)):
@@ -182,12 +203,19 @@ def log_validity(blockchain: Blockchain) -> None:
 if __name__ == "__main__":
     logger: logging.Logger = setup_logger()
 
-    blockchain: Blockchain = Blockchain(initial_difficulty=4,
-                                        target_block_time=0.01,
-                                        # target_block_time=TARGET_BLOCK_TIME,
-                                        )  # Set the initial difficulty and target block time
+    blockchain: Blockchain = Blockchain(
+        initial_difficulty=4,  # Set the initial difficulty, number of leading zeroes
+        target_block_time=1,  # Set the target block time, seconds
+        # initial_difficulty=4,
+        # target_block_time=0.01,
+        # target_block_time=TARGET_BLOCK_TIME,
+    )  # Set the initial difficulty and target block time
     log_validity(blockchain)
-    logger.debug(f"Initial difficulty: {blockchain.difficulty}")
+    logger.debug(f"Difficulty: {blockchain.difficulty}")
 
-    mine_blocks(blockchain, num_blocks=5, difficulty_coefficient=1.5)
+    mine_blocks(blockchain,
+                num_blocks=5,  # Number of blocks to mine
+                difficulty_coefficient=16,  # The number of leading zeroes in the hashcode
+                # difficulty_coefficient=1.5,
+                )
     log_blockchain_state(blockchain.chain)
