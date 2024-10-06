@@ -14,9 +14,9 @@ import random
 import logging
 from colorama import Fore, Style, init
 
-TARGET_BLOCK_TIME = 0.01
+from block import Block
 
-MAX_INT = 2 ** 256 - 1
+MAX_INT = (2 ** (2 ** (2 ** 3))) - 1  # todo 16^64 - 1 = 2^256 - 1, the maximum value of the nonce
 
 # Initialize colorama
 init(autoreset=True)
@@ -57,6 +57,27 @@ def setup_logger(level=logging.DEBUG, console_level=logging.DEBUG):
     return logger
 
 
+def log_mined_block(block: Block) -> None:
+    logger.info(
+        f"Mined: Block(\n"
+        f"                                                     index:{block.index}, \n"
+        f"                                                     hash:{block.hash}, \n"
+        f"                                                     prev_hash:{block.previous_hash}, \n"
+        f"                                                     nonce:{block.nonce}\n)"
+        f"                                                     ")
+
+
+def log_time(actual_time: float, expected_time: float) -> None:
+    logger.debug(
+        f"Actual mining time: {actual_time:.35f}s,\n "
+        f"                                        Expected mining time: {expected_time:.35f}s\n"
+    )
+
+
+def separator(symbol: str = "#", length: int = 50) -> None:
+    logger.warning(symbol * length)
+
+
 class Block:
     def __init__(self, index: int, timestamp: float, data: str, previous_hash: str = '') -> None:
         self.index = index
@@ -87,58 +108,35 @@ class Block:
             sha = hashlib.sha256()
             sha.update(base_hash_data + str(self.nonce).encode('utf-8'))
             self.hash = sha.hexdigest()  # how many letters in that hashcode alphabet? 16
-        logger.info(
-            f"Mined: Block(\n"
-            f"                                                     index:{self.index}, \n"
-            f"                                                     hash:{self.hash}, \n"
-            f"                                                     prev_hash:{self.previous_hash}, \n"
-            f"                                                     nonce:{self.nonce}\n)"
-            f"                                                     ")
+        log_mined_block(self)  # todo Mined: Block(
 
 
 class Blockchain:
     def __init__(self, initial_difficulty: int, target_block_time: float) -> None:
-        self.chain = [self.create_genesis_block()]
+        # logger.debug("#" * 50)
+        genesis_block = create_genesis_block()
+        self.chain = [genesis_block]
         self.difficulty = initial_difficulty
         self.target_block_time = target_block_time  # Target block time in seconds
-
-    @staticmethod
-    def create_genesis_block() -> Block:
-        return Block(0, time.time(), "Genesis Block", "0")
-
-    def get_latest_block(self) -> Block:
-        return self.chain[-1]
 
     def add_block(self, new_block: Block, difficulty_coefficient: float) -> None:
         new_block.previous_hash = self.get_latest_block().hash  # Set the previous hash of the new block to the hash of the latest block
         new_block.mine(self.difficulty)
         self.chain.append(new_block)
         self.adjust_difficulty(difficulty_coefficient)
+        log_validity(self)
+        logger.debug(f"Difficulty: {self.difficulty}")
 
-    def adjust_difficulty(self, difficulty_coefficient) -> None:
+    def adjust_difficulty(self, difficulty_coefficient: float) -> None:
         if len(self.chain) < 2:
             return  # No adjustment needed for genesis block
         last_block: Block = self.chain[-1]
         prev_block: Block = self.chain[-2]
-        time_taken: float = last_block.timestamp - prev_block.timestamp
+        actual_time: float = last_block.timestamp - prev_block.timestamp
         expected_time: float = self.target_block_time  # Expected time in seconds
-        logger.error(
-            f"Actual mining time: {time_taken:.35f}s,\n "
-            f"                                        Expected mining time: {expected_time}s\n"
-        )
+        log_time(actual_time, expected_time)
+        self.adjust_difficulty_by_coefficient(actual_time, expected_time, difficulty_coefficient)
 
-        self.adjust_difficulty_by_coefficient(time_taken, expected_time, difficulty_coefficient)
-
-        logger.warning(
-            "##################################################################################################################################################")
-
-        log_validity(blockchain)
-
-        logger.debug(f"Difficulty: {self.difficulty}")
-
-    # todo adjust by coefficient = log n (expected_time / time_taken),
-    # todo n - number of letters in the hashcode alphabet, e.g. "0b116fa85b68ce2b6445bcb6c986acfdb4d10e31655c9d7ff9eef5e8bf9ba191", -> n = 16
-    # todo # sha.hexdigest alphabet length: n = len(set(sha.hexdigest()) = 16, length of the hashword is 64, 16^64 = 2^256
     def adjust_difficulty_by_coefficient(self, time_taken, expected_time, difficulty_coefficient):
         if time_taken < expected_time / difficulty_coefficient:
             self.difficulty += 1
@@ -149,14 +147,23 @@ class Blockchain:
         for i in range(1, len(self.chain)):
             current_block: Block = self.chain[i]
             previous_block: Block = self.chain[i - 1]
-
             if current_block.hash != current_block.calculate_hash():
                 return False
-
             if current_block.previous_hash != previous_block.hash:
                 return False
-
         return True
+
+    def get_latest_block(self) -> Block:
+        return self.chain[-1]
+
+
+def create_genesis_block() -> Block:
+    genesis_block = Block(0, time.time(), "Genesis Block", "0")
+    log_mined_block(genesis_block)
+    actual_time = 0  # Genesis block has no previous block, so actual time is 0
+    expected_time = 1  # Set the expected time for the genesis block
+    log_time(actual_time, expected_time)
+    return genesis_block
 
 
 class ProofOfWork:
@@ -198,22 +205,14 @@ if __name__ == "__main__":
     logger: logging.Logger = setup_logger()
 
     blockchain: Blockchain = Blockchain(
-        initial_difficulty=4,  # Set the initial difficulty, number of leading zeroes
+        initial_difficulty=3,  # Set the initial difficulty, number of leading zeroes
         target_block_time=1,  # Set the target block time, seconds
-        # initial_difficulty=4,
-        # target_block_time=0.01,
-        # target_block_time=TARGET_BLOCK_TIME,
     )  # Set the initial difficulty and target block time
-
-    logger.warning(
-        "##################################################################################################################################################")
 
     log_validity(blockchain)
     logger.debug(f"Difficulty: {blockchain.difficulty}")
 
     mine_blocks(blockchain,
-                num_blocks=5,  # Number of blocks to mine
+                num_blocks=3,  # Number of blocks to mine
                 difficulty_coefficient=16,  # The number of leading zeroes in the hashcode
-                # difficulty_coefficient=1.5,
                 )
-    # log_blockchain_state(blockchain.chain)
