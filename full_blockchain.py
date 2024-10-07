@@ -3,8 +3,7 @@
 #
 #   This code is for a full_blockchain.py and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
-
-
+import math
 from venv import logger
 
 import time
@@ -115,7 +114,7 @@ class Block:
         self.nonce = random.randint(0, MAX_NONCE)  # Start from a random nonce
 
         # Set the target number of leading zeros in the chosen numeral system
-        target_zeros = '0' * difficulty # todo why 0?
+        target_zeros = '0' * difficulty  # todo why 0?
 
         base_hash_data = (
                 str(self.index) + str(self.timestamp) + str(self.data) + str(self.previous_hash)
@@ -129,20 +128,20 @@ class Block:
             # Convert the hash to the chosen numeral system (base = 2, 4, 8, 16)
             if base == 2:
                 # Convert hash to binary
-                converted_hash = bin(int(self.hash, 16))[2:].zfill(256) # ~256 characters
+                converted_hash = bin(int(self.hash, 16))[2:].zfill(256)  # ~256 characters
                 # logger.debug(f"Converted hash[{base}]: {converted_hash}")
             elif base == 4:
                 # Convert hash to quaternary
-                converted_hash = oct(int(self.hash, 16))[2:].zfill(128) # ~128 characters
-            elif base == 8:
-                # Convert hash to octal
-                converted_hash = oct(int(self.hash, 16))[2:].zfill(85)  # ~85 characters todo why 85?
+                converted_hash = oct(int(self.hash, 16))[2:].zfill(128)  # ~128 characters
+            # elif base == 8: # todo not possible, because 16/log2(8) = 5.33
+            #     # Convert hash to octal
+            #     converted_hash = oct(int(self.hash, 16))[2:].zfill(85)  # ~85 characters todo why 85?
             elif base == 16:
                 # Use hexadecimal (default)
                 converted_hash = self.hash
 
             # Check leading zeros in the chosen system
-            if converted_hash[:difficulty] == target_zeros: # todo why 0?
+            if converted_hash[:difficulty] == target_zeros:  # todo why 0?
                 break
 
             self.nonce += 1
@@ -172,7 +171,7 @@ class Blockchain:
         self.chain.append(new_block)
         self.adjust_difficulty(difficulty_coefficient)
         log_validity(self)
-        logger.debug(f"Difficulty: {self.difficulty}")
+        logger.debug(f"Difficulty[{self.base}]: {self.difficulty}")
 
     def get_block_mining_time(self):
         return self.chain[-1].timestamp - self.chain[-2].timestamp
@@ -238,17 +237,31 @@ def mine_blocks(blockchain: Blockchain, num_blocks: int, difficulty_coefficient:
 if __name__ == "__main__":
     logger: logging.Logger = setup_logger()
 
+    BASE = 16
+    INITIAL_DUAL_DIFFICULTY = 4
+
+    # INITIAL_DIFFICULTYV =
+    # todo round to closest int:  # INITIAL_DIFFICULTY = INITIAL_DUAL_DIFFICULTY * 2 / BASE
+    # INITIAL_DIFFICULTY = round(INITIAL_DUAL_DIFFICULTY * 2 / BASE)          # elif base == 8: # todo not possible, because 16/log2(8) = 5.33
+    INITIAL_DIFFICULTY = round(INITIAL_DUAL_DIFFICULTY / math.log2(BASE))
+
+    logger.debug(f"BASE: {BASE}")
+    logger.debug(f"INITIAL_DUAL_DIFFICULTY: {INITIAL_DUAL_DIFFICULTY}")
+    logger.debug(f"INITIAL_DIFFICULTY: {INITIAL_DIFFICULTY}")
+
     blockchain: Blockchain = Blockchain(
-        initial_difficulty=16,  # Set the initial difficulty
+        # initial_difficulty = INITIAL_DUAL_DIFFICULTY * 2 / BASE,  # Set the initial difficulty
+        initial_difficulty=INITIAL_DIFFICULTY,  # Set the initial
         target_block_time=1,  # Set the target block time in seconds
-        base=2  # Use binary system by default
+        base=BASE  # Use binary system by default
     )
 
     log_validity(blockchain)
-    logger.debug(f"Difficulty: {blockchain.difficulty}")
+    logger.debug(f"Difficulty[base={BASE}]: {blockchain.difficulty}")
 
     mine_blocks(
         blockchain,
         num_blocks=10,
-        difficulty_coefficient=2,  # todo why 1.5 not 2?
+        difficulty_coefficient=BASE,  # todo why 1.5 not 2?
+        # difficulty_coefficient=2,  # todo why 1.5 not 2?
     )
