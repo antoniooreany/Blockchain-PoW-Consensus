@@ -70,8 +70,8 @@ def log_mined_block(block: Block) -> None:
 
 
 def log_time(actual_time: float, expected_time: float) -> None:
-    logger.debug(
-        f"Actual mining time: {actual_time:.35f}s,\n "
+    logger.error(
+        f"Average mining time: {actual_time:.35f}s,\n "
         f"                                        Expected mining time: {expected_time:.35f}s\n"
     )
 
@@ -393,14 +393,29 @@ class Blockchain:
         log_time(actual_time, expected_time)
         return genesis_block
 
+    # def add_block(self, new_block: Block) -> None:
+    #     new_block.previous_hash = self.get_latest_block().hash  # Set the previous hash of the new block to the hash of the latest block
+    #     new_block.mine(self.difficulty, self.base)  # Pass the chosen numeral system
+    #     self.chain.append(new_block)
+    #     if len(self.chain) % self.adjustment_interval == 0:
+    #         self.adjust_difficulty()
+    #     log_validity(self)
+    #     logger.debug(f"Difficulty[base={self.base}]: {self.difficulty}")
+
+
     def add_block(self, new_block: Block) -> None:
         new_block.previous_hash = self.get_latest_block().hash  # Set the previous hash of the new block to the hash of the latest block
+        start_time = time.time()
         new_block.mine(self.difficulty, self.base)  # Pass the chosen numeral system
+        end_time = time.time()
+        actual_mining_time = end_time - start_time
         self.chain.append(new_block)
         if len(self.chain) % self.adjustment_interval == 0:
             self.adjust_difficulty()
         log_validity(self)
         logger.debug(f"Difficulty[base={self.base}]: {self.difficulty}")
+        logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.25f}s")
+
 
     def get_average_mining_time(self, num_blocks: int = 10) -> float:
         if len(self.chain) < num_blocks + 1:
@@ -534,11 +549,12 @@ if __name__ == "__main__":
     BASE = 2
     INITIAL_DUAL_DIFFICULTY = 16
     INITIAL_BASE_DIFFICULTY = round(INITIAL_DUAL_DIFFICULTY / math.log2(BASE))
-    ADJUSTMENT_INTERVAL = 10  # Number of blocks between difficulty adjustments
+    ADJUSTMENT_INTERVAL = 5  # Number of blocks between difficulty adjustments
 
     logger.debug(f"BASE: {BASE}")
     logger.debug(f"INITIAL_DUAL_DIFFICULTY: {INITIAL_DUAL_DIFFICULTY}")
     logger.debug(f"INITIAL_BASE_DIFFICULTY: {INITIAL_BASE_DIFFICULTY}")
+    logger.debug(f"ADJUSTMENT_INTERVAL: {ADJUSTMENT_INTERVAL}")
 
     blockchain: Blockchain = Blockchain(
         initial_difficulty=INITIAL_BASE_DIFFICULTY,  # Set the initial difficulty
