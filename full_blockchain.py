@@ -159,7 +159,6 @@ class Blockchain:
         self.base = base  # Base for numeral system
         self.adjustment_interval = adjustment_interval  # Number of blocks between difficulty adjustments
 
-    @staticmethod
     def create_genesis_block(self) -> Block:
         genesis_block = Block(0, time.time(), "Genesis Block", "0")
         log_mined_block(genesis_block)
