@@ -71,8 +71,8 @@ def log_mined_block(block: Block) -> None:
 
 def log_time(actual_time: float, expected_time: float) -> None:
     logger.error(
-        f"Average mining time: {actual_time:.35f}s,\n "
-        f"                                        Expected mining time: {expected_time:.35f}s\n"
+        f"Average mining time: {actual_time:.35f} seconds,\n "
+        f"                                        Expected mining time: {expected_time:.35f} seconds\n"
     )
 
 
@@ -150,6 +150,40 @@ class Block:
         log_mined_block(self)
 
 
+import matplotlib.pyplot as plt
+
+
+# class Blockchain:
+#     def __init__(self, initial_difficulty: int, target_block_time: float, base: int = 2,
+#                  adjustment_interval: int = 10) -> None:
+#         self.chain = [self.create_genesis_block()]
+#         self.difficulty = initial_difficulty
+#         self.target_block_time = target_block_time  # Target block time in seconds
+#         self.base = base  # Base for numeral system
+#         self.adjustment_interval = adjustment_interval  # Number of blocks between difficulty adjustments
+#
+#     def create_genesis_block(self) -> Block:
+#         genesis_block = Block(0, time.time(), "Genesis Block", "0")
+#         log_mined_block(genesis_block)
+#         actual_time = 0  # Genesis block has no previous block, so actual time is 0
+#         expected_time = 1  # Set the expected time for the genesis block
+#         log_time(actual_time, expected_time)
+#         return genesis_block
+#
+#     def add_block(self, new_block: Block) -> None:
+#         new_block.previous_hash = self.get_latest_block().hash  # Set the previous hash of the new block to the hash of the latest block
+#         start_time = time.time()
+#         new_block.mine(self.difficulty, self.base)  # Pass the chosen numeral system
+#         end_time = time.time()
+#         actual_mining_time = end_time - start_time
+#         self.chain.append(new_block)
+#         if len(self.chain) % self.adjustment_interval == 0:
+#             self.adjust_difficulty()
+#         log_validity(self)
+#         logger.debug(f"Difficulty[base={self.base}]: {self.difficulty}")
+#         logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.25f} seconds")
+
+
 class Blockchain:
     def __init__(self, initial_difficulty: int, target_block_time: float, base: int = 2,
                  adjustment_interval: int = 10) -> None:
@@ -158,6 +192,8 @@ class Blockchain:
         self.target_block_time = target_block_time  # Target block time in seconds
         self.base = base  # Base for numeral system
         self.adjustment_interval = adjustment_interval  # Number of blocks between difficulty adjustments
+        self.mining_times = []  # List to store mining times
+        self.difficulties = []  # List to store difficulties
 
     def create_genesis_block(self) -> Block:
         genesis_block = Block(0, time.time(), "Genesis Block", "0")
@@ -174,11 +210,13 @@ class Blockchain:
         end_time = time.time()
         actual_mining_time = end_time - start_time
         self.chain.append(new_block)
+        self.mining_times.append(actual_mining_time)
+        self.difficulties.append(self.difficulty)
         if len(self.chain) % self.adjustment_interval == 0:
             self.adjust_difficulty()
         log_validity(self)
         logger.debug(f"Difficulty[base={self.base}]: {self.difficulty}")
-        logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.25f}s")
+        logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.25f} seconds")
 
     def get_average_mining_time(self, num_blocks: int = 10) -> float:
         if len(self.chain) < num_blocks + 1:
@@ -234,10 +272,89 @@ def mine_blocks(blockchain: Blockchain, num_blocks: int) -> None:
         blockchain.add_block(new_block)
 
 
+# def plot_statistics(blockchain: Blockchain) -> None:
+#     plt.style.use('dark_background')
+#
+#     fig, ax1 = plt.subplots()
+#
+#     color = 'tab:blue'
+#     ax1.set_xlabel('Block Index')
+#     ax1.set_ylabel('Mining Time (s)', color=color)
+#     ax1.plot(range(len(blockchain.mining_times)), blockchain.mining_times, color=color)
+#     ax1.tick_params(axis='y', labelcolor=color)
+#
+#     ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+#     color = 'tab:red'
+#     ax2.set_ylabel('Difficulty', color=color)  # we already handled the x-label with ax1
+#     ax2.plot(range(len(blockchain.difficulties)), blockchain.difficulties, color=color)
+#     ax2.tick_params(axis='y', labelcolor=color)
+#
+#     fig.tight_layout()  # otherwise the right y-label is slightly clipped
+#     plt.title('Blockchain Mining Statistics')
+#     plt.show()
+#
+#
+#
+# if __name__ == "__main__":
+#     logger: logging.Logger = setup_logger()
+#
+#     BASE = 2
+#     INITIAL_DUAL_DIFFICULTY = 16
+#     INITIAL_BASE_DIFFICULTY = round(INITIAL_DUAL_DIFFICULTY / math.log2(BASE))
+#     ADJUSTMENT_INTERVAL = 5  # Number of blocks between difficulty adjustments
+#
+#     logger.debug(f"BASE: {BASE}")
+#     logger.debug(f"INITIAL_DUAL_DIFFICULTY: {INITIAL_DUAL_DIFFICULTY}")
+#     logger.debug(f"INITIAL_BASE_DIFFICULTY: {INITIAL_BASE_DIFFICULTY}")
+#     logger.debug(f"ADJUSTMENT_INTERVAL: {ADJUSTMENT_INTERVAL}")
+#
+#     blockchain: Blockchain = Blockchain(
+#         initial_difficulty=INITIAL_BASE_DIFFICULTY,  # Set the initial difficulty
+#         target_block_time=1,  # Set the target block time in seconds
+#         base=BASE,  # Use binary system by default
+#         adjustment_interval=ADJUSTMENT_INTERVAL  # Set the adjustment interval
+#     )
+#
+#     log_validity(blockchain)
+#     logger.debug(f"Difficulty[base={BASE}]: {blockchain.difficulty}")
+#
+#     mine_blocks(
+#         blockchain,
+#         num_blocks=100
+#     )
+#
+#     plot_statistics(blockchain)
+
+
+import matplotlib.pyplot as plt
+
+
+def plot_statistics(blockchain: Blockchain) -> None:
+    plt.style.use('dark_background')
+
+    fig, ax1 = plt.subplots()
+
+    color = 'tab:blue'
+    ax1.set_xlabel('Block Index')
+    ax1.set_ylabel('Mining Time (s)', color=color)
+    ax1.plot(range(len(blockchain.mining_times)), blockchain.mining_times, color=color)
+    ax1.tick_params(axis='y', labelcolor=color)
+
+    ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+    color = 'tab:red'
+    ax2.set_ylabel('Dual Difficulty', color=color)  # we already handled the x-label with ax1
+    ax2.plot(range(len(blockchain.difficulties)), blockchain.difficulties, color=color)
+    ax2.tick_params(axis='y', labelcolor=color)
+
+    fig.tight_layout()  # otherwise the right y-label is slightly clipped
+    plt.title('Blockchain Mining Statistics')
+    plt.show()
+
+
 if __name__ == "__main__":
     logger: logging.Logger = setup_logger()
 
-    BASE = 2
+    BASE = 16
     INITIAL_DUAL_DIFFICULTY = 16
     INITIAL_BASE_DIFFICULTY = round(INITIAL_DUAL_DIFFICULTY / math.log2(BASE))
     ADJUSTMENT_INTERVAL = 5  # Number of blocks between difficulty adjustments
@@ -261,3 +378,5 @@ if __name__ == "__main__":
         blockchain,
         num_blocks=100
     )
+
+    plot_statistics(blockchain)
