@@ -229,8 +229,8 @@ def mine_blocks(blockchain: Blockchain, num_blocks: int, difficulty_change_coeff
 if __name__ == "__main__":
     logger: logging.Logger = setup_logger()
 
-    BASE = 16
-    INITIAL_DUAL_DIFFICULTY = 4
+    BASE = 2
+    INITIAL_DUAL_DIFFICULTY = 16
     INITIAL_BASE_DIFFICULTY = round(INITIAL_DUAL_DIFFICULTY / math.log2(BASE))
 
     logger.debug(f"BASE: {BASE}")
