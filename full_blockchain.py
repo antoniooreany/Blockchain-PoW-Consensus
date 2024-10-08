@@ -3,6 +3,8 @@
 #
 #   This code is for a full_blockchain.py and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
+
+
 import math
 from venv import logger
 
@@ -171,7 +173,7 @@ class Blockchain:
         self.chain.append(new_block)
         self.adjust_difficulty(difficulty_coefficient)
         log_validity(self)
-        logger.debug(f"Difficulty[{self.base}]: {self.difficulty}")
+        logger.debug(f"Difficulty[base={self.base}]: {self.difficulty}")
 
     def get_block_mining_time(self):
         return self.chain[-1].timestamp - self.chain[-2].timestamp
@@ -204,15 +206,6 @@ class Blockchain:
         return self.chain[-1]
 
 
-# def create_genesis_block() -> Block:
-#     genesis_block = Block(0, time.time(), "Genesis Block", "0")
-#     log_mined_block(genesis_block)
-#     actual_time = 0  # Genesis block has no previous block, so actual time is 0
-#     expected_time = 1  # Set the expected time for the genesis block
-#     log_time(actual_time, expected_time)
-#     return genesis_block
-
-
 class ProofOfWork:
     @staticmethod
     def find_nonce(block: Block, difficulty: int) -> int:
@@ -228,10 +221,10 @@ class ProofOfWork:
         return block.hash[:difficulty] == target
 
 
-def mine_blocks(blockchain: Blockchain, num_blocks: int, difficulty_coefficient: float) -> None:
+def mine_blocks(blockchain: Blockchain, num_blocks: int, difficulty_change_coefficient: float) -> None:
     for i in range(1, num_blocks):  # Start from 1 to avoid mining a genesis block twice
         new_block = Block(i, time.time(), f"Block {i}", blockchain.get_latest_block().hash)
-        blockchain.add_block(new_block, difficulty_coefficient)
+        blockchain.add_block(new_block, difficulty_change_coefficient)
 
 
 if __name__ == "__main__":
@@ -239,19 +232,14 @@ if __name__ == "__main__":
 
     BASE = 16
     INITIAL_DUAL_DIFFICULTY = 4
-
-    # INITIAL_DIFFICULTYV =
-    # todo round to closest int:  # INITIAL_DIFFICULTY = INITIAL_DUAL_DIFFICULTY * 2 / BASE
-    # INITIAL_DIFFICULTY = round(INITIAL_DUAL_DIFFICULTY * 2 / BASE)          # elif base == 8: # todo not possible, because 16/log2(8) = 5.33
-    INITIAL_DIFFICULTY = round(INITIAL_DUAL_DIFFICULTY / math.log2(BASE))
+    INITIAL_BASE_DIFFICULTY = round(INITIAL_DUAL_DIFFICULTY / math.log2(BASE))
 
     logger.debug(f"BASE: {BASE}")
     logger.debug(f"INITIAL_DUAL_DIFFICULTY: {INITIAL_DUAL_DIFFICULTY}")
-    logger.debug(f"INITIAL_DIFFICULTY: {INITIAL_DIFFICULTY}")
+    logger.debug(f"INITIAL_BASE_DIFFICULTY: {INITIAL_BASE_DIFFICULTY}")
 
     blockchain: Blockchain = Blockchain(
-        # initial_difficulty = INITIAL_DUAL_DIFFICULTY * 2 / BASE,  # Set the initial difficulty
-        initial_difficulty=INITIAL_DIFFICULTY,  # Set the initial
+        initial_difficulty=INITIAL_BASE_DIFFICULTY,  # Set the initial
         target_block_time=1,  # Set the target block time in seconds
         base=BASE  # Use binary system by default
     )
@@ -262,6 +250,5 @@ if __name__ == "__main__":
     mine_blocks(
         blockchain,
         num_blocks=10,
-        difficulty_coefficient=BASE,  # todo why 1.5 not 2?
-        # difficulty_coefficient=2,  # todo why 1.5 not 2?
+        difficulty_change_coefficient=BASE,  # todo why 1.5 not 2?
     )
