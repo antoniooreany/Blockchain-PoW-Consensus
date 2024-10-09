@@ -4,9 +4,8 @@
 #   This code is for a logging_utils.py and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
-
 import logging
-
+import colorama
 
 class ColorFormatter(logging.Formatter):
     def format(self, record):

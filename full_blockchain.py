@@ -150,15 +150,17 @@ class Block:
 
 
 class Blockchain:
-    def __init__(self, initial_difficulty: int, target_block_time: float, base: int = 2,
+    def __init__(self, initial_base_difficulty: int, target_block_time: float, base: int = 2,
                  adjustment_interval: int = 10) -> None:
         self.chain = [self.create_genesis_block()]
-        self.difficulty = initial_difficulty
+        self.base_difficulty = initial_base_difficulty
+        self.bit_difficulty = initial_base_difficulty * math.log2(base)
         self.target_block_time = target_block_time  # Target block time in seconds
         self.base = base  # Base for numeral system
         self.adjustment_interval = adjustment_interval  # Number of blocks between difficulty adjustments
         self.mining_times = []  # List to store mining times
-        self.difficulties = []  # List to store difficulties
+        self.base_difficulties = []  # List to store difficulties
+        self.bit_difficulties = []  # List to store difficulties in bits
 
     def create_genesis_block(self) -> Block:
         genesis_block = Block(0, time.time(), "Genesis Block", "0")
@@ -171,16 +173,17 @@ class Blockchain:
     def add_block(self, new_block: Block) -> None:
         new_block.previous_hash = self.get_latest_block().hash  # Set the previous hash of the new block to the hash of the latest block
         start_time = time.time()
-        new_block.mine(self.difficulty, self.base)  # Pass the chosen numeral system
+        new_block.mine(self.base_difficulty, self.base)  # Pass the chosen numeral system
         end_time = time.time()
         actual_mining_time = end_time - start_time
         self.chain.append(new_block)
         self.mining_times.append(actual_mining_time)
-        self.difficulties.append(self.difficulty)
+        self.base_difficulties.append(self.base_difficulty)
+        self.bit_difficulties.append(self.base_difficulty * math.log2(self.base))
         if len(self.chain) % self.adjustment_interval == 0:
             self.adjust_difficulty()
         log_validity(self)
-        logger.debug(f"Difficulty Level[base={self.base}]: {self.difficulty}")
+        logger.debug(f"Difficulty Level[base={self.base}]: {self.base_difficulty}")
         logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.25f} seconds")
 
     def get_average_mining_time(self, num_blocks: int = 10) -> float:
@@ -198,9 +201,10 @@ class Blockchain:
         expected_time: float = self.target_block_time  # Expected time in seconds
         log_time(actual_time, expected_time)
         if actual_time < expected_time:
-            self.difficulty += 1
-        elif actual_time > expected_time and self.difficulty > 1:
-            self.difficulty -= 1
+            self.base_difficulty += 1
+        elif actual_time > expected_time and self.base_difficulty > 1:
+            self.base_difficulty -= 1
+        self.bit_difficulty = self.base_difficulty * math.log2(self.base)
 
     def is_chain_valid(self) -> bool:
         for i in range(1, len(self.chain)):
@@ -249,7 +253,6 @@ import numpy as np
 import matplotlib.colors as mcolors
 import math
 
-
 def plot_statistics(blockchains: dict, scaling_factor: float = 1.0) -> None:
     # Get the screen dimensions
     monitor = get_monitors()[0]
@@ -273,20 +276,19 @@ def plot_statistics(blockchains: dict, scaling_factor: float = 1.0) -> None:
 
     # Collect all difficulty values for consistent scaling
     for blockchain in blockchains.values():
-        all_base_difficulties.extend(blockchain.base_difficulties)
-        all_bit_difficulties.extend(blockchain.bit_difficulties)
-
-
+        all_base_difficulties.extend(blockchain.base_difficulties)  # Use 'difficulties' instead of 'base_difficulties'
+        all_bit_difficulties.extend(blockchain.bit_difficulties)  # Use 'difficulties' instead of 'bit_difficulties'
 
     # Determine the common y-axis range for difficulties only
-    min_difficulty = min(all_base_difficulties)
-    max_difficulty = max(all_base_difficulties) * scaling_factor
+    min_bit_difficulty = min(all_bit_difficulties) * scaling_factor
+    max_bit_difficulty = max(all_bit_difficulties) * scaling_factor
 
-    # Adjust the minimum difficulty to be a certain percentage below the actual minimum value
-    min_difficulty *= 0.9  # Adjust to 90% of the actual minimum value
+    # Add a small epsilon to max_bit_difficulty to avoid identical ylims
+    epsilon = 1e-9
+    if min_bit_difficulty == max_bit_difficulty:
+        max_bit_difficulty += epsilon
 
     for i, (base, blockchain) in enumerate(blockchains.items()):
-        bit_difficulty_base_factor = math.log2(base)
         mining_time_color = mining_time_colors[i % len(mining_time_colors)]
         difficulty_color = difficulty_colors[i % len(difficulty_colors)]
         linewidth = base * 0.9
@@ -311,17 +313,17 @@ def plot_statistics(blockchains: dict, scaling_factor: float = 1.0) -> None:
 
         # Plot base difficulties on the same graph with a secondary y-axis
         ax2 = ax1.twinx()
-        bit_difficulties = [d * bit_difficulty_base_factor * scaling_factor for d in blockchain.base_difficulties]
+        bit_difficulties = [base_difficulty * math.log2(base) * scaling_factor for base_difficulty in blockchain.base_difficulties]
         ax2.plot(range(len(bit_difficulties)), bit_difficulties, color=difficulty_color,
                  linewidth=linewidth, label=f'Bit Difficulty (base={base})')
         ax2.set_ylabel('Bit Difficulty, bits', fontsize=12, color='cyan')
         ax2.tick_params(axis='y', labelcolor=difficulty_color)
-        ax2.set_ylim(min_difficulty, max_difficulty)
+        ax2.set_ylim(min_bit_difficulty, max_bit_difficulty)
 
     fig.tight_layout()
 
     # Adjust legend to be outside of the plot to avoid overlap
-    fig.legend(loc='upper center', bbox_to_anchor=(0.5, -0.1), ncol=3, fontsize=10)
+    fig.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=3, fontsize=10)  # Adjusted bbox_to_anchor
     plt.title('Blockchain Mining Statistics Comparison', fontsize=14, color='white')
     plt.show()
 
@@ -340,7 +342,7 @@ if __name__ == "__main__":
         ADJUSTMENT_INTERVAL = 5
 
         blockchain = Blockchain(
-            initial_difficulty=INITIAL_BASE_DIFFICULTY,
+            initial_base_difficulty=INITIAL_BASE_DIFFICULTY,
             target_block_time=1,
             base=BASE,
             adjustment_interval=ADJUSTMENT_INTERVAL
@@ -350,7 +352,7 @@ if __name__ == "__main__":
 
         mine_blocks(
             blockchain,
-            num_blocks=12
+            num_blocks=10
         )
 
         blockchains[BASE] = blockchain

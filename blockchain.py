@@ -17,6 +17,7 @@ class Blockchain:
                  adjustment_interval: int = 10) -> None:
         self.chain = [self.create_genesis_block()]
         self.base_difficulty = initial_base_difficulty
+        self.bit_difficulty = initial_base_difficulty * math.log2(base)
         self.target_block_time = target_block_time
         self.base = base
         self.adjustment_interval = adjustment_interval
@@ -47,7 +48,7 @@ class Blockchain:
             self.adjust_difficulty()
         log_validity(self)
         logger = logging.getLogger('venv')
-        logger.debug(f"Difficulty Level[base={self.base}]: {self.base_difficulty}")
+        logger.debug(f"Bit Difficulty Level[base={self.base}]: {self.bit_difficulty}")
         logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.25f} seconds")
 
     def get_latest_block(self) -> Block:
@@ -71,6 +72,7 @@ class Blockchain:
             self.base_difficulty += 1
         elif average_time > expected_time and self.base_difficulty > 1:
             self.base_difficulty -= 1
+        self.bit_difficulty = self.base_difficulty * math.log2(self.base)
 
     def is_chain_valid(self) -> bool:
         for i in range(1, len(self.chain)):

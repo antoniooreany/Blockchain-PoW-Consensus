@@ -42,13 +42,13 @@ def plot_blockchain_statistics(blockchains: dict, scaling_factor: float = 1.0) -
         all_base_difficulties.extend(blockchain.base_difficulties)
         all_bit_difficulties.extend(blockchain.bit_difficulties)
 
-    # min_base_difficulty = min(all_base_difficulties) * 0.9
-    # max_base_difficulty = max(all_base_difficulties) * scaling_factor
-    # logger.debug(f"Min difficulty: {min_base_difficulty}, \n" # 3.6
-    #              f"Max difficulty: {max_base_difficulty}") # 17.0
-    # min_bit_difficulty = min(all_bit_difficulties) * 0.9
     min_bit_difficulty = min(all_bit_difficulties) * scaling_factor
     max_bit_difficulty = max(all_bit_difficulties) * scaling_factor
+
+    # Add a small epsilon if min and max are identical
+    if min_bit_difficulty == max_bit_difficulty:
+        epsilon = 1e-9
+        max_bit_difficulty += epsilon
 
     # Determine the common y-axis range for difficulties only
     for i, (base, blockchain) in enumerate(blockchains.items()):
@@ -104,5 +104,3 @@ def plot_blockchain_statistics(blockchains: dict, scaling_factor: float = 1.0) -
     )
     plt.title('Blockchain Mining Statistics Comparison', fontsize=14, color='white')
     plt.show()
-
-# Cleaned up the code by standardizing variable names, removing debugging statements, improving readability, and using consistent spacing.
