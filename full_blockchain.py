@@ -1518,9 +1518,9 @@ def plot_statistics(blockchains: dict, scaling_factor: float = 1.0) -> None:
 
         # Plot base difficulties on the same graph with a secondary y-axis
         ax2 = ax1.twinx()
-        bit_difficulties = [d * scaling_factor for d in blockchain.difficulties]
-        # bit_difficulties = [d * bit_difficulty_base_factor * scaling_factor for d in blockchain.difficulties]
-        ax2.plot(range(len(bit_difficulties)), bit_difficulties, color=difficulty_color,
+        base_difficulties = [d * scaling_factor for d in blockchain.difficulties]
+        # base_difficulties = [d * bit_difficulty_base_factor * scaling_factor for d in blockchain.difficulties]
+        ax2.plot(range(len(base_difficulties)), base_difficulties, color=difficulty_color,
                  linewidth=linewidth, label=f'Base Difficulty (BASE={base})')
         ax2.set_ylabel('Base Difficulty', fontsize=12, color='cyan')
         ax2.tick_params(axis='y', labelcolor=difficulty_color)
