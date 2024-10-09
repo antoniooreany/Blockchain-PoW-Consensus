@@ -245,6 +245,142 @@ import logging
 logging.getLogger('matplotlib').setLevel(logging.INFO)
 
 
+# def plot_statistics(blockchains: dict, scaling_factor: float = 10.0) -> None:
+#     # Get the screen dimensions
+#     monitor = get_monitors()[0]
+#     screen_width = monitor.width
+#     screen_height = monitor.height
+#
+#     # Set the figure size proportional to the screen size
+#     fig_width = screen_width * 0.9 / 100  # 90% of screen width
+#     fig_height = screen_height * 0.9 / 100  # 90% of screen height
+#
+#     plt.style.use('dark_background')
+#     fig, ax1 = plt.subplots(figsize=(fig_width, fig_height))
+#
+#     # Custom colors
+#     mining_time_colors = ['cyan', 'magenta', 'yellow', 'green']
+#     difficulty_colors = ['blue', 'red', 'orange', 'purple']
+#     line_styles = ['-', '--', '-.', ':']  # Different line styles
+#
+#     # To store min/max values for y-axis scaling for difficulties only
+#     all_difficulties = []
+#
+#     # Collect all difficulty values for consistent scaling
+#     for blockchain in blockchains.values():
+#         all_difficulties.extend(blockchain.difficulties)
+#
+#     # Determine the common y-axis range for difficulties only
+#     min_difficulty = min(all_difficulties)
+#     max_difficulty = max(all_difficulties) * scaling_factor
+#
+#     for i, (base, blockchain) in enumerate(blockchains.items()):
+#         mining_time_color = mining_time_colors[i % len(mining_time_colors)]
+#         difficulty_color = difficulty_colors[i % len(difficulty_colors)]
+#         line_style = line_styles[i % len(line_styles)]
+#
+#         # Plot mining times
+#         ax1.plot(range(len(blockchain.mining_times)), blockchain.mining_times, color=mining_time_color,
+#                  linestyle=line_style, label=f'Mining Time (BASE={base})')
+#         ax1.set_xlabel('Block Index')
+#         ax1.set_ylabel('Mining Time (s)', color=mining_time_color)
+#         ax1.tick_params(axis='y', labelcolor=mining_time_color)
+#         ax1.grid(True)  # Add grid to ax1
+#
+#         # Allow independent scaling for Mining Time
+#         ax1.relim()
+#         ax1.autoscale_view()
+#
+#         # Plot dual difficulties on the same graph with a secondary y-axis
+#         ax2 = ax1.twinx()
+#         scaled_difficulties = [d * scaling_factor for d in blockchain.difficulties]
+#         ax2.plot(range(len(scaled_difficulties)), scaled_difficulties, color=difficulty_color, linestyle=line_style,
+#                  label=f'Dual Difficulty (BASE={base})')
+#         ax2.set_ylabel('Dual Difficulty', color=difficulty_color)
+#         ax2.tick_params(axis='y', labelcolor=difficulty_color)
+#
+#         # Set consistent y-axis limits for difficulties across all blockchains
+#         ax2.set_ylim(min_difficulty, max_difficulty)
+#
+#     fig.tight_layout()  # otherwise the right y-label is slightly clipped
+#     plt.title('Blockchain Mining Statistics Comparison')
+#     fig.legend(loc='upper left')
+#     plt.show()
+
+
+import matplotlib.pyplot as plt
+from screeninfo import get_monitors
+
+# def plot_statistics(blockchains: dict, scaling_factor: float = 10.0) -> None:
+#     # Get the screen dimensions
+#     monitor = get_monitors()[0]
+#     screen_width = monitor.width
+#     screen_height = monitor.height
+#
+#     # Set the figure size proportional to the screen size
+#     fig_width = screen_width * 0.9 / 100  # 90% of screen width
+#     fig_height = screen_height * 0.9 / 100  # 90% of screen height
+#
+#     plt.style.use('dark_background')
+#     fig, ax1 = plt.subplots(figsize=(fig_width, fig_height))
+#
+#     # Custom colors
+#     mining_time_colors = ['cyan', 'magenta', 'yellow', 'green']
+#     difficulty_colors = ['blue', 'red', 'orange', 'purple']
+#     line_styles = ['-', '--', '-.', ':']  # Different line styles
+#
+#     # To store min/max values for y-axis scaling for difficulties only
+#     all_difficulties = []
+#
+#     # Collect all difficulty values for consistent scaling
+#     for blockchain in blockchains.values():
+#         all_difficulties.extend(blockchain.difficulties)
+#
+#     # Determine the common y-axis range for difficulties only
+#     min_difficulty = min(all_difficulties)
+#     max_difficulty = max(all_difficulties) * scaling_factor
+#
+#     for i, (base, blockchain) in enumerate(blockchains.items()):
+#         mining_time_color = mining_time_colors[i % len(mining_time_colors)]
+#         difficulty_color = difficulty_colors[i % len(difficulty_colors)]
+#         line_style = line_styles[i % len(line_styles)]
+#
+#         # Calculate linewidth based on BASE
+#         linewidth = base / 2.0
+#
+#         # Plot mining times
+#         ax1.plot(range(len(blockchain.mining_times)), blockchain.mining_times, color=mining_time_color,
+#                  linestyle=line_style, linewidth=linewidth, label=f'Mining Time (BASE={base})')
+#         ax1.set_xlabel('Block Index')
+#         ax1.set_ylabel('Mining Time (s)', color=mining_time_color)
+#         ax1.tick_params(axis='y', labelcolor=mining_time_color)
+#         ax1.grid(True)  # Add grid to ax1
+#
+#         # Allow independent scaling for Mining Time
+#         ax1.relim()
+#         ax1.autoscale_view()
+#
+#         # Plot dual difficulties on the same graph with a secondary y-axis
+#         ax2 = ax1.twinx()
+#         scaled_difficulties = [d * scaling_factor for d in blockchain.difficulties]
+#         ax2.plot(range(len(scaled_difficulties)), scaled_difficulties, color=difficulty_color, linestyle=line_style,
+#                  linewidth=linewidth, label=f'Dual Difficulty (BASE={base})')
+#         ax2.set_ylabel('Dual Difficulty', color=difficulty_color)
+#         ax2.tick_params(axis='y', labelcolor=difficulty_color)
+#
+#         # Set consistent y-axis limits for difficulties across all blockchains
+#         ax2.set_ylim(min_difficulty, max_difficulty)
+#
+#     fig.tight_layout()  # otherwise the right y-label is slightly clipped
+#     plt.title('Blockchain Mining Statistics Comparison')
+#     fig.legend(loc='upper left')
+#     plt.show()
+
+
+
+import matplotlib.pyplot as plt
+from screeninfo import get_monitors
+
 def plot_statistics(blockchains: dict, scaling_factor: float = 10.0) -> None:
     # Get the screen dimensions
     monitor = get_monitors()[0]
@@ -259,9 +395,10 @@ def plot_statistics(blockchains: dict, scaling_factor: float = 10.0) -> None:
     fig, ax1 = plt.subplots(figsize=(fig_width, fig_height))
 
     # Custom colors
-    mining_time_colors = ['cyan', 'magenta', 'yellow', 'green']
-    difficulty_colors = ['blue', 'red', 'orange', 'purple']
-    line_styles = ['-', '--', '-.', ':']  # Different line styles
+    # mining_time_colors = ['cyan', 'magenta', 'yellow', 'green']
+    mining_time_colors = ['cyan', 'cyan', 'cyan', 'cyan']
+    # difficulty_colors = ['blue', 'red', 'orange', 'purple']
+    difficulty_colors = ['green', 'green', 'green', 'green']
 
     # To store min/max values for y-axis scaling for difficulties only
     all_difficulties = []
@@ -277,11 +414,14 @@ def plot_statistics(blockchains: dict, scaling_factor: float = 10.0) -> None:
     for i, (base, blockchain) in enumerate(blockchains.items()):
         mining_time_color = mining_time_colors[i % len(mining_time_colors)]
         difficulty_color = difficulty_colors[i % len(difficulty_colors)]
-        line_style = line_styles[i % len(line_styles)]
+
+        # Calculate linewidth based on BASE
+        # linewidth = base / 2.0
+        linewidth = base
 
         # Plot mining times
         ax1.plot(range(len(blockchain.mining_times)), blockchain.mining_times, color=mining_time_color,
-                 linestyle=line_style, label=f'Mining Time (BASE={base})')
+                 linewidth=linewidth, label=f'Mining Time (BASE={base})')
         ax1.set_xlabel('Block Index')
         ax1.set_ylabel('Mining Time (s)', color=mining_time_color)
         ax1.tick_params(axis='y', labelcolor=mining_time_color)
@@ -294,8 +434,8 @@ def plot_statistics(blockchains: dict, scaling_factor: float = 10.0) -> None:
         # Plot dual difficulties on the same graph with a secondary y-axis
         ax2 = ax1.twinx()
         scaled_difficulties = [d * scaling_factor for d in blockchain.difficulties]
-        ax2.plot(range(len(scaled_difficulties)), scaled_difficulties, color=difficulty_color, linestyle=line_style,
-                 label=f'Dual Difficulty (BASE={base})')
+        ax2.plot(range(len(scaled_difficulties)), scaled_difficulties, color=difficulty_color,
+                 linewidth=linewidth, label=f'Dual Difficulty (BASE={base})')
         ax2.set_ylabel('Dual Difficulty', color=difficulty_color)
         ax2.tick_params(axis='y', labelcolor=difficulty_color)
 
@@ -308,15 +448,14 @@ def plot_statistics(blockchains: dict, scaling_factor: float = 10.0) -> None:
     plt.show()
 
 
+
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-import numpy as np
 
 if __name__ == "__main__":
     logger: logging.Logger = setup_logger(level=logging.DEBUG)
 
     blockchains = {}
-    for BASE in [2, 16]:
+    for BASE in [2, 4, 16]:
         INITIAL_DUAL_DIFFICULTY = 16
         INITIAL_BASE_DIFFICULTY = round(INITIAL_DUAL_DIFFICULTY / math.log2(BASE))
         ADJUSTMENT_INTERVAL = 5  # Number of blocks between difficulty adjustments
