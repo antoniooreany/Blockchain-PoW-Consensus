@@ -33,7 +33,7 @@ if __name__ == "__main__":
     ]:
         INITIAL_BIT_DIFFICULTY = 18
         INITIAL_BASE_DIFFICULTY = round(INITIAL_BIT_DIFFICULTY / math.log2(BASE))
-        ADJUSTMENT_INTERVAL = 10
+        ADJUSTMENT_INTERVAL = 5
 
         blockchain = Blockchain(
             initial_base_difficulty=INITIAL_BASE_DIFFICULTY,
@@ -42,7 +42,7 @@ if __name__ == "__main__":
             adjustment_interval=ADJUSTMENT_INTERVAL
         )
 
-        for i in range(2000):
+        for i in range(100):
             blockchain.add_block(Block(i, time.time(), f"Block {i} Data"))
 
         blockchains[BASE] = blockchain
