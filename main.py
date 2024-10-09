@@ -35,13 +35,13 @@ if __name__ == "__main__":
         ADJUSTMENT_INTERVAL = 3
 
         blockchain = Blockchain(
-            initial_difficulty=INITIAL_BASE_DIFFICULTY,
+            initial_base_difficulty=INITIAL_BASE_DIFFICULTY,
             target_block_time=1,
             base=BASE,
             adjustment_interval=ADJUSTMENT_INTERVAL
         )
 
-        for i in range(9):
+        for i in range(6):
             blockchain.add_block(Block(i, time.time(), f"Block {i} Data"))
 
         blockchains[BASE] = blockchain

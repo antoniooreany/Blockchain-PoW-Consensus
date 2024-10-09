@@ -4,6 +4,7 @@
 #   This code is for a plotting and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
+from venv import logger
 
 import matplotlib.pyplot as plt
 from screeninfo import get_monitors
@@ -34,14 +35,22 @@ def plot_blockchain_statistics(blockchains: dict, scaling_factor: float = 1.0) -
 
     mining_time_colors = ['green', 'green', 'green']
     difficulty_colors = ['cyan', 'cyan', 'cyan']
-    all_difficulties = []
+    all_base_difficulties = []
+    all_bit_difficulties = []
 
     for blockchain in blockchains.values():
-        all_difficulties.extend(blockchain.difficulties)
+        all_base_difficulties.extend(blockchain.base_difficulties)
+        all_bit_difficulties.extend(blockchain.bit_difficulties)
 
-    min_difficulty = min(all_difficulties) * 0.9
-    max_difficulty = max(all_difficulties) * scaling_factor
+    # min_base_difficulty = min(all_base_difficulties) * 0.9
+    # max_base_difficulty = max(all_base_difficulties) * scaling_factor
+    # logger.debug(f"Min difficulty: {min_base_difficulty}, \n" # 3.6
+    #              f"Max difficulty: {max_base_difficulty}") # 17.0
+    # min_bit_difficulty = min(all_bit_difficulties) * 0.9
+    min_bit_difficulty = min(all_bit_difficulties) * scaling_factor
+    max_bit_difficulty = max(all_bit_difficulties) * scaling_factor
 
+    # Determine the common y-axis range for difficulties only
     for i, (base, blockchain) in enumerate(blockchains.items()):
         bit_difficulty_base_factor = math.log2(base)
         mining_time_color = mining_time_colors[i % len(mining_time_colors)]
@@ -64,7 +73,7 @@ def plot_blockchain_statistics(blockchains: dict, scaling_factor: float = 1.0) -
         )
 
         ax1.set_xlabel('Block Index', fontsize=12)
-        ax1.set_ylabel('Mining Time, seconds', fontsize=12, color='green')
+        ax1.set_ylabel('Mining Time, seconds', fontsize=12, color=mining_time_color)
         ax1.tick_params(axis='y', labelcolor=mining_time_color)
         ax1.grid(True, which='both', linestyle=':', linewidth=0.5)
         ax1.relim()
@@ -72,7 +81,8 @@ def plot_blockchain_statistics(blockchains: dict, scaling_factor: float = 1.0) -
 
         ax2 = ax1.twinx()
         bit_difficulties = [
-            d * bit_difficulty_base_factor * scaling_factor for d in blockchain.difficulties
+            base_difficulty * bit_difficulty_base_factor * scaling_factor
+            for base_difficulty in blockchain.base_difficulties
         ]
         ax2.plot(
             range(len(bit_difficulties)),
@@ -81,9 +91,9 @@ def plot_blockchain_statistics(blockchains: dict, scaling_factor: float = 1.0) -
             linewidth=linewidth,
             label=f'Bit Difficulty (base={base})'
         )
-        ax2.set_ylabel('Bit Difficulty, bits', fontsize=12, color='cyan')
+        ax2.set_ylabel('Bit Difficulty, bits', fontsize=12, color=difficulty_color)
         ax2.tick_params(axis='y', labelcolor=difficulty_color)
-        ax2.set_ylim(min_difficulty, max_difficulty)
+        ax2.set_ylim(min_bit_difficulty, max_bit_difficulty)
 
     fig.tight_layout()
     fig.legend(

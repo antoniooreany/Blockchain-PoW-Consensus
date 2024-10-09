@@ -268,15 +268,19 @@ def plot_statistics(blockchains: dict, scaling_factor: float = 1.0) -> None:
     difficulty_colors = ['cyan', 'cyan', 'cyan']
 
     # To store min/max values for y-axis scaling for difficulties only
-    all_difficulties = []
+    all_base_difficulties = []
+    all_bit_difficulties = []
 
     # Collect all difficulty values for consistent scaling
     for blockchain in blockchains.values():
-        all_difficulties.extend(blockchain.difficulties)
+        all_base_difficulties.extend(blockchain.base_difficulties)
+        all_bit_difficulties.extend(blockchain.bit_difficulties)
+
+
 
     # Determine the common y-axis range for difficulties only
-    min_difficulty = min(all_difficulties)
-    max_difficulty = max(all_difficulties) * scaling_factor
+    min_difficulty = min(all_base_difficulties)
+    max_difficulty = max(all_base_difficulties) * scaling_factor
 
     # Adjust the minimum difficulty to be a certain percentage below the actual minimum value
     min_difficulty *= 0.9  # Adjust to 90% of the actual minimum value
@@ -307,7 +311,7 @@ def plot_statistics(blockchains: dict, scaling_factor: float = 1.0) -> None:
 
         # Plot base difficulties on the same graph with a secondary y-axis
         ax2 = ax1.twinx()
-        bit_difficulties = [d * bit_difficulty_base_factor * scaling_factor for d in blockchain.difficulties]
+        bit_difficulties = [d * bit_difficulty_base_factor * scaling_factor for d in blockchain.base_difficulties]
         ax2.plot(range(len(bit_difficulties)), bit_difficulties, color=difficulty_color,
                  linewidth=linewidth, label=f'Bit Difficulty (base={base})')
         ax2.set_ylabel('Bit Difficulty, bits', fontsize=12, color='cyan')
