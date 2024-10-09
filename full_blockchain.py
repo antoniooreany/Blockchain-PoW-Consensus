@@ -252,10 +252,8 @@ def mine_blocks(blockchain: Blockchain, num_blocks: int) -> None:
 
 
 import matplotlib.pyplot as plt
-from matplotlib.ticker import MaxNLocator
+from matplotlib.ticker import MaxNLocator, FuncFormatter
 from screeninfo import get_monitors
-import numpy as np
-import matplotlib.colors as mcolors
 import math
 
 
@@ -272,9 +270,9 @@ def plot_statistics(blockchains: dict, scaling_factor: float = 1.0) -> None:
     plt.style.use('dark_background')
     fig, ax1 = plt.subplots(figsize=(fig_width, fig_height))
 
-    # Custom colors for mining time and difficulty
-    mining_time_colors = ['green', 'green', 'green']
-    difficulty_colors = ['cyan', 'cyan', 'cyan']
+    # Fluorescent colors for mining time and difficulty
+    mining_time_colors = ['#39FF14', '#39FF14', '#39FF14']  # Bright green
+    difficulty_color = '#FF0000'  # Bright red
 
     # To store min/max values for y-axis scaling for difficulties only
     all_base_difficulties = []
@@ -296,17 +294,12 @@ def plot_statistics(blockchains: dict, scaling_factor: float = 1.0) -> None:
 
     for i, (base, blockchain) in enumerate(blockchains.items()):
         mining_time_color = mining_time_colors[i % len(mining_time_colors)]
-        difficulty_color = difficulty_colors[i % len(difficulty_colors)]
-        linewidth = base * 1
+        linewidth = base * 2
 
-        # Plot circles for mining times
-        ax1.scatter(range(len(blockchain.mining_times)), blockchain.mining_times, color=mining_time_color,
-                    s=np.pi * (base / 2) ** 2, label=f'Mining Time (BASE={base})')
-
-        # Connect circles with lines
-        less_saturated_color = mcolors.to_rgba(mining_time_color, alpha=0.5)
-        ax1.plot(range(len(blockchain.mining_times)), blockchain.mining_times, color=less_saturated_color,
-                 linewidth=linewidth)
+        # Plot vertical lines for mining times
+        for j, mining_time in enumerate(blockchain.mining_times):
+            ax1.axvline(x=j, ymin=0, ymax=mining_time, color=mining_time_color, linewidth=linewidth,
+                        label=f'Mining Time (BASE={base})' if j == 0 else "")
 
         ax1.set_xlabel('Block Index', fontsize=12)
         ax1.set_ylabel('Mining Time, seconds', fontsize=12, color=mining_time_color)
@@ -320,21 +313,30 @@ def plot_statistics(blockchains: dict, scaling_factor: float = 1.0) -> None:
         ax1.relim()
         ax1.autoscale_view()
 
-        # Plot base difficulties on the same graph with a secondary y-axis
+        # Set x-axis and y-axis limits to start from 0
+        ax1.set_xlim(left=0)
+        ax1.set_ylim(bottom=0)
+
+        # Plot base difficulties as larger circles on the same graph with a secondary y-axis
         ax2 = ax1.twinx()
         bit_difficulties = [base_difficulty * math.log2(base) * scaling_factor for base_difficulty in
                             blockchain.base_difficulties]
-        ax2.plot(range(len(bit_difficulties)), bit_difficulties, color=difficulty_color,
-                 linewidth=linewidth, label=f'Bit Difficulty (BASE={base})')
-        ax2.set_ylabel('Bit Difficulty, bits', fontsize=12, color=difficulty_color)
+        ax2.scatter(range(len(bit_difficulties)), bit_difficulties, s=[base * 50 for _ in bit_difficulties],
+                    color=difficulty_color, label=f'Difficulty (BASE={base})', alpha=0.6)
+        ax2.set_ylabel('Difficulty=2^Bit_Difficulty', fontsize=12, color=difficulty_color)
         ax2.tick_params(axis='y', labelcolor=difficulty_color)
         ax2.set_ylim(min_bit_difficulty, max_bit_difficulty)
         ax2.grid(True, which='both', linestyle=':', linewidth=0.5, color=difficulty_color)
 
+        # Set y-axis to exponential by 2 scale
+        ax2.set_yscale('linear')
+        ax2.yaxis.set_major_locator(MaxNLocator(integer=True))
+        ax2.yaxis.set_major_formatter(FuncFormatter(lambda x, _: f'$2^{{{int(math.log2(x))}}}$' if x > 0 else '0'))
+
     fig.tight_layout(pad=3.0)  # Adjust padding to ensure text is fully visible
 
-    # Adjust legend to be outside of the plot to avoid overlap
-    fig.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=3, fontsize=10)
+    # Adjust legend position
+    fig.legend(loc='upper right', bbox_to_anchor=(1, 1), ncol=1, fontsize=10)
     plt.title('Blockchain Mining Statistics Comparison', fontsize=20, color='white', fontweight='bold')
     plt.show()
 
@@ -363,7 +365,7 @@ if __name__ == "__main__":
 
         mine_blocks(
             blockchain,
-            num_blocks=21
+            num_blocks=51
         )
 
         blockchains[BASE] = blockchain
