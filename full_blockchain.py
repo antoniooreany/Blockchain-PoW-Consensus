@@ -297,7 +297,7 @@ def plot_statistics(blockchains: dict, scaling_factor: float = 1.0) -> None:
     for i, (base, blockchain) in enumerate(blockchains.items()):
         mining_time_color = mining_time_colors[i % len(mining_time_colors)]
         difficulty_color = difficulty_colors[i % len(difficulty_colors)]
-        linewidth = base * 0.5
+        linewidth = base * 1
 
         # Plot circles for mining times
         ax1.scatter(range(len(blockchain.mining_times)), blockchain.mining_times, color=mining_time_color,
@@ -325,17 +325,17 @@ def plot_statistics(blockchains: dict, scaling_factor: float = 1.0) -> None:
         bit_difficulties = [base_difficulty * math.log2(base) * scaling_factor for base_difficulty in
                             blockchain.base_difficulties]
         ax2.plot(range(len(bit_difficulties)), bit_difficulties, color=difficulty_color,
-                 linewidth=linewidth, label=f'Bit Difficulty (base={base})')
+                 linewidth=linewidth, label=f'Bit Difficulty (BASE={base})')
         ax2.set_ylabel('Bit Difficulty, bits', fontsize=12, color=difficulty_color)
         ax2.tick_params(axis='y', labelcolor=difficulty_color)
         ax2.set_ylim(min_bit_difficulty, max_bit_difficulty)
         ax2.grid(True, which='both', linestyle=':', linewidth=0.5, color=difficulty_color)
 
-    fig.tight_layout()
+    fig.tight_layout(pad=3.0)  # Adjust padding to ensure text is fully visible
 
     # Adjust legend to be outside of the plot to avoid overlap
     fig.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=3, fontsize=10)
-    plt.title('Blockchain Mining Statistics Comparison', fontsize=14, color='white')
+    plt.title('Blockchain Mining Statistics Comparison', fontsize=20, color='white', fontweight='bold')
     plt.show()
 
 
@@ -348,7 +348,7 @@ if __name__ == "__main__":
         # 4,
         # 16,
     ]:
-        INITIAL_BIT_DIFFICULTY = 16
+        INITIAL_BIT_DIFFICULTY = 18
         INITIAL_BASE_DIFFICULTY = round(INITIAL_BIT_DIFFICULTY / math.log2(BASE))
         ADJUSTMENT_INTERVAL = 3
 
