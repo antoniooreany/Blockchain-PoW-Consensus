@@ -69,9 +69,9 @@ def log_mined_block(block: Block) -> None:
         f"                                                     ")
 
 
-def log_time(actual_time: float, expected_time: float) -> None:
+def log_time(actual_time: float, expected_time: float, block_indices: list) -> None:
     logger.error(
-        f"Average mining time: {actual_time:.35f} seconds,\n "
+        f"Average mining time for blocks with indices: {block_indices}: {actual_time:.35f} seconds,\n "
         f"                                        Expected mining time: {expected_time:.35f} seconds\n"
     )
 
@@ -177,14 +177,33 @@ class Blockchain:
         logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.25f} seconds")
         logger.debug(f"Bit Difficulty [base={self.base}]: {self.bit_difficulty()}")
 
+    # def adjust_difficulty(self) -> None:
+    #     if len(self.chain) < 2:
+    #         return  # No adjustment needed for genesis block
+    #     actual_time = time.time() - self.start_time
+    #     expected_time = self.adjustment_interval * self.target_block_time
+    #     log_time(actual_time, expected_time)
+    #     adjustment_factor = actual_time / expected_time
+    #     self.base_difficulty = max(1, self.base_difficulty * adjustment_factor)  # todo float instead of int
+    #     logger.info(f"Difficulty adjustment: new difficulty {self.base_difficulty}")
+    #     self.start_time = time.time()  # Reset the start time for the next period
+
     def adjust_difficulty(self) -> None:
-        if len(self.chain) < 2:
-            return  # No adjustment needed for genesis block
-        actual_time = time.time() - self.start_time
+        if len(self.chain) < self.adjustment_interval:
+            return  # No adjustment needed if there are not enough blocks
+
+        # Calculate the actual time taken to mine the last `adjustment_interval` blocks
+        recent_blocks = self.chain[-self.adjustment_interval:]
+        actual_times = [recent_blocks[i].timestamp - recent_blocks[i - 1].timestamp for i in
+                        range(1, len(recent_blocks))]
+        actual_time = sum(actual_times) / len(actual_times)
+
         expected_time = self.adjustment_interval * self.target_block_time
-        log_time(actual_time, expected_time)
+        block_indices = [block.index for block in recent_blocks]
+        log_time(actual_time, expected_time, block_indices)
+
         adjustment_factor = actual_time / expected_time
-        self.base_difficulty = max(1, self.base_difficulty * adjustment_factor)  # todo float instead of int
+        self.base_difficulty = max(1, self.base_difficulty * adjustment_factor)  # Ensure difficulty is at least 1
         logger.info(f"Difficulty adjustment: new difficulty {self.base_difficulty}")
         self.start_time = time.time()  # Reset the start time for the next period
 
@@ -217,7 +236,8 @@ class Blockchain:
         log_mined_block(genesis_block)
         actual_time = 0  # Genesis block has no previous block, so actual time is 0
         expected_time = 1  # Set the expected time for the genesis block
-        log_time(actual_time, expected_time)
+        block_indices = [0]  # Genesis block index is 0
+        log_time(actual_time, expected_time, block_indices)
         return genesis_block
 
 
