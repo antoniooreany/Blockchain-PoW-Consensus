@@ -94,75 +94,8 @@ def separator(symbol: str = "#", length: int = 50) -> None:
     logger.warning(symbol * length)
 
 
-# class Block:
-#     def __init__(self, index: int, timestamp: float, data: str, previous_hash: str = '') -> None:
-#         self.index = index
-#         self.timestamp = timestamp
-#         self.data = data
-#         self.previous_hash = previous_hash
-#         self.nonce = 0  # Initialize nonce before calculating hash
-#         self.hash = self.calculate_hash()
-#
-#     def calculate_hash(self) -> str:
-#         sha = hashlib.sha256()
-#         sha.update(
-#             (str(self.index) + str(self.timestamp) + str(self.data) + str(self.previous_hash) + str(self.nonce)).encode(
-#                 'utf-8'))
-#         return sha.hexdigest()
-#
-#     def mine(self, difficulty: int, base: int = 2) -> None:
-#         self.nonce = random.randint(0, MAX_NONCE)  # Start from a random nonce
-#
-#         # Set the target number of leading zeros in the chosen numeral system
-#         target_zeros = '0' * difficulty  # todo why 0?
-#
-#         base_hash_data = (
-#                 str(self.index) + str(self.timestamp) + str(self.data) + str(self.previous_hash)
-#         ).encode('utf-8')
-#
-#         while True:
-#             sha = hashlib.sha256()
-#             sha.update(base_hash_data + str(self.nonce).encode('utf-8'))
-#             self.hash = sha.hexdigest()
-#
-#             # Convert the hash to the chosen numeral system (base = 2, 4, 8, 16)
-#             if base == 2:
-#                 # Convert hash to binary
-#                 converted_hash = bin(int(self.hash, 16))[2:].zfill(256)  # ~256 characters
-#                 # logger.debug(f"Converted hash[{base}]: {converted_hash}")
-#             elif base == 4:
-#                 # Convert each hex digit to a 4-bit binary string
-#                 binary_representation = ''.join(
-#                     format(int(c, 16), '04b') for c in self.hash)  # Convert each hex digit to 4 binary digits
-#
-#                 # Convert binary to quaternary (base 4) by grouping every 2 binary digits
-#                 converted_hash = ''.join(
-#                     str(int(binary_representation[i:i + 2], 2)) for i in range(0, len(binary_representation), 2))
-#
-#             # elif base == 4:
-#             # Convert hash to quaternary
-#             # converted_hash = ''.join(format(int(c, 16), '04b') for c in self.hash)  # Convert each hex digit to 4 binary digits
-#             # converted_hash = ''.join(str(int(converted_hash[i:i+2], 2)) for i in range(0, len(converted_hash), 2))  # Group binary digits into base 4
-#             # elif base == 8: # todo not possible, because 16/log2(8) = 5.33
-#             #     # Convert hash to octal
-#             #     converted_hash = oct(int(self.hash, 16))[2:].zfill(85)  # ~85 characters todo why 85?
-#             elif base == 16:
-#                 # Use hexadecimal (default)
-#                 converted_hash = self.hash
-#
-#             # Check leading zeros in the chosen system
-#             if converted_hash[:difficulty] == target_zeros:  # todo why 0?
-#                 break
-#
-#             self.nonce += 1
-#
-#         log_mined_block(self)
-
-
 import hashlib
 import random
-
-MAX_NONCE = (2 ** (2 ** (2 ** 3))) - 1  # Maximum value of the nonce
 
 
 class Block:
@@ -205,59 +138,6 @@ class Block:
             self.nonce += 1
 
 
-# class Blockchain:
-#     def __init__(self, initial_base_difficulty: int, target_block_time: float, base: int = 2,
-#                  adjustment_interval: int = 10) -> None:
-#         self.chain = [self.create_genesis_block()]
-#         self.base_difficulty = initial_base_difficulty
-#         self.bit_difficulty = initial_base_difficulty * math.log2(base)
-#         self.target_block_time = target_block_time  # Target block time in seconds
-#         self.base = base  # Base for numeral system
-#         self.adjustment_interval = adjustment_interval  # Number of blocks between difficulty adjustments
-#         self.mining_times = []  # List to store mining times
-#         self.base_difficulties = []  # List to store difficulties
-#         self.bit_difficulties = []  # List to store difficulties in bits
-#
-#     def add_block(self, new_block: Block) -> None:
-#         new_block.previous_hash = self.get_latest_block().hash  # Set the previous hash of the new block to the hash of the latest block
-#         start_time = time.time()
-#         new_block.mine(self.base_difficulty, self.base)  # Pass the chosen numeral system
-#         end_time = time.time()
-#         actual_mining_time = end_time - start_time
-#         self.chain.append(new_block)
-#         self.mining_times.append(actual_mining_time)
-#         self.base_difficulties.append(self.base_difficulty)
-#         self.bit_difficulties.append(self.base_difficulty * math.log2(self.base))
-#         if len(self.chain) % self.adjustment_interval == 0:
-#             self.adjust_difficulty()
-#         log_validity(self)
-#         logger.debug(f"Bit Difficulty[base={self.base}]: {self.bit_difficulty}")
-#         logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.25f} seconds")
-#
-#     def adjust_difficulty(self) -> None:
-#         if len(self.chain) < 2:
-#             return  # No adjustment needed for genesis block
-#         actual_time = self.get_average_mining_time(self.adjustment_interval)
-#         expected_time: float = self.target_block_time  # Expected time in seconds
-#         log_time(actual_time, expected_time)
-#         if actual_time < expected_time:
-#             self.base_difficulty += 1
-#         elif actual_time > expected_time and self.base_difficulty > 1:
-#             self.base_difficulty -= 1
-#         self.bit_difficulty = self.base_difficulty * math.log2(self.base)
-#
-#     def get_latest_block(self) -> Block:
-#         return self.chain[-1]
-#
-#     def is_chain_valid(self) -> bool:
-#         for i in range(1, len(self.chain)):
-#             current_block: Block = self.chain[i]
-#             previous_block: Block = self.chain[i - 1]
-#             if current_block.hash != current_block.calculate_hash():
-#                 return False
-#             if current_block.previous_hash != previous_block.hash:  # Remove parentheses here
-#                 return False
-#         return True
 
 
 import time
@@ -268,94 +148,11 @@ BLOCKS_TO_ADJUST = 5  # Adjust difficulty every 100 blocks
 TARGET_TIME_PER_BLOCK = 1  # Target time per block in seconds
 
 
-# class Blockchain:
-#     def __init__(self, initial_base_difficulty, target_block_time, base, adjustment_interval):
-#         self.chain = []
-#         self.mining_times = []
-#         self.base_difficulties = []
-#         self.bit_difficulties = []
-#         self.base = base
-#         self.base_difficulty = initial_base_difficulty
-#         self.target_block_time = target_block_time
-#         self.adjustment_interval = adjustment_interval
-#         self.start_time = time.time()  # Start time for the current period
-#
-#     def add_block(self, new_block):
-#         new_block.previous_hash = self.get_latest_block().hash if self.chain else '0'
-#         start_time = time.time()
-#         new_block.mine(self.base_difficulty, self.base)
-#         end_time = time.time()
-#         actual_mining_time = end_time - start_time
-#         self.chain.append(new_block)
-#         self.mining_times.append(actual_mining_time)
-#         self.base_difficulties.append(self.base_difficulty)
-#         self.bit_difficulties.append(self.bit_difficulty())
-#
-#         # Check if difficulty needs to be adjusted
-#         if len(self.chain) % BLOCKS_TO_ADJUST == 0:
-#             self.adjust_difficulty()
-#
-#         log_validity(self)
-#         logger.debug(f"Difficulty Level[base={self.base}]: {self.base_difficulty}")
-#         logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.25f} seconds")
-#
-#     def adjust_difficulty(self):
-#         # Time taken to mine the last BLOCKS_TO_ADJUST blocks
-#         actual_time = time.time() - self.start_time
-#         expected_time = BLOCKS_TO_ADJUST * TARGET_TIME_PER_BLOCK
-#
-#         # Adjust difficulty
-#         adjustment_factor = actual_time / expected_time
-#         self.base_difficulty = max(1, self.base_difficulty * adjustment_factor)
-#
-#         print(f"Difficulty adjustment: new difficulty {self.base_difficulty}")
-#
-#         # Restart the timer for the next period
-#         self.start_time = time.time()
-#
-#     def bit_difficulty(self):
-#         # Logarithmic difficulty
-#         return math.log2(self.base_difficulty)
-#
-#     def get_latest_block(self):
-#         return self.chain[-1]
-#
-#     def is_chain_valid(self):
-#         for i in range(1, len(self.chain)):
-#             current_block = self.chain[i]
-#             previous_block = self.chain[i - 1]
-#             if current_block.hash != current_block.calculate_hash():
-#                 return False
-#             if current_block.previous_hash != previous_block.hash:
-#                 return False
-#         return True
-
-
-# class Blockchain:
-#     def __init__(self, initial_base_difficulty, target_block_time, base, adjustment_interval):
-#         self.chain = [self.create_genesis_block()]
-#         self.base_difficulty = initial_base_difficulty
-#         self.target_block_time = target_block_time
-#         self.base = base
-#         self.adjustment_interval = adjustment_interval
-#         self.start_time = time.time()
 
 
 class Blockchain:
-    # def __init__(self, initial_base_difficulty: int, target_block_time: float, base: int = 2,
-    #              adjustment_interval: int = 10) -> None:
-    #     self.chain = [self.create_genesis_block()]
-    #     self.base_difficulty = initial_base_difficulty
-    #     self.target_block_time = target_block_time  # Target block time in seconds
-    #     self.base = base  # Base for numeral system
-    #     self.adjustment_interval = adjustment_interval  # Number of blocks between difficulty adjustments
-    #     self.start_time = time.time()  # Start time for the current period
-    #
-    #     self.mining_times = []
-    #     self.base_difficulties = []
-    #     self.bit_difficulties = []
-
-    def __init__(self, initial_base_difficulty: int, target_block_time: float, base: int = 2, adjustment_interval: int = 10) -> None:
+    def __init__(self, initial_base_difficulty: int, target_block_time: float, base: int = 2,
+                 adjustment_interval: int = 10) -> None:
         self.chain = [self.create_genesis_block()]
         self.base_difficulty = initial_base_difficulty
         self.target_block_time = target_block_time  # Target block time in seconds
@@ -367,49 +164,10 @@ class Blockchain:
         self.base_difficulties = []
         self.bit_difficulties = []
 
-
-
-    # def create_genesis_block(self):
-    #     genesis_block = Block(0, time.time(), "Genesis Block", "0")
-    #     genesis_block.hash = genesis_block.calculate_hash()
-    #     return genesis_block
-
-
     def create_genesis_block(self):
         genesis_block = Block(0, time.time(), "Genesis Block", "0")
         genesis_block.hash = genesis_block.calculate_hash()
         return genesis_block
-
-
-    # def add_block(self, new_block):
-    #     new_block.previous_hash = self.get_latest_block().hash
-    #     start_time = time.time()
-    #     new_block.mine(self.base_difficulty, self.base)
-    #     end_time = time.time()
-    #     actual_mining_time = end_time - start_time
-    #     self.chain.append(new_block)
-    #     self.mining_times.append(actual_mining_time)
-    #     self.base_difficulties.append(self.base_difficulty)
-    #     self.bit_difficulties.append(self.bit_difficulty())
-    #
-    #     if len(self.chain) % BLOCKS_TO_ADJUST == 0:
-    #         self.adjust_difficulty()
-
-    # def add_block(self, new_block: Block) -> None:
-    #     new_block.previous_hash = self.get_latest_block().hash  # Set the previous hash of the new block to the hash of the latest block
-    #     start_time = time.time()
-    #     new_block.mine(self.base_difficulty, self.base)  # Pass the chosen numeral system
-    #     end_time = time.time()
-    #     actual_mining_time = end_time - start_time
-    #     self.chain.append(new_block)
-    #     if len(self.chain) % self.adjustment_interval == 0:
-    #         self.adjust_difficulty()
-    #     log_validity(self)
-    #     logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.25f} seconds")
-    #
-    #     log_validity(self)
-    #     logger.debug(f"Bit Difficulty [base={self.base}]: {self.bit_difficulty()}")
-    #     logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.25f} seconds")
 
     def add_block(self, new_block: Block) -> None:
         new_block.previous_hash = self.get_latest_block().hash  # Set the previous hash of the new block to the hash of the latest block
@@ -429,29 +187,6 @@ class Blockchain:
         logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.25f} seconds")
         logger.debug(f"Bit Difficulty [base={self.base}]: {self.bit_difficulty()}")
 
-
-    # def adjust_difficulty(self):
-    #     actual_time = time.time() - self.start_time
-    #     expected_time = BLOCKS_TO_ADJUST * TARGET_TIME_PER_BLOCK
-    #     adjustment_factor = actual_time / expected_time
-    #     self.base_difficulty = max(1, self.base_difficulty * adjustment_factor)
-    #     print(f"Difficulty adjustment: new difficulty {self.base_difficulty}")
-    #     self.start_time = time.time()
-
-    # def adjust_difficulty(self) -> None:
-    #     if len(self.chain) < 2:
-    #         return  # No adjustment needed for genesis block
-    #     actual_time = time.time() - self.start_time
-    #     expected_time = self.adjustment_interval * self.target_block_time
-    #     log_time(actual_time, expected_time)
-    #     adjustment_factor = actual_time / expected_time
-    #     self.base_difficulty = max(1, self.base_difficulty * adjustment_factor)
-    #     logger.info(f"Difficulty adjustment: new difficulty {self.base_difficulty}")
-    #     self.start_time = time.time()  # Reset the start time for the next period
-    #
-    # def bit_difficulty(self):
-    #     return math.log2(self.base_difficulty)
-
     def adjust_difficulty(self) -> None:
         if len(self.chain) < 2:
             return  # No adjustment needed for genesis block
@@ -466,35 +201,6 @@ class Blockchain:
     def bit_difficulty(self):
         return self.base_difficulty * math.log2(self.base)
 
-
-
-    # def get_latest_block(self):
-    #     return self.chain[-1]
-    #
-    # def is_chain_valid(self):
-    #     for i in range(1, len(self.chain)):
-    #         current_block = self.chain[i]
-    #         previous_block = self.chain[i - 1]
-    #         if current_block.hash != current_block.calculate_hash():
-    #             return False
-    #         if current_block.previous_hash != previous_block.hash:
-    #             return False
-    #     return True
-
-    # def get_latest_block(self) -> Block:
-    #     return self.chain[-1]
-    #
-    # def is_chain_valid(self) -> bool:
-    #     for i in range(1, len(self.chain)):
-    #         current_block = self.chain[i]
-    #         previous_block = self.chain[i - 1]
-    #         if current_block.hash != current_block.calculate_hash():
-    #             return False
-    #         if current_block.previous_hash != previous_block.hash:
-    #             return False
-    #     return True
-
-
     def get_latest_block(self) -> Block:
         return self.chain[-1]
 
@@ -507,7 +213,6 @@ class Blockchain:
             if current_block.previous_hash != previous_block.hash:
                 return False
         return True
-
 
     def get_average_mining_time(self, num_blocks: int = 10) -> float:
         if len(self.chain) < num_blocks + 1:
