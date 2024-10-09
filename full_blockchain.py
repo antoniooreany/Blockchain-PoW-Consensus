@@ -198,7 +198,7 @@ class Blockchain:
                         range(1, len(recent_blocks))]
         actual_time = sum(actual_times) / len(actual_times)
 
-        expected_time = self.adjustment_interval * self.target_block_time
+        expected_time = self.target_block_time  # Set the expected time to 1 second
         block_indices = [block.index for block in recent_blocks]
         log_time(actual_time, expected_time, block_indices)
 
