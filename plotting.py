@@ -55,7 +55,7 @@ def plot_blockchain_statistics(blockchains: dict, scaling_factor: float = 1.0) -
         bit_difficulty_base_factor = math.log2(base)
         mining_time_color = mining_time_colors[i % len(mining_time_colors)]
         difficulty_color = difficulty_colors[i % len(difficulty_colors)]
-        linewidth = base * 0.9
+        linewidth = base * 0.3
 
         ax1.scatter(
             range(len(blockchain.mining_times)),

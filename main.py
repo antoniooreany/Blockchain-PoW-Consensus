@@ -21,8 +21,9 @@ if __name__ == "__main__":
     blockchains = {}
     for BASE in [
         2,
-        4,
-        16,
+        # 4,
+        # 8,
+        # 16,
         # 32,
         # 64,
         # 128,
@@ -30,9 +31,9 @@ if __name__ == "__main__":
         # 512,
         # 1024,
     ]:
-        INITIAL_BIT_DIFFICULTY = 16
+        INITIAL_BIT_DIFFICULTY = 18
         INITIAL_BASE_DIFFICULTY = round(INITIAL_BIT_DIFFICULTY / math.log2(BASE))
-        ADJUSTMENT_INTERVAL = 10
+        ADJUSTMENT_INTERVAL = 100
 
         blockchain = Blockchain(
             initial_base_difficulty=INITIAL_BASE_DIFFICULTY,
