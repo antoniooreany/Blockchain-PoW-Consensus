@@ -4,10 +4,7 @@
 #   This code is for a full_blockchain.py and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
-import hashlib
 import logging
-import random
-import time
 from venv import logger
 
 from colorama import Fore, Style, init
@@ -95,6 +92,54 @@ def separator(symbol: str = "#", length: int = 50) -> None:
     logger.warning(symbol * length)
 
 
+# class Block:
+#     def __init__(self, index: int, timestamp: float, data: str, previous_hash: str = '') -> None:
+#         self.index = index
+#         self.timestamp = timestamp
+#         self.data = data
+#         self.previous_hash = previous_hash
+#         self.nonce = 0  # Initialize nonce before calculating hash
+#         self.hash = self.calculate_hash()
+#
+#     def calculate_hash(self) -> str:
+#         sha = hashlib.sha256()
+#         sha.update(
+#             (str(self.index) + str(self.timestamp) + str(self.data) + str(self.previous_hash) + str(self.nonce)).encode(
+#                 'utf-8'))
+#         return sha.hexdigest()
+#
+#     def mine(self, difficulty: float, base: int = 2) -> None:
+#         self.nonce = random.randint(0, MAX_NONCE)  # Start from a random nonce
+#
+#         # Calculate the target value based on the difficulty
+#         target_value = (2 ** (256 - difficulty))
+#
+#         base_hash_data = (
+#                 str(self.index) + str(self.timestamp) + str(self.data) + str(self.previous_hash)
+#         ).encode('utf-8')
+#
+#         while True:
+#             sha = hashlib.sha256()
+#             sha.update(base_hash_data + str(self.nonce).encode('utf-8'))
+#             self.hash = sha.hexdigest()
+#
+#             # Convert the hash to a numerical value
+#             hash_value = int(self.hash, 16)
+#
+#             # Check if the hash value is less than the target value
+#             if hash_value < target_value:
+#                 break
+#             self.nonce += 1
+
+
+import hashlib
+import logging
+import random
+import time
+
+MAX_NONCE = (2 ** (2 ** (2 ** 3))) - 1  # Maximum value of the nonce
+
+
 class Block:
     def __init__(self, index: int, timestamp: float, data: str, previous_hash: str = '') -> None:
         self.index = index
@@ -133,6 +178,8 @@ class Block:
             if hash_value < target_value:
                 break
             self.nonce += 1
+
+        logging.info(f"Mined block hash: {self.hash}")
 
 
 # # Constants for difficulty adjustment # todo why 5?
@@ -193,7 +240,7 @@ class Blockchain:
 
         adjustment_factor = actual_time / expected_time
         self.base_difficulty = max(1, self.base_difficulty * adjustment_factor)  # Ensure difficulty is at least 1
-        logger.info(f"Difficulty adjustment: new difficulty {self.base_difficulty}")
+        logger.info(f"Difficulty adjustment: new difficulty {self.base_difficulty}")  # Exponential by base difficulty
         self.start_time = time.time()  # Reset the start time for the next period
 
     def bit_difficulty(self):
@@ -350,7 +397,7 @@ if __name__ == "__main__":
         # 4,
         # 16,
     ]:
-        INITIAL_BIT_DIFFICULTY = 18
+        INITIAL_BIT_DIFFICULTY = 16
         INITIAL_BASE_DIFFICULTY = round(INITIAL_BIT_DIFFICULTY / math.log2(BASE))
         ADJUSTMENT_INTERVAL = 3
 
@@ -365,7 +412,7 @@ if __name__ == "__main__":
 
         mine_blocks(
             blockchain,
-            num_blocks=51
+            num_blocks=21
         )
 
         blockchains[BASE] = blockchain
