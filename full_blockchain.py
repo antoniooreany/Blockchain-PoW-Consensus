@@ -4,18 +4,25 @@
 #   This code is for a full_blockchain.py and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
+import hashlib
+import logging
+import random
+import time
 from venv import logger
 
-import time
-
-import logging
 from colorama import Fore, Style, init
-
-import hashlib
-import random
 
 from block import Block
 from blockchain import Blockchain
+
+# Set the logging level to INFO (or WARNING to reduce more output)
+logging.getLogger('matplotlib').setLevel(logging.INFO)
+
+import matplotlib.pyplot as plt
+from screeninfo import get_monitors
+import numpy as np
+import matplotlib.colors as mcolors
+import math
 
 MAX_NONCE = (2 ** (2 ** (2 ** 3))) - 1  # todo 16^64 - 1 = 2^256 - 1, the maximum value of the nonce
 
@@ -94,10 +101,6 @@ def separator(symbol: str = "#", length: int = 50) -> None:
     logger.warning(symbol * length)
 
 
-import hashlib
-import random
-
-
 class Block:
     def __init__(self, index: int, timestamp: float, data: str, previous_hash: str = '') -> None:
         self.index = index
@@ -138,16 +141,9 @@ class Block:
             self.nonce += 1
 
 
-
-
-import time
-import math
-
 # Constants for difficulty adjustment # todo why 5?
 BLOCKS_TO_ADJUST = 5  # Adjust difficulty every 100 blocks
 TARGET_TIME_PER_BLOCK = 1  # Target time per block in seconds
-
-
 
 
 class Blockchain:
@@ -194,7 +190,7 @@ class Blockchain:
         expected_time = self.adjustment_interval * self.target_block_time
         log_time(actual_time, expected_time)
         adjustment_factor = actual_time / expected_time
-        self.base_difficulty = max(1, self.base_difficulty * adjustment_factor)
+        self.base_difficulty = max(1, self.base_difficulty * adjustment_factor)  # todo float instead of int
         logger.info(f"Difficulty adjustment: new difficulty {self.base_difficulty}")
         self.start_time = time.time()  # Reset the start time for the next period
 
@@ -250,19 +246,6 @@ def mine_blocks(blockchain: Blockchain, num_blocks: int) -> None:
     for i in range(1, num_blocks):  # Start from 1 to avoid mining a genesis block twice
         new_block = Block(i, time.time(), f"Block {i}", blockchain.get_latest_block().hash)
         blockchain.add_block(new_block)
-
-
-from screeninfo import get_monitors
-import logging
-
-# Set the logging level to INFO (or WARNING to reduce more output)
-logging.getLogger('matplotlib').setLevel(logging.INFO)
-
-import matplotlib.pyplot as plt
-from screeninfo import get_monitors
-import numpy as np
-import matplotlib.colors as mcolors
-import math
 
 
 def plot_statistics(blockchains: dict, scaling_factor: float = 1.0) -> None:
