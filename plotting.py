@@ -62,7 +62,7 @@ def plot_blockchain_statistics(blockchains: dict, scaling_factor: float = 1.0) -
             blockchain.mining_times,
             color=mining_time_color,
             s=np.pi * (base / 2) ** 2,
-            label=f'Mining Time (BASE={base})'
+            label=f'Mining Time (base={base})'
         )
 
         ax1.plot(
