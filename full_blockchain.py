@@ -135,9 +135,9 @@ class Block:
             self.nonce += 1
 
 
-# Constants for difficulty adjustment # todo why 5?
-BLOCKS_TO_ADJUST = 5  # Adjust difficulty every 100 blocks
-TARGET_TIME_PER_BLOCK = 1  # Target time per block in seconds
+# # Constants for difficulty adjustment # todo why 5?
+# BLOCKS_TO_ADJUST = 5  # Adjust difficulty every 100 blocks
+# TARGET_TIME_PER_BLOCK = 1  # Target time per block in seconds
 
 
 class Blockchain:
@@ -176,17 +176,6 @@ class Blockchain:
         log_validity(self)
         logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.25f} seconds")
         logger.debug(f"Bit Difficulty [base={self.base}]: {self.bit_difficulty()}")
-
-    # def adjust_difficulty(self) -> None:
-    #     if len(self.chain) < 2:
-    #         return  # No adjustment needed for genesis block
-    #     actual_time = time.time() - self.start_time
-    #     expected_time = self.adjustment_interval * self.target_block_time
-    #     log_time(actual_time, expected_time)
-    #     adjustment_factor = actual_time / expected_time
-    #     self.base_difficulty = max(1, self.base_difficulty * adjustment_factor)  # todo float instead of int
-    #     logger.info(f"Difficulty adjustment: new difficulty {self.base_difficulty}")
-    #     self.start_time = time.time()  # Reset the start time for the next period
 
     def adjust_difficulty(self) -> None:
         if len(self.chain) < self.adjustment_interval:
