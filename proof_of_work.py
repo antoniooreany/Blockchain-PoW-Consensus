@@ -7,9 +7,9 @@
 from block import Block
 
 
-class ProofOfWork:
+class ProofOfWork:  # todo does this class needed? mine method is in block.py do the same job
     @staticmethod
-    def find_nonce(block: Block, difficulty: int) -> int:
+    def find_nonce(block: Block, difficulty: int) -> int:  # todo rewrite: hash_value < target_value
         """
         Finds a nonce for a given block such that the block's hash
         starts with 'difficulty' zeros.
@@ -29,8 +29,8 @@ class ProofOfWork:
             block.hash = block.calculate_hash()
         return block.nonce
 
-    @staticmethod
-    def validate_proof(block: Block, difficulty: int) -> bool:
+    @staticmethod  # todo does this method needed? someone else can do the same job!
+    def validate_proof(block: Block, difficulty: int) -> bool:  # todo rewrite: hash_value < target_value
         """
         Checks if a given block's hash starts with 'difficulty' zeros.
 
@@ -43,5 +43,5 @@ class ProofOfWork:
             bool: True if the block's hash starts with 'difficulty' zeros,
                 False otherwise.
         """
-        target = '0' * difficulty
+        target = '0' * difficulty  # todo rewrite: hash_value < target_value
         return block.hash[:difficulty] == target

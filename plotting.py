@@ -4,16 +4,18 @@
 #   This code is for a plotting and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
-from venv import logger
-
-import matplotlib.pyplot as plt
-from screeninfo import get_monitors
-import numpy as np
-import matplotlib.colors as mcolors
 import math
 
+import matplotlib.colors as mcolors
+import matplotlib.pyplot as plt
+import numpy as np
+from screeninfo import get_monitors
 
-def plot_blockchain_statistics(blockchains: dict, scaling_factor: float = 1.0) -> None:
+
+def plot_blockchain_statistics(
+        blockchains: dict,
+        scaling_factor: float = 1.0
+) -> None:
     """
     Plot statistics for multiple blockchains.
     :param blockchains: A dictionary mapping the name of each blockchain to its Blockchain object.
@@ -35,11 +37,11 @@ def plot_blockchain_statistics(blockchains: dict, scaling_factor: float = 1.0) -
 
     mining_time_colors = ['green', 'green', 'green']
     difficulty_colors = ['cyan', 'cyan', 'cyan']
-    all_base_difficulties = []
+    # all_base_difficulties = []
     all_bit_difficulties = []
 
     for blockchain in blockchains.values():
-        all_base_difficulties.extend(blockchain.base_difficulties)
+        # all_base_difficulties.extend(blockchain.base_difficulties)
         all_bit_difficulties.extend(blockchain.bit_difficulties)
 
     min_bit_difficulty = min(all_bit_difficulties) * scaling_factor
