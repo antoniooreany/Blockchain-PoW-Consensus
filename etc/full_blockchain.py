@@ -9,8 +9,8 @@ from venv import logger
 
 from colorama import Fore, Style, init
 
-from block import Block
-from blockchain import Blockchain
+from src.block import Block
+from src.blockchain import Blockchain
 
 logging.getLogger('matplotlib').setLevel(logging.INFO)
 

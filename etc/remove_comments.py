@@ -99,7 +99,7 @@ def remove_commented_code(file_path):
                 file.write(line)
 
 
-file_path = '../blockchain.py'  # Replace with your file path
+file_path = '../src/blockchain.py'  # Replace with your file path
 remove_commented_code(file_path)
 
 # def select_file():
