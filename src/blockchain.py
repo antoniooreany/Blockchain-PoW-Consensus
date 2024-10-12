@@ -3,6 +3,7 @@
 #   This code is for a blockchain.py and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 import logging
+import math
 import time
 
 from block import Block
@@ -201,7 +202,9 @@ class Blockchain:
         actual_time: float = time.time() - self.start_time
         expected_time: float = self.adjustment_interval * self.target_block_time
         adjustment_factor: float = actual_time / expected_time
-        new_difficulty: float = max(1, self.bit_difficulties[-1] * adjustment_factor)
+        # new_difficulty: float = max(1, self.bit_difficulties[-1] * adjustment_factor)
+        # new_difficulty: float = max(1, self.bit_difficulties[-1] / adjustment_factor)
+        new_difficulty: float = max(1, self.bit_difficulties[-1] - math.log2(adjustment_factor))
         self.bit_difficulties.append(new_difficulty)
         self.start_time = time.time()
 
@@ -210,7 +213,7 @@ class Blockchain:
         self.logger.info(
             f"Average mining time for the last {self.adjustment_interval} blocks: {avg_mining_time:.25f} seconds")
         self.logger.info(
-            f"Indices of the last {self.adjustment_interval} blocks: {list(range(len(self.blocks) - self.adjustment_interval, len(self.blocks)))}")
+            f"Indices of the last {self.adjustment_interval} blocks: {list(range(len(self.blocks) - self.adjustment_interval + 1, len(self.blocks) + 1))}")
         self.logger.info(f"New difficulty: {new_difficulty}")
 
     def is_chain_valid(self) -> bool:

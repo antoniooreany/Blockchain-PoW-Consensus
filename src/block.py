@@ -6,7 +6,9 @@
 
 
 import hashlib
+import math
 import random
+from venv import logger
 
 from src.logging_utils import log_mined_block
 
@@ -63,7 +65,7 @@ class Block:
 
     def mine(
             self,
-            bit_difficulty: int,
+            bit_difficulty: float,
     ) -> None:
         """
         Mine a block.
@@ -78,7 +80,13 @@ class Block:
         self.nonce: int = random.randint(0, max_nonce)  # Start from a random nonce
 
         # Calculate the target value based on difficulty
-        target_value: int = (2 ** (256 - bit_difficulty)) - 1
+        # target_value: int = (2 ** (256 - bit_difficulty)) - 1  # todo move to blockchain.py
+        target_value: float = math.pow(2, 256 - bit_difficulty) - 1  # todo move to blockchain.py
+
+        logger.debug(f"Target value: {target_value}")
+        # log the target value in hexadecimal with leading zeros
+        # logger.debug(f"Target value in hexadecimal with leading zeros: {hex(target_value)[2:]}")
+        # logger.debug(f"Target value in hexadecimal: {hex(target_value)}")
 
         base_hash_data: bytes = ((str(self.index) +
                                   str(self.timestamp) +
