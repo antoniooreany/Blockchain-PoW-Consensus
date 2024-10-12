@@ -98,7 +98,7 @@ def plot_statistics(blockchain):
 
     ax2 = ax1.twinx()
     ax2.set_ylabel('Difficulty', color='cyan')
-    ax2.plot(range(len(blockchain.difficulties)), blockchain.difficulties, 'o-', color='cyan')
+    ax2.plot(range(len(blockchain.bit_difficulties)), blockchain.bit_difficulties, 'o-', color='cyan')
     ax2.tick_params(axis='y', labelcolor='cyan')
 
     fig.tight_layout()

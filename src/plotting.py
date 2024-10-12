@@ -1,48 +1,48 @@
-#   Copyright (c) 2024, Anton Gorshkov
-#   All rights reserved.
-#
-#   This code is for a plotting and its unit tests.
-#   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
-
-import math
+# #   Copyright (c) 2024, Anton Gorshkov
+# #   All rights reserved.
+# #
+# #   This code is for a plotting and its unit tests.
+# #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
 import matplotlib.colors as mcolors
-import matplotlib.pyplot as plt
 import numpy as np
 from screeninfo import get_monitors
 
+from src.blockchain import Blockchain
+
 
 def plot_blockchain_statistics(
-        blockchains: dict,
-        scaling_factor: float = 1.0
-) -> None:
+        blockchains: dict[int, Blockchain],  # base as key, Blockchain as value
+        scaling_factor: float = 1.0,  # An optional parameter to scale the y-axis for the bit difficulties
+        linewidth: int = 5  # The width of the line to plot
+) -> None:  # returns None
     """
     Plot statistics for multiple blockchains.
-    :param blockchains: A dictionary mapping the name of each blockchain to its Blockchain object.
+
+    :param linewidth: The width of the line to plot
+    :param blockchains: A dictionary mapping the name of each blockchain to its Blockchain object
     :param scaling_factor: An optional parameter to scale the y-axis for the bit difficulties, default 1.0
     :return: None
     """
     if not blockchains:
         raise ValueError("No blockchains provided")
 
-    monitor = get_monitors()[0]
+    monitor: get_monitors()[0] = get_monitors()[0]
     if not monitor:
         raise RuntimeError("No monitor found")
 
-    fig_width = monitor.width * 0.9 / 100
-    fig_height = monitor.height * 0.9 / 100
+    fig_width: float = monitor.width * 0.9 / 100
+    fig_height: float = monitor.height * 0.9 / 100
 
     plt.style.use('dark_background')
     fig, ax1 = plt.subplots(figsize=(fig_width, fig_height))
 
-    mining_time_colors = ['green', 'green', 'green']
-    difficulty_colors = ['cyan', 'cyan', 'cyan']
-    # all_base_difficulties = []
-    all_bit_difficulties = []
+    mining_time_colors: list[str] = ['green', 'green', 'green']
+    difficulty_colors: list[str] = ['cyan', 'cyan', 'cyan']
+    all_bit_difficulties: list[float] = []
 
     for blockchain in blockchains.values():
-        # all_base_difficulties.extend(blockchain.base_difficulties)
-        all_bit_difficulties.extend(blockchain.bit_difficulties)
+        all_bit_difficulties.extend(blockchain.bit_difficulties)  # todo no property bit_difficulties in Blockchain
 
     min_bit_difficulty = min(all_bit_difficulties) * scaling_factor
     max_bit_difficulty = max(all_bit_difficulties) * scaling_factor
@@ -54,24 +54,23 @@ def plot_blockchain_statistics(
 
     # Determine the common y-axis range for difficulties only
     for i, (base, blockchain) in enumerate(blockchains.items()):
-        bit_difficulty_base_factor = math.log2(base)
-        mining_time_color = mining_time_colors[i % len(mining_time_colors)]
-        difficulty_color = difficulty_colors[i % len(difficulty_colors)]
-        linewidth = base * 0.5
+        # bit_difficulty_base_factor = math.log2(base)
+        mining_time_color: str = mining_time_colors[i % len(mining_time_colors)]
+        difficulty_color: str = difficulty_colors[i % len(difficulty_colors)]
 
         ax1.scatter(
             range(len(blockchain.mining_times)),
             blockchain.mining_times,
             color=mining_time_color,
-            s=np.pi * (base / 2) ** 2,
-            label=f'Mining Time (base={base})'
+            s=np.pi * (base / 2) ** 2,  # todo base is not a property of blockchain
+            label=f'Mining Time (base={base})'  # todo base is not a property of blockchain
         )
 
         ax1.plot(
             range(len(blockchain.mining_times)),
             blockchain.mining_times,
             color=mcolors.to_rgba(mining_time_color, alpha=0.5),
-            linewidth=linewidth
+            linewidth=linewidth,
         )
 
         ax1.set_xlabel('Block Index', fontsize=12)
@@ -83,8 +82,8 @@ def plot_blockchain_statistics(
 
         ax2 = ax1.twinx()
         bit_difficulties = [
-            base_difficulty * bit_difficulty_base_factor * scaling_factor
-            for base_difficulty in blockchain.base_difficulties
+            bit_difficulty * scaling_factor
+            for bit_difficulty in blockchain.bit_difficulties  # todo no property bit_difficulties in Blockchain
         ]
         ax2.plot(
             range(len(bit_difficulties)),
@@ -106,3 +105,63 @@ def plot_blockchain_statistics(
     )
     plt.title('Blockchain Mining Statistics Comparison', fontsize=14, color='white')
     plt.show()
+
+
+#
+# def plot_blockchain_statistics(blockchains):
+#     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
+#
+#     for base, blockchain in blockchains.items():
+#         ax1.plot(blockchain.mining_times, 'go-', label='Время майнинга')
+#         ax2.plot(range(blockchain.blocks_to_adjust, len(blockchain.blocks)), blockchain.difficulties[1:], 'bo-',
+#                  label='Сложность')
+#
+#     ax1.set_xlabel('Блоки')
+#     ax1.set_ylabel('Время майнинга (сек)')
+#     ax1.legend()
+#
+#     ax2.set_xlabel('Блоки')
+#     ax2.set_ylabel('Сложность')
+#     ax2.legend()
+#
+#     plt.tight_layout()
+#     plt.show()
+
+
+import matplotlib.pyplot as plt
+
+# def plot_blockchain_statistics(blockchains):
+#     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
+#
+#     for base, blockchain in blockchains.items():
+#         ax1.plot(blockchain.mining_times, 'go-', label='Mining Time')
+#         ax2.plot(range(blockchain.blocks_to_adjust, len(blockchain.blocks)), blockchain.bit_difficulties[1:], 'bo-',
+#                  label='Difficulty')
+#
+#     ax1.set_xlabel('Blocks')
+#     ax1.set_ylabel('Mining Time (sec)')
+#     ax1.legend()
+#
+#     ax2.set_xlabel('Blocks')
+#     ax2.set_ylabel('Difficulty')
+#     ax2.legend()
+#
+#     plt.tight_layout()
+#     plt.show()
+
+
+# def plot_blockchain_statistics(blockchains):
+#     fig, ax1 = plt.subplots()
+#
+#     for blockchain in blockchains.values():
+#         ax1.plot(range(len(blockchain.blocks)), [block.timestamp for block in blockchain.blocks], 'b-')
+#         ax1.set_xlabel('Block Index')
+#         ax1.set_ylabel('Timestamp', color='b')
+#
+#         ax2 = ax1.twinx()
+#         x = range(blockchain.blocks_to_adjust, len(blockchain.blocks))
+#         y = blockchain.bit_difficulties[1:len(x) + 1]  # Ensure y has the same length as x
+#         ax2.plot(x, y, 'bo-')
+#         ax2.set_ylabel('Bit Difficulty', color='r')
+#
+#     plt.show()

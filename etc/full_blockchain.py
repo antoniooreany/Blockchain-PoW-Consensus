@@ -248,7 +248,7 @@ def plot_statistics(blockchains: dict, scaling_factor: float = 1.0) -> None:
     all_difficulties = []
 
     for blockchain in blockchains.values():
-        all_difficulties.extend(blockchain.difficulties)
+        all_difficulties.extend(blockchain.bit_difficulties)
 
     min_difficulty = min(all_difficulties) * scaling_factor
     max_difficulty = max(all_difficulties) * scaling_factor
@@ -258,13 +258,13 @@ def plot_statistics(blockchains: dict, scaling_factor: float = 1.0) -> None:
     max_difficulty += margin
 
     for blockchain in blockchains.values():
-        all_difficulties.extend(blockchain.difficulties)
+        all_difficulties.extend(blockchain.bit_difficulties)
 
     plt.figure(figsize=(10, 6))
     for base, blockchain in blockchains.items():
         plt.plot(
-            range(len(blockchain.difficulties)),
-            [difficulty * scaling_factor for difficulty in blockchain.difficulties],
+            range(len(blockchain.bit_difficulties)),
+            [difficulty * scaling_factor for difficulty in blockchain.bit_difficulties],
             label=f'Base {base}'
         )
 
@@ -291,7 +291,7 @@ def plot_statistics(blockchains: dict, scaling_factor: float = 1.0) -> None:
 
         ax2 = ax1.twinx()
         bit_difficulties = [base_difficulty * math.log2(base) * scaling_factor for base_difficulty in
-                            blockchain.difficulties]
+                            blockchain.bit_difficulties]
         ax2.scatter(range(len(bit_difficulties)), bit_difficulties, s=[base * 50 for _ in bit_difficulties],
                     color=difficulty_color, label=f'Difficulty (BASE={base})', alpha=0.6)
         ax2.set_ylabel('Difficulty=2^Bit_Difficulty', fontsize=12, color=difficulty_color)

@@ -22,11 +22,11 @@ if __name__ == "__main__":
     blockchains = {}
     for base in [
         2,
-        4,
-        8,
-        16,
-        32,
-        64,
+        # 4,
+        # 8,
+        # 16,
+        # 32,
+        # 64,
         # 128,
         # 256,
         # 512,
@@ -34,16 +34,21 @@ if __name__ == "__main__":
     ]:
         INITIAL_BIT_DIFFICULTY = 18  # todo avoid base_difficulty, use bit_difficulty, better even linear_difficulty
         INITIAL_BASE_DIFFICULTY = round(INITIAL_BIT_DIFFICULTY / math.log2(base))
-        ADJUSTMENT_INTERVAL = 2
+        ADJUSTMENT_INTERVAL = 5
 
         blockchain = Blockchain(
-            initial_base_difficulty=INITIAL_BASE_DIFFICULTY,
+            # initial_base_difficulty=INITIAL_BASE_DIFFICULTY,
+            bit_difficulty=INITIAL_BIT_DIFFICULTY,
+            adjustment_interval=ADJUSTMENT_INTERVAL,  # todo should it be a property of blockchain?
             target_block_time=1,
-            # base=BASE, # todo don't use base as a property of blockchain, block etc.
-            adjustment_interval=ADJUSTMENT_INTERVAL  # todo should it be a property of blockchain?
         )
+        logger.debug(f"Creating blockchain with base {base} and initial bit difficulty {INITIAL_BIT_DIFFICULTY}")
 
-        for i in range(5):
+        # Create the genesis block
+        genesis_block = blockchain.create_genesis_block()
+
+        # Now mine other blocks
+        for i in range(1, 10):
             blockchain.add_block(Block(i, time.time(), f"Block {i} Data"))
 
         blockchains[base] = blockchain
