@@ -54,7 +54,7 @@ def log_mined_block(block) -> None:
     assert block.index is not None, "Block index cannot be null"
     assert block.hash is not None, "Block hash cannot be null"
     logger: logging.Logger = logging.getLogger()
-    logger.info(f"Block mined: {block.index} with hash {block.hash}")
+    logger.info(f"Mined block; index: {block.index}, hash: {block.hash}")
 
 
 def log_time(

@@ -99,7 +99,7 @@ class Block:
                 break
 
             self.nonce += 1  # Increment the nonce to try a different hash
-        log_mined_block(self)
+        log_mined_block(self)  # todo move to blockchain.py
 
     # def convert_to_base4(self, num: int) -> str:
     #     """ Helper function to convert an integer to base-4. """

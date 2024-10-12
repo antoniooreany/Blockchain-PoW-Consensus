@@ -1,12 +1,11 @@
-# #   Copyright (c) 2024, Anton Gorshkov
-# #   All rights reserved.
-# #
-# #   This code is for a main.py and its unit tests.
-# #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
+#   Copyright (c) 2024, Anton Gorshkov
+#   All rights reserved.
+#
+#   This code is for a main.py and its unit tests.
+#   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
 
 import logging
-import math
 import time
 
 from blockchain import Block, Blockchain
@@ -33,8 +32,8 @@ if __name__ == "__main__":
         # 1024,
     ]:
         INITIAL_BIT_DIFFICULTY = 18  # todo avoid base_difficulty, use bit_difficulty, better even linear_difficulty
-        INITIAL_BASE_DIFFICULTY = round(INITIAL_BIT_DIFFICULTY / math.log2(base))
-        ADJUSTMENT_INTERVAL = 5
+        # INITIAL_BASE_DIFFICULTY = round(INITIAL_BIT_DIFFICULTY / math.log2(base))
+        ADJUSTMENT_INTERVAL = 3
 
         blockchain = Blockchain(
             # initial_base_difficulty=INITIAL_BASE_DIFFICULTY,
@@ -42,10 +41,13 @@ if __name__ == "__main__":
             adjustment_interval=ADJUSTMENT_INTERVAL,  # todo should it be a property of blockchain?
             target_block_time=1,
         )
-        logger.debug(f"Creating blockchain with base {base} and initial bit difficulty {INITIAL_BIT_DIFFICULTY}")
+        logger.debug(f"Created: blockchain (base: {base}, initial bit difficulty: {INITIAL_BIT_DIFFICULTY})")
+        logger.debug(f"##################")
 
         # Create the genesis block
         genesis_block = blockchain.create_genesis_block()
+        logger.info(f"Created: Genesis block; index: {genesis_block.index}, hash: {genesis_block.hash}")
+        logger.debug(f"##################")
 
         # Now mine other blocks
         for i in range(1, 10):
@@ -54,3 +56,11 @@ if __name__ == "__main__":
         blockchains[base] = blockchain
 
     plot_blockchain_statistics(blockchains)
+
+    # logger.debug(f"##################")
+    # # log all blockchains
+    # for blockchain in blockchains.values():
+    #     # logger.debug(f"Blockchain with base {blockchain.base}")
+    #     for block in blockchain.blocks:
+    #         logger.debug(f"Block {block.index} with hash {block.hash}")
+    #     logger.debug(f"##################")
