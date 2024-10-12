@@ -33,13 +33,15 @@ if __name__ == "__main__":
     ]:
         INITIAL_BIT_DIFFICULTY = 18  # todo avoid base_difficulty, use bit_difficulty, better even linear_difficulty
         # INITIAL_BASE_DIFFICULTY = round(INITIAL_BIT_DIFFICULTY / math.log2(base))
-        ADJUSTMENT_INTERVAL = 3
+        ADJUSTMENT_INTERVAL = 10
+        NUMBER_BLOCKS_TO_ADD = 100
+        TARGET_BLOCK_TIME = 1
 
         blockchain = Blockchain(
             # initial_base_difficulty=INITIAL_BASE_DIFFICULTY,
             bit_difficulty=INITIAL_BIT_DIFFICULTY,
             adjustment_interval=ADJUSTMENT_INTERVAL,  # todo should it be a property of blockchain?
-            target_block_time=1,
+            target_block_time=TARGET_BLOCK_TIME,
         )
         logger.debug(f"Created: blockchain (base: {base}, initial bit difficulty: {INITIAL_BIT_DIFFICULTY})")
         logger.debug(f"##################")
@@ -50,7 +52,7 @@ if __name__ == "__main__":
         logger.debug(f"##################")
 
         # Now mine other blocks
-        for i in range(1, 10):
+        for i in range(1, NUMBER_BLOCKS_TO_ADD):
             blockchain.add_block(Block(i, time.time(), f"Block {i} Data"))
 
         blockchains[base] = blockchain
