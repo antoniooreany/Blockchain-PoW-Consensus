@@ -65,23 +65,47 @@ class Blockchain:
             self.adjust_difficulty()
 
         log_validity(self)
-        self.logger.debug(f"Bit Difficulty: {self.bit_difficulties[-1]}")
+        self.logger.debug(f"Bit Difficulty: {self.bit_difficulties[-1]}")  # Log the bit difficulty
+        # self.logger.debug(f"Expected mining time for block {new_block.index}: {self.target_block_time} seconds")
         self.logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.25f} seconds")
         self.logger.debug(f"##############################################")
         # self.logger.info(f"Block mined: {new_block.index} with hash {new_block.hash}")
 
-    def get_average_mining_time(self, num_blocks: int = 5) -> float:
-        if len(self.blocks) < num_blocks + 1:
-            return sum(self.mining_times) / len(
-                self.mining_times)  # Average for available blocks if fewer than num_blocks
+    def get_average_mining_time(self, num_blocks: int) -> float:
+        # if len(self.blocks) < num_blocks + 1: # todo why should we do this?
+        #     return sum(self.mining_times) / len(self.mining_times)  # Average for available blocks if fewer than num_blocks
         total_time = sum(self.mining_times[-num_blocks:])  # Only consider the last `num_blocks` mining times
         return total_time / num_blocks
 
-    def adjust_difficulty(self) -> None:
-        actual_time: float = time.time() - self.start_time
-        expected_time: float = self.adjustment_interval * self.target_block_time
+    def adjust_difficulty(self) -> None:  # todo only adjust once per adjustment_interval blocks
+        # actual_time: float = time.time() - self.start_time
+        actual_time: float = self.get_average_mining_time(
+            self.adjustment_interval)  # todo Average mining time for the last adjustment_interval blocks
+        expected_time: float = self.target_block_time  # todo Actual time: 1.8566131591796875, Expected time: 1.0
+        # expected_time: float = self.adjustment_interval * self.target_block_time  # todo Actual time: 1.8566131591796875, Expected time: 1.0
+        logging.debug(f"Actual time: {actual_time}, Expected time: {expected_time}")
+
+        # Calculate the adjustment factor
         adjustment_factor: float = actual_time / expected_time
-        new_difficulty: float = max(1, self.bit_difficulties[-1] - math.log2(adjustment_factor))
+        logging.debug(f"Adjustment factor: {adjustment_factor}")
+
+        # new_difficulty: float = max(0, self.bit_difficulties[-1] - math.log2(adjustment_factor))  # Ensure difficulty is at least 0
+        # new_difficulty: float = max(1, self.bit_difficulties[-1] - math.log2(adjustment_factor)) # Ensure difficulty is at least 1
+        # new_difficulty: float = self.bit_difficulties[-1] - math.log2(adjustment_factor)  # todo Ensure difficulty is at least 1
+        # new_difficulty: float = self.bit_difficulties.pop() - math.log2(adjustment_factor)
+        # todo get last_bit_difficulty from bit_difficulties
+        last_bit_difficulty = self.bit_difficulties[-1]
+        smallest_bit_difficulty = 10  # Ensure difficulty is at least 10
+        # new_difficulty: float = last_bit_difficulty - math.log2(adjustment_factor)
+        #
+        log_adjustment_factor = math.log2(adjustment_factor)
+        if log_adjustment_factor > 2:
+            log_adjustment_factor = 2
+        elif log_adjustment_factor < -2:
+            log_adjustment_factor = -2
+
+        new_difficulty = max(smallest_bit_difficulty, last_bit_difficulty - log_adjustment_factor)
+
         self.bit_difficulties.append(new_difficulty)
         self.start_time = time.time()
 
