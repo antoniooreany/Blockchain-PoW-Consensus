@@ -110,10 +110,8 @@ def plot_blockchain_statistics(
         ax2.tick_params(axis='y', labelcolor=difficulty_color)
 
         ax2.grid(True, which='both', linestyle=':', linewidth=0.5, color=difficulty_color)
-        # ax2.relim()
-        # ax2.autoscale_view()
-
-        # ax2.set_ylim(min_bit_difficulty, max_bit_difficulty)
+        ax2.relim()
+        ax2.autoscale_view()
 
         # # Plot difficulties as a lines collection:
         # ax2.plot(
