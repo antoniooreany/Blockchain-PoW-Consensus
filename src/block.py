@@ -12,11 +12,8 @@ from venv import logger
 
 from src.logging_utils import log_mined_block
 
-
-# from src.logging_utils import log_mined_block
-
-
-# from logging_utils import log_mined_block
+HASH_BIT_LENGTH = 256  # The length of the hash in bits
+NONCE_BIT_LENGTH = 32  # The length of the nonce in bits
 
 
 class Block:
@@ -76,17 +73,20 @@ class Block:
         Returns:
             None
         """
-        max_nonce: int = 2 ** 256 - 1  # maximum value for nonce
+
+        # max_nonce: int = 2 ** HASH_BIT_LENGTH - 1  # maximum value for nonce
+        max_nonce: int = 2 ** NONCE_BIT_LENGTH - 1  # maximum value for nonce
         self.nonce: int = random.randint(0, max_nonce)  # Start from a random nonce
 
         # Calculate the target value based on difficulty
-        # target_value: int = (2 ** (256 - bit_difficulty)) - 1  # todo move to blockchain.py
-        target_value: float = math.pow(2, 256 - bit_difficulty) - 1  # todo move to blockchain.py
+        target_value: float = math.pow(2, HASH_BIT_LENGTH - bit_difficulty) - 1  # todo move to blockchain.py
 
-        logger.debug(f"Target value: {target_value}")
-        # log the target value in hexadecimal with leading zeros
-        # logger.debug(f"Target value in hexadecimal with leading zeros: {hex(target_value)[2:]}")
-        # logger.debug(f"Target value in hexadecimal: {hex(target_value)}")
+        # logger.debug(f"max nonce: {max_nonce}")
+        logger.debug(f"target value: {target_value}")
+        logger.debug(f"nonce: {self.nonce}")
+        logger.debug(f"target_value / max_nonce: {target_value / max_nonce}")
+        logger.debug(f"target_value / nonce: {target_value / self.nonce}")
+        logger.debug(f"nonce / max_nonce: {self.nonce / max_nonce}")
 
         base_hash_data: bytes = ((str(self.index) +
                                   str(self.timestamp) +
@@ -108,13 +108,3 @@ class Block:
 
             self.nonce += 1  # Increment the nonce to try a different hash
         log_mined_block(self)  # todo move to blockchain.py
-
-    # def convert_to_base4(self, num: int) -> str:
-    #     """ Helper function to convert an integer to base-4. """
-    #     if num == 0:
-    #         return '0'
-    #     digits = []
-    #     while num:
-    #         digits.append(str(num % 4))
-    #         num //= 4
-    #     return ''.join(digits[::-1])

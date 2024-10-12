@@ -14,8 +14,8 @@ from src.blockchain import Blockchain
 
 def plot_blockchain_statistics(
         blockchains: dict[int, Blockchain],  # base as key, Blockchain as value
-        scaling_factor: float = 1.0,  # An optional parameter to scale the y-axis for the bit difficulties
-        linewidth: int = 5  # The width of the line to plot
+        scaling_factor: float = 0.9,  # An optional parameter to scale the y-axis for the bit difficulties
+        linewidth: int = 1  # The width of the line to plot
 ) -> None:  # returns None
     """
     Plot statistics for multiple blockchains.
@@ -55,7 +55,6 @@ def plot_blockchain_statistics(
 
     # Determine the common y-axis range for difficulties only
     for i, (base, blockchain) in enumerate(blockchains.items()):
-        # bit_difficulty_base_factor = math.log2(base)
         mining_time_color: str = mining_time_colors[i % len(mining_time_colors)]
         difficulty_color: str = difficulty_colors[i % len(difficulty_colors)]
 
@@ -78,6 +77,8 @@ def plot_blockchain_statistics(
             bit_difficulty * scaling_factor
             for bit_difficulty in blockchain.bit_difficulties  # todo no property bit_difficulties in Blockchain
         ]
+
+        # Plot difficulties
         ax2.plot(
             range(len(bit_difficulties)),
             bit_difficulties,
@@ -93,6 +94,15 @@ def plot_blockchain_statistics(
         ax2.autoscale_view()
 
         ax2.set_ylim(min_bit_difficulty, max_bit_difficulty)
+
+        # # Plot difficulties as a lines collection:
+        # ax2.plot(
+        #     range(len(bit_difficulties)),
+        #     bit_difficulties,
+        #     color=difficulty_color,
+        #     linewidth=linewidth,
+        #     label=f'Bit Difficulty (base={base})'
+        # )
 
     fig.tight_layout()
     fig.legend(
@@ -122,60 +132,3 @@ def scatter_mining_times(ax1, base, blockchain, mining_time_color):
         s=np.pi * (base / 2) ** 2,  # todo base is not a property of blockchain
         label=f'Mining Time (base={base})'  # todo base is not a property of blockchain
     )
-
-#
-# def plot_blockchain_statistics(blockchains):
-#     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
-#
-#     for base, blockchain in blockchains.items():
-#         ax1.plot(blockchain.mining_times, 'go-', label='Время майнинга')
-#         ax2.plot(range(blockchain.blocks_to_adjust, len(blockchain.blocks)), blockchain.difficulties[1:], 'bo-',
-#                  label='Сложность')
-#
-#     ax1.set_xlabel('Блоки')
-#     ax1.set_ylabel('Время майнинга (сек)')
-#     ax1.legend()
-#
-#     ax2.set_xlabel('Блоки')
-#     ax2.set_ylabel('Сложность')
-#     ax2.legend()
-#
-#     plt.tight_layout()
-#     plt.show()
-
-
-# def plot_blockchain_statistics(blockchains):
-#     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
-#
-#     for base, blockchain in blockchains.items():
-#         ax1.plot(blockchain.mining_times, 'go-', label='Mining Time')
-#         ax2.plot(range(blockchain.blocks_to_adjust, len(blockchain.blocks)), blockchain.bit_difficulties[1:], 'bo-',
-#                  label='Difficulty')
-#
-#     ax1.set_xlabel('Blocks')
-#     ax1.set_ylabel('Mining Time (sec)')
-#     ax1.legend()
-#
-#     ax2.set_xlabel('Blocks')
-#     ax2.set_ylabel('Difficulty')
-#     ax2.legend()
-#
-#     plt.tight_layout()
-#     plt.show()
-
-
-# def plot_blockchain_statistics(blockchains):
-#     fig, ax1 = plt.subplots()
-#
-#     for blockchain in blockchains.values():
-#         ax1.plot(range(len(blockchain.blocks)), [block.timestamp for block in blockchain.blocks], 'b-')
-#         ax1.set_xlabel('Block Index')
-#         ax1.set_ylabel('Timestamp', color='b')
-#
-#         ax2 = ax1.twinx()
-#         x = range(blockchain.blocks_to_adjust, len(blockchain.blocks))
-#         y = blockchain.bit_difficulties[1:len(x) + 1]  # Ensure y has the same length as x
-#         ax2.plot(x, y, 'bo-')
-#         ax2.set_ylabel('Bit Difficulty', color='r')
-#
-#     plt.show()

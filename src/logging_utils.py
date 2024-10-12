@@ -7,10 +7,6 @@
 import logging
 
 
-# from src.block import Block
-# from src.blockchain import Blockchain
-
-
 class ColorFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
         """
@@ -54,7 +50,7 @@ def log_mined_block(block) -> None:
     assert block.index is not None, "Block index cannot be null"
     assert block.hash is not None, "Block hash cannot be null"
     logger: logging.Logger = logging.getLogger()
-    logger.info(f"Mined block; index: {block.index}, hash: {block.hash}")
+    logger.info(f"Mined block: (index: {block.index}, hash: {block.hash})")
 
 
 def log_time(
