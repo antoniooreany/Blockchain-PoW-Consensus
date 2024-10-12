@@ -12,13 +12,6 @@ from logger_singleton import LoggerSingleton
 from plotting import plot_blockchain_statistics
 from src.logging_utils import log_mined_block
 
-#
-# def mine_blocks():
-#     # Now mine other blocks
-#     for i in range(1, NUMBER_BLOCKS_TO_ADD):
-#         blockchain.add_block(Block(i, time.time(), f"Block {i} Data"))
-
-
 if __name__ == "__main__":
     # Set the logging level to INFO (or WARNING to reduce more output)
     logging.getLogger('matplotlib').setLevel(logging.INFO)
@@ -39,8 +32,8 @@ if __name__ == "__main__":
         # 1024,
     ]:
         INITIAL_BIT_DIFFICULTY = 15  # todo avoid base_difficulty, use bit_difficulty, better even linear_difficulty
-        ADJUSTMENT_INTERVAL = 10
-        NUMBER_BLOCKS_TO_ADD = 100
+        ADJUSTMENT_INTERVAL = 100
+        NUMBER_BLOCKS_TO_ADD = 10000
         TARGET_BLOCK_TIME = 0.01
 
         blockchain = Blockchain(
