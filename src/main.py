@@ -38,9 +38,9 @@ if __name__ == "__main__":
         # 512,
         # 1024,
     ]:
-        INITIAL_BIT_DIFFICULTY = 11.7  # todo avoid base_difficulty, use bit_difficulty, better even linear_difficulty
+        INITIAL_BIT_DIFFICULTY = 15  # todo avoid base_difficulty, use bit_difficulty, better even linear_difficulty
         ADJUSTMENT_INTERVAL = 10
-        NUMBER_BLOCKS_TO_ADD = 1000
+        NUMBER_BLOCKS_TO_ADD = 100
         TARGET_BLOCK_TIME = 0.01
 
         blockchain = Blockchain(
