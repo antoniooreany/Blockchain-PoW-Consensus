@@ -66,12 +66,12 @@ class Blockchain:
     def get_latest_block(self) -> Block:
         return self.blocks[-1] if self.blocks else None
 
-    def add_block(self, new_block: Block, clamp_factor, smallest_bit_difficulty) -> None:
-        new_block.previous_hash = self.get_latest_block().hash if self.blocks else '0'
-        start_time = time.time()
+    def add_block(self, new_block: Block, clamp_factor: float, smallest_bit_difficulty: float) -> None:
+        new_block.previous_hash: str = self.get_latest_block().hash if self.blocks else '0'
+        start_time: float = time.time()  # todo can be taken from new_block.timestamp
         new_block.mine(self.bit_difficulties[-1])  # Use the last difficulty value
-        end_time = time.time()
-        actual_mining_time = end_time - start_time
+        end_time: float = time.time()  # todo can be taken from new_block.timestamp
+        actual_mining_time: float = end_time - start_time
 
         # if ProofOfWork.validate_proof(new_block, self.bit_difficulties[-1]):
         #     self.blocks.append(new_block)
@@ -113,7 +113,8 @@ class Blockchain:
             f"Average mining time: {average_mining_time}, Target block mining time: {self.target_block_mining_time}")
 
         # Calculate the adjustment factor
-        adjustment_factor: float = average_mining_time / self.target_block_mining_time  # todo remove ": float"?
+        # adjustment_factor: float = average_mining_time / self.target_block_mining_time  # todo remove ": float"?
+        adjustment_factor: float = self.target_block_mining_time / average_mining_time  # todo remove ": float"?
         logging.debug(f"Adjustment factor: {adjustment_factor}")
 
         last_bit_difficulty = self.bit_difficulties[-1]
@@ -122,7 +123,7 @@ class Blockchain:
         if adjustment_factor > 0:
             log_adjustment_factor = math.log2(adjustment_factor)
             clamped_log_adjustment_factor = clamp(log_adjustment_factor, clamp_factor)
-            new_difficulty = max(smallest_bit_difficulty, last_bit_difficulty - clamped_log_adjustment_factor)
+            new_difficulty = max(smallest_bit_difficulty, last_bit_difficulty + clamped_log_adjustment_factor)
         else:
             # If adjustment_factor is 0 or less, set new_difficulty to the smallest_bit_difficulty
             new_difficulty = smallest_bit_difficulty

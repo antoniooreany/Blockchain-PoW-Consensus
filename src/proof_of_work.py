@@ -3,6 +3,7 @@
 #
 #   This code is for a pow and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
+
 import math
 
 from block import Block
