@@ -32,8 +32,6 @@ def collect_filtered_bit_difficulties(blockchain, adjustment_interval):
             filtered_bit_difficulties.append(difficulty)
     return filtered_bit_difficulties
 
-# Example usage
-# filtered_difficulties = collect_filtered_bit_difficulties(blockchain, ADJUSTMENT_INTERVAL)
 
 class Blockchain:
     def __init__(self, initial_bit_difficulty, adjustment_interval, target_block_time):

@@ -30,7 +30,7 @@ class ProofOfWork:
         return block.nonce
 
     @staticmethod
-    def validate_proof(block: Block, bit_difficulty: int) -> bool:
+    def validate_proof(block: Block, bit_difficulty: int) -> bool:  # todo move to Block class, where to use it?
         """
         Checks if a given block's hash is less than the target value based on the difficulty.
 

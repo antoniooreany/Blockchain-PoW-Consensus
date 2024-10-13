@@ -107,8 +107,6 @@ def plot_blockchain_statistics(
         # Add a small margin to the y-axis limits for Bit Difficulty
         min_bit_difficulty = min(blockchain.bit_difficulties)
         max_bit_difficulty = max(blockchain.bit_difficulties)
-        # margin = (max_bit_difficulty - min_bit_difficulty) * 0.1  # 10% margin
-        # ax2.set_ylim(min_bit_difficulty - margin, max_bit_difficulty + margin)
 
         # Ensure that min_bit_difficulty and max_bit_difficulty are not identical
         if min_bit_difficulty == max_bit_difficulty:
@@ -122,8 +120,8 @@ def plot_blockchain_statistics(
         ax2.tick_params(axis='y', labelcolor=difficulty_color)
 
         ax2.grid(True, which='both', linestyle=':', linewidth=0.5, color=difficulty_color)
-        # ax2.relim()
-        # ax2.autoscale_view()
+        ax2.relim()
+        ax2.autoscale_view()
 
         # # Plot difficulties as a lines collection:
         # ax2.plot(
@@ -145,64 +143,6 @@ def plot_blockchain_statistics(
     plt.show()
 
 
-# def plot_blockchain_statistics(blockchains):
-#     for base, blockchain in blockchains.items():
-#         fig, ax1 = plt.subplots()
-#
-#         # Plot Mining Time as vertical segments
-#         color = 'tab:green'
-#         ax1.set_xlabel('Block Index')
-#         ax1.set_ylabel('Mining Time (s)', color=color)
-#         ax1.vlines(range(len(blockchain.mining_times)), 0, blockchain.mining_times, color=color, linewidth=2)
-#         ax1.tick_params(axis='y', labelcolor=color)
-#
-#         # Plot Difficulty
-#         ax2 = ax1.twinx()
-#         color = 'tab:cyan'
-#         ax2.set_ylabel('Difficulty', color=color)
-#         ax2.plot(range(len(blockchain.bit_difficulties)), blockchain.bit_difficulties, 'o-', color=color)
-#         ax2.tick_params(axis='y', labelcolor=color)
-#
-#         # Add a small margin to the y-axis limits for Bit Difficulty
-#         min_bit_difficulty = min(blockchain.bit_difficulties)
-#         max_bit_difficulty = max(blockchain.bit_difficulties)
-#         margin = (max_bit_difficulty - min_bit_difficulty) * 0.1  # 10% margin
-#         ax2.set_ylim(min_bit_difficulty - margin, max_bit_difficulty + margin)
-#
-#         fig.tight_layout()
-#         plt.title(f'Blockchain Mining Statistics for Base {base}')
-#         plt.show()
-
-
-# def plot_blockchain_statistics(blockchains):
-#     """
-#     Plot statistics for the given blockchains: mining time and difficulty.
-#
-#     Args:
-#         blockchains (dict): Dictionary of blockchains with different configurations.
-#     """
-#     for base, blockchain in blockchains.items():
-#         fig, ax1 = plt.subplots()
-#
-#         # Plot Mining Time as vertical segments
-#         color = 'tab:green'
-#         ax1.set_xlabel('Block Index')
-#         ax1.set_ylabel('Mining Time (s)', color=color)
-#         ax1.vlines(range(len(blockchain.mining_times)), 0, blockchain.mining_times, color=color, linewidth=2)
-#         ax1.tick_params(axis='y', labelcolor=color)
-#
-#         # Plot Difficulty
-#         ax2 = ax1.twinx()
-#         color = 'tab:cyan'
-#         ax2.set_ylabel('Difficulty', color=color)
-#         ax2.plot(range(len(blockchain.bit_difficulties)), blockchain.bit_difficulties, 'o-', color=color)
-#         ax2.tick_params(axis='y', labelcolor=color)
-#
-#         fig.tight_layout()
-#         plt.title(f'Blockchain Mining Statistics for Base {base}')
-#         plt.show()
-
-
 def plot_mining_times(ax1, blockchain, linewidth, mining_time_color):
     ax1.plot(
         range(len(blockchain.mining_times)),
@@ -211,21 +151,6 @@ def plot_mining_times(ax1, blockchain, linewidth, mining_time_color):
         color=mcolors.to_rgba(mining_time_color, alpha=0.5),
         linewidth=linewidth,
     )
-
-    # ax1.vlines(
-    #     x=range(len(blockchain.mining_times)),
-    #     ymin=0,
-    #     ymax=blockchain.mining_times,
-    #     color=mining_time_color,
-    #     label='Mining Time, seconds',
-    #     linewidth=linewidth,
-    #     alpha=0.5,
-    #     linestyle='--',
-    # )
-
-    # # Plot mining times as vertical lines
-    # plt.vlines(x=range(len(blockchain.mining_times)), ymin=0, ymax=blockchain.mining_times, color=mining_time_color,
-    #            label='Mining Time')
 
 
 def scatter_mining_times(ax1, base, blockchain, mining_time_color):
