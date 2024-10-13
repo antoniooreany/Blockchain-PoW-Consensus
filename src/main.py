@@ -24,17 +24,11 @@ if __name__ == "__main__":
         # 4,
         # 8,
         # 16,
-        # 32,
-        # 64,
-        # 128,
-        # 256,
-        # 512,
-        # 1024,
     ]:
         INITIAL_BIT_DIFFICULTY = 13  # todo avoid base_difficulty, use bit_difficulty, better even linear_difficulty
         ADJUSTMENT_INTERVAL = 10
         TARGET_BLOCK_TIME = 0.01
-        NUMBER_BLOCKS_TO_ADD = 2000
+        NUMBER_BLOCKS_TO_ADD = 100
 
         CLAMP_FACTOR = 2  # todo 2 bits; bin: 0b10, hex: 0x2, dec: 2: max adjustment factor
         SMALLEST_BIT_DIFFICULTY = 4  # todo 4 bits; bin: 0b0000, hex: 0x0, dec: 0: smallest bit difficulty
@@ -47,7 +41,7 @@ if __name__ == "__main__":
         logger.debug(f"Created: blockchain (base: {base}, initial bit difficulty: {INITIAL_BIT_DIFFICULTY})")
         logger.debug(f"##################")
 
-        # Create the genesis block
+        # Create the genesis block todo move to Blockchain class
         genesis_block = create_genesis_block()
         log_mined_block(genesis_block)
         logger.debug(f"##################")
