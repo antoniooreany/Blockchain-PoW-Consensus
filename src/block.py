@@ -76,7 +76,7 @@ class Block:
 
         # max_nonce: int = 2 ** HASH_BIT_LENGTH - 1  # maximum value for nonce
         max_nonce: int = 2 ** NONCE_BIT_LENGTH - 1  # maximum value for nonce
-        self.nonce: int = random.randint(0, max_nonce)  # Start from a random nonce
+        self.nonce: int = random.randint(0, max_nonce)  # Start from a random nonce (int)
 
         # Calculate the target value based on difficulty
         target_value: float = math.pow(2, HASH_BIT_LENGTH - bit_difficulty) - 1  # todo move to blockchain.py

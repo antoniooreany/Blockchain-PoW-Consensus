@@ -9,6 +9,7 @@ import time
 
 from block import Block
 from logging_utils import log_validity
+from src.proof_of_work import ProofOfWork
 
 
 def clamp(log_adjustment_factor: float, clamp_factor: float) -> float:
@@ -37,12 +38,19 @@ class Blockchain:
     def __init__(self, initial_bit_difficulty, adjustment_interval, target_block_time):
         self.start_time = time.time()  # Initialize start_time
         self.blocks = []
+        self.chain = []  # Initialize the chain todo fill with genesis block?
         self.bit_difficulties = [initial_bit_difficulty]
+        self.bit_difficulty = initial_bit_difficulty  # Initialize difficulty
         self.adjustment_interval = adjustment_interval
         self.target_block_mining_time = target_block_time
         self.mining_times = []  # Initialize mining_times
         self.blocks_to_adjust = adjustment_interval  # Initialize blocks_to_adjust
         self.logger = logging.getLogger(__name__)
+
+        # # Create the genesis block
+        # genesis_block = create_genesis_block()
+        # self.add_block(genesis_block, clamp_factor=2, smallest_bit_difficulty=4)  # Example values for clamp_factor and smallest_bit_difficulty
+        # log_mined_block(genesis_block)
 
     def mine_blocks(self, number_of_blocks: int, clamp_factor, smallest_bit_difficulty):
         """
@@ -131,11 +139,30 @@ class Blockchain:
         self.logger.info(f"New difficulty: {new_difficulty}")
 
     def is_chain_valid(self) -> bool:
-        for i in range(1, len(self.blocks)):
-            current_block: Block = self.blocks[i]
-            previous_block: Block = self.blocks[i - 1]
+        """
+        Check if the blockchain is valid or not.
+
+        Iterate through the blockchain and check if the hashes of the blocks match
+        the expected hashes. Also, check if the previous hash of the current block
+        matches the hash of the previous block.
+
+        Returns:
+            bool: True if the blockchain is valid, False otherwise.
+        """
+        for i in range(1, len(self.chain)):
+            current_block: Block = self.chain[i]
+            previous_block: Block = self.chain[i - 1]
+
             if current_block.hash != current_block.calculate_hash():
                 return False
+
             if current_block.previous_hash != previous_block.hash:
                 return False
+
+            if not ProofOfWork.validate_proof(
+                    current_block,
+                    self.bit_difficulties[i],  # todo check if this is correct?
+            ):
+                return False
+
         return True
