@@ -395,14 +395,15 @@
 
 
 import hashlib
+import logging
 import time
 from venv import logger
 
-import logging
 from colorama import Fore, Style, init
 
 # Initialize colorama
 init(autoreset=True)
+
 
 class ColorFormatter(logging.Formatter):
     COLORS = {
@@ -438,6 +439,7 @@ def setup_logger():
 
     return logger
 
+
 # # Example usage
 # if __name__ == "__main__":
 #     logger = setup_logger('my_logger')
@@ -471,10 +473,11 @@ class Block:
             self.hash = self.calculate_hash()
         print(f"Block mined: {self.hash}")
 
+
 class Blockchain:
     def __init__(self, difficulty: int, target_block_time=1) -> None:
         self.chain = [self.create_genesis_block()]
-        self.difficulty = difficulty
+        self.difficulty: int = difficulty
         self.target_block_time = target_block_time  # Target block time in seconds
 
     @staticmethod
@@ -518,6 +521,7 @@ class Blockchain:
 
         return True
 
+
 class ProofOfWork:
     @staticmethod
     def find_nonce(block: Block, difficulty: int) -> int:
@@ -532,6 +536,7 @@ class ProofOfWork:
         target = '0' * difficulty
         return block.hash[:difficulty] == target
 
+
 if __name__ == "__main__":
     logger = setup_logger()
     blockchain = Blockchain(difficulty=3)  # Set the initial difficulty of the blockchain
@@ -541,5 +546,5 @@ if __name__ == "__main__":
         logger.info(f"Blockchain valid? {blockchain.is_chain_valid()}")
 
     for block in blockchain.chain:
-        logger.info(f"Index: {block.index}, Hash: {block.hash}, Previous Hash: {block.previous_hash}, Nonce: {block.nonce}")
-
+        logger.info(
+            f"Index: {block.index}, Hash: {block.hash}, Previous Hash: {block.previous_hash}, Nonce: {block.nonce}")
