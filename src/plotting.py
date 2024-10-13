@@ -139,7 +139,7 @@ def plot_blockchain_statistics(
         ncol=3,
         fontsize=10
     )
-    plt.title('Blockchain Mining Statistics Comparison', fontsize=14, color='white')
+    plt.title('Blockchain Mining Statistics', fontsize=14, color='white')
     plt.show()
 
 
