@@ -37,8 +37,8 @@ def collect_filtered_bit_difficulties(blockchain, adjustment_interval):
 class Blockchain:
     def __init__(self, initial_bit_difficulty, adjustment_interval, target_block_time):
         self.start_time = time.time()  # Initialize start_time
-        self.blocks = []
-        self.chain = []  # Initialize the chain todo fill with genesis block?
+        self.blocks = []  # todo the same as self.chain
+        # self.chain = []  # Initialize the chain todo fill with genesis block?
         self.bit_difficulties = [initial_bit_difficulty]
         self.bit_difficulty = initial_bit_difficulty  # Initialize difficulty
         self.adjustment_interval = adjustment_interval
@@ -149,9 +149,9 @@ class Blockchain:
         Returns:
             bool: True if the blockchain is valid, False otherwise.
         """
-        for i in range(1, len(self.chain)):
-            current_block: Block = self.chain[i]
-            previous_block: Block = self.chain[i - 1]
+        for i in range(1, len(self.blocks)):
+            current_block: Block = self.blocks[i]
+            previous_block: Block = self.blocks[i - 1]
 
             if current_block.hash != current_block.calculate_hash():
                 return False
