@@ -4,15 +4,13 @@
 #   This code is for a full_blockchain.py and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
+import hashlib
+import logging
+import random
+import time
 from venv import logger
 
-import time
-
-import logging
 from colorama import Fore, Style, init
-
-import hashlib
-import random
 
 from block import Block
 from blockchain import Blockchain
@@ -241,7 +239,6 @@ def mine_blocks(blockchain: Blockchain, num_blocks: int) -> None:
         blockchain.add_block(new_block)
 
 
-from screeninfo import get_monitors
 import logging
 
 # Set the logging level to INFO (or WARNING to reduce more output)
@@ -252,6 +249,7 @@ from screeninfo import get_monitors
 import numpy as np
 import matplotlib.colors as mcolors
 import math
+
 
 def plot_statistics(blockchains: dict, scaling_factor: float = 1.0) -> None:
     # Get the screen dimensions
@@ -313,7 +311,8 @@ def plot_statistics(blockchains: dict, scaling_factor: float = 1.0) -> None:
 
         # Plot base difficulties on the same graph with a secondary y-axis
         ax2 = ax1.twinx()
-        bit_difficulties = [base_difficulty * math.log2(base) * scaling_factor for base_difficulty in blockchain.base_difficulties]
+        bit_difficulties = [base_difficulty * math.log2(base) * scaling_factor for base_difficulty in
+                            blockchain.base_difficulties]
         ax2.plot(range(len(bit_difficulties)), bit_difficulties, color=difficulty_color,
                  linewidth=linewidth, label=f'Bit Difficulty (base={base})')
         ax2.set_ylabel('Bit Difficulty, bits', fontsize=12, color='cyan')
@@ -333,9 +332,9 @@ if __name__ == "__main__":
 
     blockchains = {}
     for BASE in [
-        2,
+        # 2,
         4,
-        16,
+        # 16,
     ]:
         INITIAL_BIT_DIFFICULTY = 16
         INITIAL_BASE_DIFFICULTY = round(INITIAL_BIT_DIFFICULTY / math.log2(BASE))
