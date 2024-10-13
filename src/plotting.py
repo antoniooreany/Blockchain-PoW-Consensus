@@ -11,6 +11,10 @@ from screeninfo import get_monitors
 
 from src.blockchain import Blockchain
 
+MARGIN_COEFFICIENT = 0.1
+
+DEFAULT_MARGIN = 1
+
 FONTSIZE = 12
 
 
@@ -103,15 +107,23 @@ def plot_blockchain_statistics(
         # Add a small margin to the y-axis limits for Bit Difficulty
         min_bit_difficulty = min(blockchain.bit_difficulties)
         max_bit_difficulty = max(blockchain.bit_difficulties)
-        margin = (max_bit_difficulty - min_bit_difficulty) * 0.1  # 10% margin
+        # margin = (max_bit_difficulty - min_bit_difficulty) * 0.1  # 10% margin
+        # ax2.set_ylim(min_bit_difficulty - margin, max_bit_difficulty + margin)
+
+        # Ensure that min_bit_difficulty and max_bit_difficulty are not identical
+        if min_bit_difficulty == max_bit_difficulty:
+            margin = DEFAULT_MARGIN  # or any small value to create a difference
+        else:
+            margin = (max_bit_difficulty - min_bit_difficulty) * MARGIN_COEFFICIENT  # 10% margin
+
         ax2.set_ylim(min_bit_difficulty - margin, max_bit_difficulty + margin)
 
         ax2.set_ylabel('Bit Difficulty, bits', fontsize=FONTSIZE, color=difficulty_color)
         ax2.tick_params(axis='y', labelcolor=difficulty_color)
 
         ax2.grid(True, which='both', linestyle=':', linewidth=0.5, color=difficulty_color)
-        ax2.relim()
-        ax2.autoscale_view()
+        # ax2.relim()
+        # ax2.autoscale_view()
 
         # # Plot difficulties as a lines collection:
         # ax2.plot(

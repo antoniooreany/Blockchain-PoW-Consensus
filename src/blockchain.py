@@ -25,6 +25,16 @@ def create_genesis_block() -> Block:
     return genesis_block
 
 
+def collect_filtered_bit_difficulties(blockchain, adjustment_interval):
+    filtered_bit_difficulties = []
+    for i, difficulty in enumerate(blockchain.bit_difficulties):
+        if (i + 1) % adjustment_interval != 0:
+            filtered_bit_difficulties.append(difficulty)
+    return filtered_bit_difficulties
+
+# Example usage
+# filtered_difficulties = collect_filtered_bit_difficulties(blockchain, ADJUSTMENT_INTERVAL)
+
 class Blockchain:
     def __init__(self, initial_bit_difficulty, adjustment_interval, target_block_time):
         self.start_time = time.time()  # Initialize start_time

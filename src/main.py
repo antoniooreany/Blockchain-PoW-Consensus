@@ -7,7 +7,7 @@
 
 import logging
 
-from blockchain import Blockchain, create_genesis_block
+from blockchain import Blockchain, create_genesis_block, collect_filtered_bit_difficulties
 from logger_singleton import LoggerSingleton
 from plotting import plot_blockchain_statistics
 from src.logging_utils import log_mined_block
@@ -34,11 +34,10 @@ if __name__ == "__main__":
         INITIAL_BIT_DIFFICULTY = 13  # todo avoid base_difficulty, use bit_difficulty, better even linear_difficulty
         ADJUSTMENT_INTERVAL = 10
         TARGET_BLOCK_TIME = 0.001
+        NUMBER_BLOCKS_TO_ADD = 1000
 
         CLAMP_FACTOR = 2  # todo 2 bits; bin: 0b10, hex: 0x2, dec: 2: max adjustment factor
         SMALLEST_BIT_DIFFICULTY = 4  # todo 4 bits; bin: 0b0000, hex: 0x0, dec: 0: smallest bit difficulty
-
-        NUMBER_BLOCKS_TO_ADD = 10000
 
         blockchain = Blockchain(
             initial_bit_difficulty=INITIAL_BIT_DIFFICULTY,
@@ -55,6 +54,10 @@ if __name__ == "__main__":
 
         blockchain.mine_blocks(number_of_blocks=NUMBER_BLOCKS_TO_ADD, clamp_factor=CLAMP_FACTOR,
                                smallest_bit_difficulty=SMALLEST_BIT_DIFFICULTY)
+
+        # Collect filtered bit difficulties
+        filtered_difficulties = collect_filtered_bit_difficulties(blockchain, ADJUSTMENT_INTERVAL)
+        blockchain.bit_difficulties = filtered_difficulties  # Update the blockchain with filtered difficulties
 
         blockchains[base] = blockchain
 
