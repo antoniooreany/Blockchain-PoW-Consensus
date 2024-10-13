@@ -39,7 +39,7 @@ class Blockchain:
         self.blocks = []
         self.bit_difficulties = [initial_bit_difficulty]
         self.adjustment_interval = adjustment_interval
-        self.target_block_time = target_block_time
+        self.target_block_mining_time = target_block_time
         self.mining_times = []  # Initialize mining_times
         self.blocks_to_adjust = adjustment_interval  # Initialize blocks_to_adjust
         self.logger = logging.getLogger(__name__)
@@ -99,15 +99,13 @@ class Blockchain:
             clamp_factor: float,
             smallest_bit_difficulty: float,
     ) -> None:  # todo only adjust once per adjustment_interval blocks
-        # actual_time: float = time.time() - self.start_time
-        actual_time: float = self.get_average_mining_time(
+        average_mining_time: float = self.get_average_mining_time(
             self.adjustment_interval)  # todo Average mining time for the last adjustment_interval blocks
-        expected_time: float = self.target_block_time  # todo Actual time: 1.8566131591796875, Expected time: 1.0
-        # expected_time: float = self.adjustment_interval * self.target_block_time  # todo Actual time: 1.8566131591796875, Expected time: 1.0
-        logging.debug(f"Actual time: {actual_time}, Expected time: {expected_time}")
+        logging.debug(
+            f"Average mining time: {average_mining_time}, Target block mining time: {self.target_block_mining_time}")
 
         # Calculate the adjustment factor
-        adjustment_factor: float = actual_time / expected_time  # todo remove ": float"?
+        adjustment_factor: float = average_mining_time / self.target_block_mining_time  # todo remove ": float"?
         logging.debug(f"Adjustment factor: {adjustment_factor}")
 
         last_bit_difficulty = self.bit_difficulties[-1]

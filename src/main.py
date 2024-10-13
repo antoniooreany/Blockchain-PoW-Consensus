@@ -33,7 +33,7 @@ if __name__ == "__main__":
     ]:
         INITIAL_BIT_DIFFICULTY = 13  # todo avoid base_difficulty, use bit_difficulty, better even linear_difficulty
         ADJUSTMENT_INTERVAL = 10
-        TARGET_BLOCK_TIME = 0.001
+        TARGET_BLOCK_TIME = 0.01
         NUMBER_BLOCKS_TO_ADD = 2000
 
         CLAMP_FACTOR = 2  # todo 2 bits; bin: 0b10, hex: 0x2, dec: 2: max adjustment factor
