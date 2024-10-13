@@ -102,19 +102,16 @@ class Blockchain:
         adjustment_factor: float = actual_time / expected_time  # todo remove ": float"?
         logging.debug(f"Adjustment factor: {adjustment_factor}")
 
-        # new_difficulty: float = max(0, self.bit_difficulties[-1] - math.log2(adjustment_factor))  # Ensure difficulty is at least 0
-        # new_difficulty: float = max(1, self.bit_difficulties[-1] - math.log2(adjustment_factor)) # Ensure difficulty is at least 1
-        # new_difficulty: float = self.bit_difficulties[-1] - math.log2(adjustment_factor)  # todo Ensure difficulty is at least 1
-        # new_difficulty: float = self.bit_difficulties.pop() - math.log2(adjustment_factor)
-        # todo get last_bit_difficulty from bit_difficulties
         last_bit_difficulty = self.bit_difficulties[-1]
-        # smallest_bit_difficulty = 5  # todo ?Ensure difficulty is at least 10?
-        # new_difficulty: float = last_bit_difficulty - math.log2(adjustment_factor)
-        #
-        log_adjustment_factor = math.log2(adjustment_factor)
-        clamped_log_adjustment_factor = clamp(log_adjustment_factor, clamp_factor)  # todo clamp log_adjustment_factor
 
-        new_difficulty = max(smallest_bit_difficulty, last_bit_difficulty - clamped_log_adjustment_factor)
+        # Ensure adjustment_factor is greater than 0 to avoid math domain error
+        if adjustment_factor > 0:
+            log_adjustment_factor = math.log2(adjustment_factor)
+            clamped_log_adjustment_factor = clamp(log_adjustment_factor, clamp_factor)
+            new_difficulty = max(smallest_bit_difficulty, last_bit_difficulty - clamped_log_adjustment_factor)
+        else:
+            # If adjustment_factor is 0 or less, set new_difficulty to the smallest_bit_difficulty
+            new_difficulty = smallest_bit_difficulty
 
         self.bit_difficulties.append(new_difficulty)
         self.start_time = time.time()

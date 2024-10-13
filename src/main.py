@@ -38,7 +38,7 @@ if __name__ == "__main__":
         CLAMP_FACTOR = 2  # todo 2 bits; bin: 0b10, hex: 0x2, dec: 2: max adjustment factor
         SMALLEST_BIT_DIFFICULTY = 4  # todo 4 bits; bin: 0b0000, hex: 0x0, dec: 0: smallest bit difficulty
 
-        NUMBER_BLOCKS_TO_ADD = 1000
+        NUMBER_BLOCKS_TO_ADD = 10000
 
         blockchain = Blockchain(
             initial_bit_difficulty=INITIAL_BIT_DIFFICULTY,

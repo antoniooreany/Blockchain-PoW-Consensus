@@ -81,10 +81,8 @@ class Block:
         # Calculate the target value based on difficulty
         target_value: float = math.pow(2, HASH_BIT_LENGTH - bit_difficulty) - 1  # todo move to blockchain.py
 
-        # logger.debug(f"max nonce: {max_nonce}")
         logger.debug(f"target value: {target_value}")
         logger.debug(f"nonce: {self.nonce}")
-        # logger.debug(f"target_value / max_nonce: {target_value / max_nonce}")
         logger.debug(f"nonce / max_nonce: {self.nonce / max_nonce}")
 
         base_hash_data: bytes = ((str(self.index) +
