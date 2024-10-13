@@ -121,6 +121,29 @@ class Blockchain:
         new_block.mine_block(self.difficulty)
         self.chain.append(new_block)
 
+    # def is_chain_valid(self) -> bool:
+    #     """
+    #     Check if the blockchain is valid or not.
+    #
+    #     Iterate through the blockchain and check if the hashes of the blocks match
+    #     the expected hashes. Also, check if the previous hash of the current block
+    #     matches the hash of the previous block.
+    #
+    #     Returns:
+    #         bool: True if the blockchain is valid, False otherwise.
+    #     """
+    #     for i in range(1, len(self.chain)):
+    #         current_block: Block = self.chain[i]
+    #         previous_block: Block = self.chain[i - 1]
+    #
+    #         if current_block.hash != current_block.calculate_hash():
+    #             return False
+    #
+    #         if current_block.previous_hash != previous_block.hash:
+    #             return False
+    #
+    #     return True
+
     def is_chain_valid(self) -> bool:
         """
         Check if the blockchain is valid or not.
@@ -140,6 +163,9 @@ class Blockchain:
                 return False
 
             if current_block.previous_hash != previous_block.hash:
+                return False
+
+            if not ProofOfWork.validate_proof(current_block, self.difficulty):
                 return False
 
         return True
