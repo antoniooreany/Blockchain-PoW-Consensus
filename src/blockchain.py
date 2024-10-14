@@ -167,3 +167,8 @@ class Blockchain:
                 return False
 
         return True
+
+    def get_average_block_creation_time(self) -> float:
+        if not self.mining_times:
+            return 0
+        return sum(self.mining_times) / len(self.mining_times)
