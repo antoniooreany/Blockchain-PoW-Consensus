@@ -26,25 +26,34 @@ def create_genesis_block() -> Block:
     return genesis_block
 
 
-def collect_filtered_bit_difficulties(blockchain, adjustment_interval):
+def collect_filtered_bit_difficulties(
+        blockchain,
+        # adjustment_interval,
+):
     filtered_bit_difficulties = []
     for i, difficulty in enumerate(blockchain.bit_difficulties):
-        if (i + 1) % adjustment_interval != 0:
-            filtered_bit_difficulties.append(difficulty)
+        # if (i + 1) % adjustment_interval != 0:
+        #     filtered_bit_difficulties.append(difficulty)
+        filtered_bit_difficulties.append(difficulty)
     return filtered_bit_difficulties
 
 
 class Blockchain:
-    def __init__(self, initial_bit_difficulty, adjustment_interval, target_block_time):
+    def __init__(
+            self,
+            initial_bit_difficulty,
+            # adjustment_interval,
+            # target_block_time,
+    ):
         self.start_time = time.time()  # Initialize start_time
         self.blocks = []  # todo the same as self.chain
         # self.chain = []  # Initialize the chain todo fill with genesis block?
         self.bit_difficulties = [initial_bit_difficulty]
         self.bit_difficulty = initial_bit_difficulty  # Initialize difficulty
-        self.adjustment_interval = adjustment_interval
-        self.target_block_mining_time = target_block_time
+        # self.adjustment_interval = adjustment_interval
+        # self.target_block_mining_time = target_block_time
         self.mining_times = []  # Initialize mining_times
-        self.blocks_to_adjust = adjustment_interval  # Initialize blocks_to_adjust
+        # self.blocks_to_adjust = adjustment_interval  # Initialize blocks_to_adjust
         self.logger = logging.getLogger(__name__)
 
         # # Create the genesis block
@@ -52,7 +61,12 @@ class Blockchain:
         # self.add_block(genesis_block, clamp_factor=2, smallest_bit_difficulty=4)  # Example values for clamp_factor and smallest_bit_difficulty
         # log_mined_block(genesis_block)
 
-    def mine_blocks(self, number_of_blocks: int, clamp_factor, smallest_bit_difficulty):
+    def mine_blocks(
+            self,
+            number_of_blocks: int,
+            # clamp_factor,
+            # smallest_bit_difficulty,
+    ):
         """
         Mine a specified number of blocks.
 
@@ -61,13 +75,22 @@ class Blockchain:
         """
         for i in range(1, number_of_blocks):
             block = Block(i, time.time(), f"Block {i} Data")
-            self.add_block(block, clamp_factor, smallest_bit_difficulty)  # todo smallest_bit_difficulty
+            self.add_block(
+                block,
+                # clamp_factor,
+                # smallest_bit_difficulty,
+            )  # todo smallest_bit_difficulty
 
     def get_latest_block(self) -> Block:
         return self.blocks[-1] if self.blocks else None
 
-    def add_block(self, new_block: Block, clamp_factor: float, smallest_bit_difficulty: float) -> None:
-        new_block.previous_hash: str = self.get_latest_block().hash if self.blocks else '0'
+    def add_block(
+            self,
+            new_block: Block,
+            # clamp_factor: float,
+            # smallest_bit_difficulty: float,
+    ) -> None:
+        new_block.previous_hash = self.get_latest_block().hash if self.blocks else '0'
         start_time: float = time.time()  # todo can be taken from new_block.timestamp
         new_block.mine(self.bit_difficulties[-1])  # Use the last difficulty value
         end_time: float = time.time()  # todo can be taken from new_block.timestamp
@@ -85,8 +108,8 @@ class Blockchain:
         self.mining_times.append(actual_mining_time)
         self.bit_difficulties.append(self.bit_difficulties[-1])  # Use the last difficulty value
 
-        if len(self.blocks) % self.adjustment_interval == 0:
-            self.adjust_difficulty(clamp_factor, smallest_bit_difficulty)  # todo smallest_bit_difficulty
+        # if len(self.blocks) % self.adjustment_interval == 0:
+        #     self.adjust_difficulty(clamp_factor, smallest_bit_difficulty)  # todo smallest_bit_difficulty
 
         log_validity(self)
         self.logger.debug(f"Bit Difficulty: {self.bit_difficulties[-1]}")  # Log the bit difficulty
