@@ -7,8 +7,6 @@
 import hashlib
 import time
 
-from src.plotting import plot_blockchain_statistics
-
 
 class Block:
     def __init__(self, index: int, timestamp: float, data: str, previous_hash: str = '') -> None:
@@ -200,4 +198,4 @@ if __name__ == "__main__":
     for block in blockchain.chain:
         print(f"Index: {block.index}, Hash: {block.hash}, Previous Hash: {block.previous_hash}, Nonce: {block.nonce}")
 
-    plot_blockchain_statistics({4: blockchain})
+    # plot_blockchain_statistics({4: blockchain})
