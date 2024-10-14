@@ -61,4 +61,6 @@ if __name__ == "__main__":
 
         blockchains[base] = blockchain
 
+        logger.critical(f"Average block creation time: {blockchain.get_average_block_creation_time()}")
+
     plot_blockchain_statistics(blockchains)

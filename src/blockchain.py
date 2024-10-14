@@ -45,6 +45,7 @@ class Blockchain:
             # adjustment_interval,
             # target_block_time,
     ):
+        # self.average_block_creation_time = None
         self.start_time = time.time()  # Initialize start_time
         self.blocks = []  # todo the same as self.chain
         # self.chain = []  # Initialize the chain todo fill with genesis block?
@@ -190,3 +191,8 @@ class Blockchain:
                 return False
 
         return True
+
+    def get_average_block_creation_time(self) -> float:
+        if not self.mining_times:
+            return 0
+        return sum(self.mining_times) / len(self.mining_times)
