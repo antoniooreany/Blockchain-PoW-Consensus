@@ -7,8 +7,8 @@ import logging
 import math
 import time
 
-from block import Block
-from logging_utils import log_validity
+from block import Block, HASH_BIT_LENGTH
+from src.logging_utils import log_validity
 from src.proof_of_work import ProofOfWork
 
 
@@ -77,7 +77,8 @@ class Blockchain:
         if len(self.blocks) % self.adjustment_interval == 0:
             self.adjust_difficulty(clamp_factor, smallest_bit_difficulty)  # todo smallest_bit_difficulty
 
-        log_validity(self)
+        is_blockchain_valid = self.is_chain_valid()  # todo if not valid, don't add block
+        log_validity(is_blockchain_valid)  # todo why invalid?
 
         self.logger.debug(f"Bit Difficulty: {self.bit_difficulties[-1]}")
         self.logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.25f} seconds")
@@ -129,21 +130,51 @@ class Blockchain:
         )
         self.logger.info(f"New difficulty: {new_bit_difficulty}")
 
+    # def is_chain_valid(self) -> bool:
+    #     for i in range(1, len(self.blocks)):
+    #         current_block: Block = self.blocks[i]
+    #         previous_block: Block = self.blocks[i - 1]
+    #
+    #         if current_block.hash != current_block.calculate_hash():  # todo false
+    #             return False
+    #
+    #         if current_block.previous_hash != previous_block.hash:  # todo false
+    #             return False
+    #
+    #         if not ProofOfWork.validate_proof(current_block,
+    #                                           self.bit_difficulties[i], ):  # todo check if this is correct?
+    #             return False
+    #
+    #     return True
+
     def is_chain_valid(self) -> bool:
         for i in range(1, len(self.blocks)):
             current_block: Block = self.blocks[i]
             previous_block: Block = self.blocks[i - 1]
 
             if current_block.hash != current_block.calculate_hash():
+                self.logger.error(f"Block {i} has an invalid hash.")
                 return False
 
             if current_block.previous_hash != previous_block.hash:
+                self.logger.error(f"Block {i} has an invalid previous hash.")
                 return False
 
-            if not ProofOfWork.validate_proof(
-                    current_block,
-                    self.bit_difficulties[i],  # todo check if this is correct?
-            ):
+            # if not ProofOfWork.validate_proof(current_block, self.bit_difficulties[i]):
+            #     self.logger.error(f"Block {i} has an invalid proof of work.")
+            #     return False
+
+            self.logger.error(
+                f"Block {i + 1} has an invalid proof of work. \n"
+                f"Bit difficulty: {self.bit_difficulties[i]}, \n"
+                # f"Target value: {hex(int(math.pow(2, 256 - self.bit_difficulties[i]) - 1))}, \n"
+                f"Block nonce: {current_block.nonce} \n"
+                f"Block hash: {current_block.hash} \n"
+                # Calculate the target value based on difficulty
+                # max_target_hash_value: float = math.pow(2, HASH_BIT_LENGTH - bit_difficulty) - 1  
+                f"max_target_hash_value: {hex(int(math.pow(2, HASH_BIT_LENGTH - self.bit_difficulties[i]) - 1))}, \n"
+            )
+            if not ProofOfWork.validate_proof(current_block, self.bit_difficulties[i]):
                 return False
 
         return True

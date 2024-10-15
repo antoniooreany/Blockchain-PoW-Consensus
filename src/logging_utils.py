@@ -73,23 +73,34 @@ def log_time(
     logger.info(f"Average time: {average_time}, Expected time: {expected_time}")
 
 
-def log_validity(blockchain) -> None:
-    """
-    Log the validity of the given blockchain.
+# def log_validity(blockchain) -> None:
+#     """
+#     Log the validity of the given blockchain.
+#
+#     Args:
+#         blockchain (Blockchain): The blockchain to check. Must not be null.
+#
+#     Returns:
+#         None
+#     """
+#     assert blockchain is not None, "Blockchain cannot be null"
+#     logger: logging.Logger = logging.getLogger()
+#     assert logger is not None, "Logger cannot be null"
+#     is_valid: bool = blockchain.is_chain_valid()
+#     assert is_valid is not None, "Blockchain validity cannot be null"
+#     if is_valid:
+#         logger.info(f"Blockchain validity: {is_valid}; Blockchain is valid")
+#     else:
+#         logger.critical(f"Blockchain validity: {is_valid} "
+#                         f"\n!!! BLOCKCHAIN IS INVALID !!!")
 
-    Args:
-        blockchain (Blockchain): The blockchain to check. Must not be null.
-
-    Returns:
-        None
-    """
-    assert blockchain is not None, "Blockchain cannot be null"
+def log_validity(is_blockchain_valid: bool) -> None:
+    # assert blockchain is not None, "Blockchain cannot be null"
     logger: logging.Logger = logging.getLogger()
-    assert logger is not None, "Logger cannot be null"
-    is_valid: bool = blockchain.is_chain_valid()
-    assert is_valid is not None, "Blockchain validity cannot be null"
-    if is_valid:
-        logger.info(f"Blockchain validity: {is_valid}; Blockchain is valid")
+    # assert logger is not None, "Logger cannot be null"
+    # is_valid: bool = blockchain.is_chain_valid()
+    # assert is_valid is not None, "Blockchain validity cannot be null"
+    if is_blockchain_valid:
+        logger.info(f"Blockchain validity: {is_blockchain_valid}; Blockchain is valid")
     else:
-        logger.critical(f"Blockchain validity: {is_valid} "
-                        f"\n!!! BLOCKCHAIN IS INVALID !!!")
+        logger.critical(f"Blockchain validity: {is_blockchain_valid} !!! BLOCKCHAIN IS INVALID !!!")
