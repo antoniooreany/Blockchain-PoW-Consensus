@@ -36,7 +36,7 @@ if __name__ == "__main__":
         blockchain = Blockchain(
             initial_bit_difficulty=INITIAL_BIT_DIFFICULTY,
             adjustment_interval=ADJUSTMENT_INTERVAL,  # todo should it be a property of blockchain?
-            target_block_time=TARGET_BLOCK_TIME,
+            target_mining_time=TARGET_BLOCK_TIME,
         )
         logger.debug(f"Created: blockchain (base: {base}, initial bit difficulty: {INITIAL_BIT_DIFFICULTY})")
         logger.debug(f"##################")
@@ -55,12 +55,10 @@ if __name__ == "__main__":
 
         blockchains[base] = blockchain
 
-        # logger.critical(f"Average block creation time: {blockchain.get_average_block_creation_time()}")
-        # logger.critical(f"Average mining time: {blockchain.get_average_mining_time(blockchain.blocks.__len__())}")
-        # todo Average bit difficulty of the second half of the blockchain:
+        # Average bit difficulty of the second half of the blockchain:
         average_mining_time_of_second_half_blockchain = blockchain.get_average_mining_time(
             blockchain.blocks.__len__() // 2)
-        logger.critical(f"Average mining time of the second half of the blockchain: "
-                        f"{average_mining_time_of_second_half_blockchain}")
+        logger.info(f"Average mining time of the second half of the blockchain: "
+                    f"{average_mining_time_of_second_half_blockchain}")
 
     plot_blockchain_statistics(blockchains)
