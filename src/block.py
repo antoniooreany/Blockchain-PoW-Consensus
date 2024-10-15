@@ -49,7 +49,7 @@ class Block:
     def mine(
             self,
             bit_difficulty: float,
-    ) -> None:  # todo mines invalid block, index 20
+    ) -> None:  # todo mines invalid block, index 10 or 20...
 
         self.nonce: int = random.randint(0, MAX_NONCE_INT)  # Start from a random nonce (int)
 
@@ -58,7 +58,7 @@ class Block:
 
         # self.logger.debug(f"target value: {max_target_hash_int}")
         # self.logger.debug(f"nonce: {self.nonce}")
-        # self.logger.debug(f"nonce / max_nonce: {self.nonce / MAX_NONCE}")
+        # self.logger.debug(f"nonce / max_nonce_int: {self.nonce / MAX_NONCE_INT}")
 
         base_hash_data: bytes = ((str(self.index) +
                                   str(self.timestamp) +
