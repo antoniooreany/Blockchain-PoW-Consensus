@@ -88,4 +88,8 @@ def log_validity(blockchain) -> None:
     assert logger is not None, "Logger cannot be null"
     is_valid: bool = blockchain.is_chain_valid()
     assert is_valid is not None, "Blockchain validity cannot be null"
-    logger.info(f"Blockchain validity: {is_valid}")
+    if is_valid:
+        logger.info(f"Blockchain validity: {is_valid}; Blockchain is valid")
+    else:
+        logger.critical(f"Blockchain validity: {is_valid} "
+                        f"\n!!! BLOCKCHAIN IS INVALID !!!")
