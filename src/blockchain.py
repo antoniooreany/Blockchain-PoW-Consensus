@@ -53,7 +53,8 @@ class Blockchain:
         # self.add_block(genesis_block, clamp_factor=2, smallest_bit_difficulty=4)  # Example values for clamp_factor and smallest_bit_difficulty
         # log_mined_block(genesis_block)
 
-    def mine_blocks(self, number_of_blocks: int, clamp_factor: float, smallest_bit_difficulty: float) -> None:
+    def mine_blocks(self, number_of_blocks: int, clamp_factor: float,
+                    smallest_bit_difficulty: float) -> None:  # todo should it be moved to main.py?
         for i in range(1, number_of_blocks):
             block = Block(i, time.time(), f"Block {i} Data")  # todo add data is not yet checked for validity,
             # todo should be checked in the more sophisticated implementation
@@ -147,7 +148,7 @@ class Blockchain:
 
         return True
 
-    def get_average_block_creation_time(self) -> float:
-        if not self.actual_mining_times:
-            return 0
-        return sum(self.actual_mining_times) / len(self.actual_mining_times)
+    # def get_average_block_creation_time(self) -> float:
+    #     if not self.actual_mining_times:
+    #         return 0
+    #     return sum(self.actual_mining_times) / len(self.actual_mining_times)
