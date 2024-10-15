@@ -114,7 +114,7 @@ class Blockchain:
             new_bit_difficulty = smallest_bit_difficulty
 
         self.bit_difficulties.append(new_bit_difficulty)
-        self.start_time = time.time()  # todo should be updated here, not in the constructor
+        # self.start_time = time.time()  # todo should be updated here, not in the add_block: before mine?
 
         # Log intermediate results
         avg_mining_time = self.get_average_mining_time(self.adjustment_interval)

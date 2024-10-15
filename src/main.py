@@ -27,8 +27,8 @@ if __name__ == "__main__":
     ]:
         INITIAL_BIT_DIFFICULTY = 16  # todo avoid base_difficulty, use bit_difficulty, better even linear_difficulty
         ADJUSTMENT_INTERVAL = 10
-        TARGET_BLOCK_TIME = 0.01
-        NUMBER_BLOCKS_TO_ADD = 100
+        TARGET_BLOCK_TIME = 0.001
+        NUMBER_BLOCKS_TO_ADD = 1000
 
         CLAMP_FACTOR = 2  # todo 2 bits; bin: 0b10, hex: 0x2, dec: 2: max adjustment factor
         SMALLEST_BIT_DIFFICULTY = 4  # todo 4 bits; bin: 0b0000, hex: 0x0, dec: 0: smallest bit difficulty
@@ -55,10 +55,11 @@ if __name__ == "__main__":
 
         blockchains[base] = blockchain
 
+        logger.critical(f"TARGET_BLOCK_TIME: {TARGET_BLOCK_TIME}")
         # Average bit difficulty of the second half of the blockchain:
         average_mining_time_of_second_half_blockchain = blockchain.get_average_mining_time(
             blockchain.blocks.__len__() // 2)
-        logger.info(f"Average mining time of the second half of the blockchain: "
-                    f"{average_mining_time_of_second_half_blockchain}")
+        logger.critical(f"Average mining time of the second half of the blockchain: "
+                        f"{average_mining_time_of_second_half_blockchain}")
 
     plot_blockchain_statistics(blockchains)
