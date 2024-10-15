@@ -272,7 +272,7 @@ def plot_statistics(blockchains: dict, scaling_factor: float = 1.0) -> None:
         mining_time_color = mining_time_colors[i % len(mining_time_colors)]
         linewidth = base * 2
 
-        for j, mining_time in enumerate(blockchain.mining_times):
+        for j, mining_time in enumerate(blockchain.actual_mining_times):
             ax1.axvline(x=j, ymin=0, ymax=mining_time, color=mining_time_color, linewidth=linewidth,
                         label=f'Mining Time (BASE={base})' if j == 0 else "")
 

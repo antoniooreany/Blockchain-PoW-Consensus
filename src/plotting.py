@@ -145,9 +145,9 @@ def plot_blockchain_statistics(
 
 def plot_mining_times(ax1, blockchain, linewidth, mining_time_color):
     ax1.plot(
-        range(len(blockchain.mining_times)),
+        range(len(blockchain.actual_mining_times)),
         # ymin=0,
-        blockchain.mining_times,
+        blockchain.actual_mining_times,
         color=mcolors.to_rgba(mining_time_color, alpha=0.5),
         linewidth=linewidth,
     )
@@ -155,8 +155,8 @@ def plot_mining_times(ax1, blockchain, linewidth, mining_time_color):
 
 def scatter_mining_times(ax1, base, blockchain, mining_time_color):
     ax1.scatter(
-        range(len(blockchain.mining_times)),
-        blockchain.mining_times,
+        range(len(blockchain.actual_mining_times)),
+        blockchain.actual_mining_times,
         color=mining_time_color,
         s=np.pi * (base / 2) ** 2,  # todo base is not a property of blockchain
         label=f'Mining Time (base={base})'  # todo base is not a property of blockchain

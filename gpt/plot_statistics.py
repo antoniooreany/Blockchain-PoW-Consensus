@@ -13,7 +13,7 @@ def plot_statistics(blockchain):
 
     ax1.set_xlabel('Номер блока')
     ax1.set_ylabel('Время майнинга, сек', color='green')
-    ax1.plot(blockchain.mining_times, 'go-', label='Время майнинга', color='green')
+    ax1.plot(blockchain.actual_mining_times, 'go-', label='Время майнинга', color='green')
     ax1.tick_params(axis='y', labelcolor='green')
 
     # Вторая ось для отображения сложности

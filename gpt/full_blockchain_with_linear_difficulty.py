@@ -93,7 +93,7 @@ def plot_statistics(blockchain):
 
     ax1.set_xlabel('Block Index')
     ax1.set_ylabel('Mining Time (s)', color='green')
-    ax1.plot(range(len(blockchain.mining_times)), blockchain.mining_times, 'o-', color='green')
+    ax1.plot(range(len(blockchain.actual_mining_times)), blockchain.actual_mining_times, 'o-', color='green')
     ax1.tick_params(axis='y', labelcolor='green')
 
     ax2 = ax1.twinx()

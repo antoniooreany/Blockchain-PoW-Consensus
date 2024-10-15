@@ -32,7 +32,7 @@ class ColorFormatter(logging.Formatter):
         }
         reset_color: str = '\033[0m'
         log_color: str = log_colors.get(record.levelname, reset_color)
-        record.msg: str = f"{log_color}{record.msg}{reset_color}"
+        record.msg = f"{log_color}{record.msg}{reset_color}"
         return super().format(record)
 
 
