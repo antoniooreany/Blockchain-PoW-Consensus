@@ -26,21 +26,36 @@ def create_genesis_block() -> Block:
     return genesis_block
 
 
+# def collect_filtered_bit_difficulties(blockchain, adjustment_interval):
+#     # Remove the last bit difficulty of the adjustment interval,
+#     # to avoid having +1 at the end of each adjustment interval.
+#     # Filter out the bit difficulties for the proper plotting.
+#     filtered_bit_difficulties = []
+#     for i, bit_difficulty in enumerate(blockchain.bit_difficulties):
+#         if (i + 1) % adjustment_interval != 0:
+#             filtered_bit_difficulties.append(bit_difficulty)
+#     return filtered_bit_difficulties
+
+
 def collect_filtered_bit_difficulties(blockchain, adjustment_interval):
-    # Remove the last bit difficulty of the adjustment interval,
-    # to avoid having +1 at the end of each adjustment interval.
-    # Filter out the bit difficulties for the proper plotting.
     filtered_bit_difficulties = []
-    for i, bit_difficulty in enumerate(blockchain.bit_difficulties):
-        if (i + 1) % adjustment_interval != 0:
-            filtered_bit_difficulties.append(bit_difficulty)
-    return filtered_bit_difficulties
+    current_difficulty = blockchain.bit_difficulties[0]  # Start with the first difficulty
+
+    for i in range(1, len(blockchain.bit_difficulties)):
+        filtered_bit_difficulties.append(current_difficulty)
+        if i % adjustment_interval == 0:
+            # Only update difficulty at the adjustment interval, not before
+            current_difficulty = blockchain.bit_difficulties[i]
+
+    # Ensure the filtered difficulties match the length of mining times
+    return filtered_bit_difficulties[:len(blockchain.actual_mining_times)]
 
 
 class Blockchain:
     def __init__(self, initial_bit_difficulty: float, adjustment_interval: int, target_mining_time: float) -> None:
         # self.start_time = time.time()  # Initialize start_time todo should be initialized here?
         self.blocks = []  # the same as self.chain
+        # self.blocks = [create_genesis_block()]  #  todo should genesis be created here instead in main.py?
         self.bit_difficulties: list[float] = [initial_bit_difficulty]
         # self.initial_bit_difficulty = initial_bit_difficulty  # todo do we need it?
         self.adjustment_interval = adjustment_interval  # todo do we need it? isn't enough to use only bit_difficulties?
@@ -165,7 +180,7 @@ class Blockchain:
             #     return False
 
             self.logger.error(
-                f"Block {i + 1} has an invalid proof of work. \n"  # todo i + 1 or i?
+                f"Block index: {i} has an invalid proof of work. \n"  # todo i + 1 or i?
                 f"Bit difficulty: {self.bit_difficulties[i]}, \n"
                 # f"Target value: {hex(int(math.pow(2, 256 - self.bit_difficulties[i]) - 1))}, \n"
                 f"Block nonce: {current_block.nonce}, \n"

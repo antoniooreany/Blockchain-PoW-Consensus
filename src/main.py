@@ -50,7 +50,11 @@ if __name__ == "__main__":
                                smallest_bit_difficulty=SMALLEST_BIT_DIFFICULTY)
 
         # Collect filtered bit difficulties
-        filtered_difficulties = collect_filtered_bit_difficulties(blockchain, ADJUSTMENT_INTERVAL)
+        filtered_difficulties = collect_filtered_bit_difficulties(
+            blockchain,
+            ADJUSTMENT_INTERVAL
+        )  # todo skips the last bit difficulty in the adjustment interval,
+        # todo ??? leading to the proof of work error ???
         blockchain.bit_difficulties = filtered_difficulties  # Update the blockchain with filtered difficulties
 
         blockchains[base] = blockchain
