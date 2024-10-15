@@ -46,7 +46,7 @@ class Blockchain:
         self.adjustment_interval = adjustment_interval  # todo do we need it? isn't enough to use only bit_difficulties?
         self.target_mining_time = target_mining_time
         self.actual_mining_times = []  # Initialize mining_times
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__)  # todo should be initialized here?
 
         # # Create the genesis block todo should be created here, not in main.py
         # genesis_block = create_genesis_block()
