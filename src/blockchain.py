@@ -44,7 +44,7 @@ class Blockchain:
         self.adjustment_interval = adjustment_interval
         self.target_block_mining_time = target_block_time
         self.mining_times = []  # Initialize mining_times
-        self.blocks_to_adjust = adjustment_interval  # Initialize blocks_to_adjust
+        # self.blocks_to_adjust = adjustment_interval  # Initialize blocks_to_adjust
         self.logger = logging.getLogger(__name__)
 
         # # Create the genesis block
@@ -67,7 +67,7 @@ class Blockchain:
         return self.blocks[-1] if self.blocks else None
 
     def add_block(self, new_block: Block, clamp_factor: float, smallest_bit_difficulty: float) -> None:
-        new_block.previous_hash: str = self.get_latest_block().hash if self.blocks else '0'
+        new_block.previous_hash = self.get_latest_block().hash if self.blocks else '0'
         start_time: float = time.time()  # todo can be taken from new_block.timestamp
         new_block.mine(self.bit_difficulties[-1])  # Use the last difficulty value
         end_time: float = time.time()  # todo can be taken from new_block.timestamp
