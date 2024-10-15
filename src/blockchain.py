@@ -165,16 +165,22 @@ class Blockchain:
             #     return False
 
             self.logger.error(
-                f"Block {i + 1} has an invalid proof of work. \n"
+                f"Block {i + 1} has an invalid proof of work. \n"  # todo i + 1 or i?
                 f"Bit difficulty: {self.bit_difficulties[i]}, \n"
                 # f"Target value: {hex(int(math.pow(2, 256 - self.bit_difficulties[i]) - 1))}, \n"
-                f"Block nonce: {current_block.nonce} \n"
-                f"Block hash: {current_block.hash} \n"
+                f"Block nonce: {current_block.nonce}, \n"
+                f"Block hash: {current_block.hash}, \n"
+                f"Block int_hash: {int(current_block.hash, 16)}, \n"
                 # Calculate the target value based on difficulty
                 # max_target_hash_value: float = math.pow(2, HASH_BIT_LENGTH - bit_difficulty) - 1  
-                f"max_target_hash_value: {hex(int(math.pow(2, HASH_BIT_LENGTH - self.bit_difficulties[i]) - 1))}, \n"
+                f"max_target_hash: {(math.pow(2, HASH_BIT_LENGTH - self.bit_difficulties[i]) - 1)}, \n"
+                f"int_max_target_hash: {(int(math.pow(2, HASH_BIT_LENGTH - self.bit_difficulties[i]) - 1))}, \n"
+                f"hex_int_max_target_hash: {hex(int(math.pow(2, HASH_BIT_LENGTH - self.bit_difficulties[i]) - 1))}, \n"
+                f"valid = {int(current_block.hash, 16) < int(math.pow(2, HASH_BIT_LENGTH - self.bit_difficulties[i]) - 1)}, \n"
+                f"diff = {int(current_block.hash, 16) - int(math.pow(2, HASH_BIT_LENGTH - self.bit_difficulties[i]) - 1)}, \n"
+                f"ratio = {int(current_block.hash, 16) / int(math.pow(2, HASH_BIT_LENGTH - self.bit_difficulties[i]) - 1)}, \n"
             )
-            if not ProofOfWork.validate_proof(current_block, self.bit_difficulties[i]):
+            if not ProofOfWork.validate_proof(current_block, self.bit_difficulties[i]):  # todo i or (i-1)?
                 return False
 
         return True
