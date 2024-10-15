@@ -54,9 +54,9 @@ class Block:
         self.nonce: int = random.randint(0, MAX_NONCE)  # Start from a random nonce (int)
 
         # Calculate the target value based on difficulty
-        target_value: float = math.pow(2, HASH_BIT_LENGTH - bit_difficulty) - 1  # todo move to blockchain.py
+        max_target_hash_value: float = math.pow(2, HASH_BIT_LENGTH - bit_difficulty) - 1  # todo move to blockchain.py
 
-        # self.logger.debug(f"target value: {target_value}")
+        # self.logger.debug(f"target value: {max_target_hash_value}")
         # self.logger.debug(f"nonce: {self.nonce}")
         # self.logger.debug(f"nonce / max_nonce: {self.nonce / MAX_NONCE}")
 
@@ -75,7 +75,7 @@ class Block:
             hash_value: int = int(self.hash, 16)
 
             # Check if the hash value is less than the target value: if so, the block is mined
-            if hash_value < target_value:  # If the hash meets the target value, the block is mined
+            if hash_value < max_target_hash_value:  # If the hash meets the target value, the block is mined
                 break
 
             self.nonce += 1  # Increment the nonce to try a different hash
