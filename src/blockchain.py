@@ -56,7 +56,7 @@ class Blockchain:
         # self.start_time = time.time()  # Initialize start_time todo should be initialized here?
         self.blocks = []  # the same as self.chain
         # self.blocks = [create_genesis_block()]  #  todo should genesis be created here instead in main.py?
-        self.bit_difficulties: list[float] = [initial_bit_difficulty]
+        self.bit_difficulties: list[float] = [initial_bit_difficulty]  # todo should be initialized here?
         self.filtered_bit_difficulties: list[float] = []  # todo should this field be here?
         # self.initial_bit_difficulty = initial_bit_difficulty  # todo do we need it?
         self.adjustment_interval = adjustment_interval  # todo do we need it? isn't enough to use only bit_difficulties?
@@ -116,6 +116,10 @@ class Blockchain:
             f"Average mining time: {average_mining_time}, "
             f"Target mining time: {self.target_mining_time}"
         )
+
+        if average_mining_time == 0:
+            logging.error("Average mining time is zero, cannot adjust difficulty.")
+            return
 
         # Calculate the adjustment factor
         adjustment_factor: float = self.target_mining_time / average_mining_time
