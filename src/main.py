@@ -72,7 +72,7 @@ if __name__ == "__main__":
 
     # Check if any errors or critical issues occurred
     if error_critical_handler.error_occurred or error_critical_handler.critical_occurred:
-        logger.info("Errors or critical issues occurred during execution.")
+        logger.critical("!!! ALERT !!! ERRORS OR CRITICAL ISSUES OCCURRED DURING EXECUTION !!!")
     else:
         logger.info("Execution completed without errors or critical issues.")
 
