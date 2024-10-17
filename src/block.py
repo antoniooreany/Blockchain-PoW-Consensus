@@ -24,15 +24,6 @@ class Block:
             data: str,
             previous_hash: str = '',
     ) -> None:
-        """
-        Block constructor.
-
-        Args:
-            index (int): The block number.
-            timestamp (float): The timestamp for the block.
-            data (str): The data stored in the block.
-            previous_hash (str, optional): The hash of the previous block. Defaults to ''.
-        """
         self.index: int = index
         self.timestamp: float = timestamp
         self.data: str = data
@@ -41,15 +32,6 @@ class Block:
         self.hash: str = self.calculate_hash()
 
     def calculate_hash(self) -> str:
-        """
-        Calculate the SHA-256 hash of the block.
-
-        Args:
-            None
-
-        Returns:
-            str: The SHA-256 hash of the block
-        """
         sha: hashlib.sha256 = hashlib.sha256()
         sha.update(
             (str(self.index) +
@@ -64,17 +46,6 @@ class Block:
             self,
             bit_difficulty: float,
     ) -> None:
-        """
-        Mine a block.
-
-        Args:
-            bit_difficulty (int): The difficulty of the block as a number of bits.
-
-        Returns:
-            None
-        """
-
-        # max_nonce: int = 2 ** HASH_BIT_LENGTH - 1  # maximum value for nonce
         max_nonce: int = 2 ** NONCE_BIT_LENGTH - 1  # maximum value for nonce
         self.nonce: int = random.randint(0, max_nonce)  # Start from a random nonce (int)
 
@@ -84,7 +55,6 @@ class Block:
         logger.debug(f"target value: {target_value}")
         logger.debug(f"nonce: {self.nonce}")
         logger.debug(f"nonce / max_nonce: {self.nonce / max_nonce}")
-        # logger.warning(f"!!!")
 
         base_hash_data: bytes = ((str(self.index) +
                                   str(self.timestamp) +
