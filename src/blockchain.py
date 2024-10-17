@@ -22,10 +22,10 @@ def clamp(log_adjustment_factor: float, clamp_factor: float) -> float:
     return log_adjustment_factor
 
 
-def create_genesis_block() -> Block:
-    genesis_block = Block(0, time.time(), "Genesis Block", "0")
-    genesis_block.hash = genesis_block.calculate_hash()  # Calculate hash without mining
-    return genesis_block
+# def create_genesis_block() -> Block:
+#     genesis_block = Block(0, time.time(), "Genesis Block", "0")
+#     genesis_block.hash = genesis_block.calculate_hash()  # Calculate hash without mining
+#     return genesis_block
 
 
 def collect_filtered_bit_difficulties(blockchain, adjustment_interval):
@@ -56,7 +56,9 @@ class Blockchain:
         # log_mined_block(genesis_block)
 
     def create_genesis_block(self):
-        genesis_block = create_genesis_block()
+        # genesis_block = create_genesis_block()
+        genesis_block = Block(0, time.time(), "Genesis Block", "0")
+        genesis_block.hash = genesis_block.calculate_hash()  # Calculate hash without mining
         log_mined_block(genesis_block)
         self.logger.debug(f"##################")
         return genesis_block
