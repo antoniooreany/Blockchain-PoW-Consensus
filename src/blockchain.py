@@ -80,7 +80,7 @@ class Blockchain:
         self.bit_difficulties.append(self.bit_difficulties[-1])  # Use the last difficulty value
 
         if len(self.blocks) % self.adjustment_interval == 0:
-            self.adjust_difficulty(clamp_factor, smallest_bit_difficulty)  # todo smallest_bit_difficulty
+            self.adjust_difficulty(clamp_factor, smallest_bit_difficulty)
 
         log_validity(self)
         self.logger.debug(f"Bit Difficulty: {self.bit_difficulties[-1]}")  # Log the bit difficulty
@@ -122,7 +122,7 @@ class Blockchain:
             new_difficulty = smallest_bit_difficulty
 
         self.bit_difficulties.append(new_difficulty)
-        self.start_time = time.time()
+        # self.start_time = time.time()
 
         # Log intermediate results
         avg_mining_time = self.get_average_mining_time(self.adjustment_interval)
