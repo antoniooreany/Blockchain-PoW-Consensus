@@ -25,9 +25,9 @@ if __name__ == "__main__":
         # 8,
         # 16,
     ]:
-        INITIAL_BIT_DIFFICULTY = 13  # todo avoid base_difficulty, use bit_difficulty, better even linear_difficulty
+        INITIAL_BIT_DIFFICULTY = 16  # todo avoid base_difficulty, use bit_difficulty, better even linear_difficulty
         ADJUSTMENT_INTERVAL = 10
-        TARGET_BLOCK_TIME = 0.01
+        TARGET_BLOCK_TIME = 0.001
         NUMBER_BLOCKS_TO_ADD = 100
 
         CLAMP_FACTOR = 2  # todo 2 bits; bin: 0b10, hex: 0x2, dec: 2: max adjustment factor
@@ -52,6 +52,11 @@ if __name__ == "__main__":
         # Collect filtered bit difficulties
         filtered_difficulties = collect_filtered_bit_difficulties(blockchain, ADJUSTMENT_INTERVAL)
         blockchain.bit_difficulties = filtered_difficulties  # Update the blockchain with filtered difficulties
+
+        logger.info(f"Target block time: {TARGET_BLOCK_TIME}")
+        average_mining_time_last_half_blocks = blockchain.get_average_mining_time(
+            num_blocks=blockchain.blocks.__len__() // 2)
+        logger.info(f"Average mining time of the last half of the blockchain: {average_mining_time_last_half_blocks}")
 
         blockchains[base] = blockchain
 
