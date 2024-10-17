@@ -11,6 +11,8 @@ from block import Block
 from logging_utils import log_validity
 from src.proof_of_work import ProofOfWork
 
+HASH_BIT_LENGTH = 256
+
 
 def clamp(log_adjustment_factor: float, clamp_factor: float) -> float:
     if log_adjustment_factor > clamp_factor:
@@ -37,14 +39,14 @@ def collect_filtered_bit_difficulties(blockchain, adjustment_interval):
 class Blockchain:
     def __init__(self, initial_bit_difficulty, adjustment_interval, target_block_time):
         self.start_time = time.time()  # Initialize start_time
-        self.blocks = []
+        self.blocks = []  # Initialize the blocks list todo fill with genesis block?
         self.chain = []  # Initialize the chain todo fill with genesis block?
         self.bit_difficulties = [initial_bit_difficulty]
         self.bit_difficulty = initial_bit_difficulty  # Initialize difficulty
-        self.adjustment_interval = adjustment_interval
+        self.adjustment_interval = adjustment_interval  # Initialize adjustment_interval
         self.target_block_mining_time = target_block_time
         self.mining_times = []  # Initialize mining_times
-        self.blocks_to_adjust = adjustment_interval  # Initialize blocks_to_adjust
+        # self.blocks_to_adjust = adjustment_interval  # Initialize blocks_to_adjust
         self.logger = logging.getLogger(__name__)
 
         # # Create the genesis block
@@ -80,6 +82,12 @@ class Blockchain:
         #     self.logger.error(f"Block hash: {new_block.hash}")
         #     self.logger.error(f"Target value: {(2 ** (256 - self.bit_difficulties[-1])) - 1}")
         #     return
+
+        if not ProofOfWork.validate_proof(new_block, self.bit_difficulties[-1]):
+            self.logger.error(f"Block {new_block.index} was mined with a hash that does not meet the difficulty")
+            self.logger.error(f"Block hash: {new_block.hash}")
+            self.logger.error(f"Target value: {(2 ** (HASH_BIT_LENGTH - self.bit_difficulties[-1])) - 1}")
+            return
 
         self.blocks.append(new_block)
         self.mining_times.append(actual_mining_time)

@@ -19,7 +19,7 @@ def plot_statistics(blockchain):
     # Вторая ось для отображения сложности
     ax2 = ax1.twinx()
     ax2.set_ylabel('Линейная сложность', color='blue')
-    ax2.plot(range(blockchain.blocks_to_adjust, len(blockchain.blocks)), blockchain.difficulties[1:], 'bo-',
+    ax2.plot(range(blockchain.adjustment_interval, len(blockchain.blocks)), blockchain.difficulties[1:], 'bo-',
              label='Сложность', color='blue')
     ax2.tick_params(axis='y', labelcolor='blue')
 
