@@ -133,16 +133,7 @@ class Blockchain:
         self.logger.info(f"New difficulty: {new_difficulty}")
 
     def is_chain_valid(self) -> bool:
-        """
-        Check if the blockchain is valid or not.
 
-        Iterate through the blockchain and check if the hashes of the blocks match
-        the expected hashes. Also, check if the previous hash of the current block
-        matches the hash of the previous block.
-
-        Returns:
-            bool: True if the blockchain is valid, False otherwise.
-        """
         for i in range(1, len(self.chain)):
             current_block: Block = self.chain[i]
             previous_block: Block = self.chain[i - 1]
