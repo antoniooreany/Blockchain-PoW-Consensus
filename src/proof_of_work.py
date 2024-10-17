@@ -38,7 +38,7 @@ class ProofOfWork:
     #     return block.nonce
 
     @staticmethod
-    def mine(
+    def find_nonce(
             # self,
             block,
             bit_difficulty: float,

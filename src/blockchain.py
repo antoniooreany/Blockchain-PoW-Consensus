@@ -67,7 +67,7 @@ class Blockchain:
         start_time = time.time()
         # new_block.mine(self.bit_difficulties[-1])  # Use the last difficulty value
         # ProofOfWork.mine(new_block, bit_difficulty=self.bit_difficulties[-1])  # Use the last difficulty value
-        ProofOfWork.mine(
+        ProofOfWork.find_nonce(
             new_block,
             self.bit_difficulties[-1],
         )  # Use the last difficulty value
