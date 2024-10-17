@@ -22,15 +22,7 @@ def plot_blockchain_statistics(
         blockchains: dict[int, Blockchain],  # base as key, Blockchain as value
         scaling_factor: float = 1.0,  # An optional parameter to scale the y-axis for the bit difficulties
         linewidth: int = 1  # The width of the line to plot
-) -> None:  # returns None
-    """
-    Plot statistics for multiple blockchains.
-
-    :param linewidth: The width of the line to plot
-    :param blockchains: A dictionary mapping the name of each blockchain to its Blockchain object
-    :param scaling_factor: An optional parameter to scale the y-axis for the bit difficulties, default 1.0
-    :return: None
-    """
+) -> None:
     if not blockchains:
         raise ValueError("No blockchains provided")
 

@@ -75,4 +75,4 @@ class Block:
                 break
 
             self.nonce += 1  # Increment the nonce to try a different hash
-        log_mined_block(self)  # todo move to blockchain.py
+        log_mined_block(self)  # todo move to blockchain.py or proof_of_work.py

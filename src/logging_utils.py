@@ -7,63 +7,6 @@
 # info: 0, debug: 10, warning: 20, error: 30, critical: 40
 
 
-# class ErrorCriticalHandler(logging.Handler):
-#     def __init__(self):
-#         super().__init__()
-#         self.error_occurred = False
-#         self.critical_occurred = False
-#         self.warning_occurred = False
-#
-#     def emit(self, record):
-#         if record.levelno == logging.ERROR:
-#             self.error_occurred = True
-#         elif record.levelno == logging.CRITICAL:
-#             self.critical_occurred = True
-#         elif record.levelno == logging.WARNING:
-#             self.warning_occurred = True
-
-
-# # src/logging_utils.py
-# import logging
-#
-#
-# class ErrorCriticalHandler(logging.Handler):
-#     def __init__(self):
-#         super().__init__()
-#         self.max_level = logging.NOTSET
-#
-#     def emit(self, record):
-#         if record.levelno > self.max_level:
-#             self.max_level = record.levelno
-
-
-# src/logging_utils.py
-
-# class ErrorCriticalHandler(logging.Handler):  # todo rename
-#     def __init__(self):
-#         super().__init__()
-#         self.critical_occurred = 0
-#         self.error_occurred = 0
-#         self.info_count = 0
-#         self.debug_count = 0
-#         self.warning_count = 0
-#         self.error_count = 0
-#         self.critical_count = 0
-#
-#     def emit(self, record):
-#         if record.levelno == logging.INFO:
-#             self.info_count += 1
-#         elif record.levelno == logging.DEBUG:
-#             self.debug_count += 1
-#         elif record.levelno == logging.WARNING:
-#             self.warning_count += 1
-#         elif record.levelno == logging.ERROR:
-#             self.error_count += 1
-#         elif record.levelno == logging.CRITICAL:
-#             self.critical_count += 1
-
-
-# src/logging_utils.py
 import logging
 
 
