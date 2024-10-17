@@ -7,10 +7,10 @@
 
 import logging
 
-from blockchain import Blockchain, create_genesis_block, collect_filtered_bit_difficulties
+from blockchain import Blockchain, collect_filtered_bit_difficulties
 from logger_singleton import LoggerSingleton
 from plotting import plot_blockchain_statistics
-from src.logging_utils import log_mined_block, LogLevelCounterHandler
+from src.logging_utils import LogLevelCounterHandler
 
 if __name__ == "__main__":
     # Set the logging level to INFO (or WARNING to reduce more output)
@@ -45,10 +45,10 @@ if __name__ == "__main__":
         logger.debug(f"Created: blockchain (base: {base}, initial bit difficulty: {INITIAL_BIT_DIFFICULTY})")
         logger.debug(f"##################")
 
-        # Create the genesis block todo move to Blockchain class
-        genesis_block = create_genesis_block()
-        log_mined_block(genesis_block)
-        logger.debug(f"##################")
+        # # Create the genesis block todo move to Blockchain class
+        # genesis_block = create_genesis_block()
+        # log_mined_block(genesis_block)
+        # logger.debug(f"##################")
 
         blockchain.add_blocks(number_of_blocks=NUMBER_BLOCKS_TO_ADD, clamp_factor=CLAMP_FACTOR,
                               smallest_bit_difficulty=SMALLEST_BIT_DIFFICULTY)

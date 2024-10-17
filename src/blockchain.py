@@ -8,7 +8,7 @@ import math
 import time
 
 from block import Block
-from logging_utils import log_validity
+from logging_utils import log_validity, log_mined_block
 from src.proof_of_work import ProofOfWork
 
 HASH_BIT_LENGTH = 256
@@ -38,8 +38,10 @@ def collect_filtered_bit_difficulties(blockchain, adjustment_interval):
 
 class Blockchain:
     def __init__(self, initial_bit_difficulty, adjustment_interval, target_block_time):
+        self.logger = logging.getLogger(__name__)
         # self.start_time = time.time()  # Initialize start_time todo do we need this?
-        self.blocks = []  # Initialize the blocks list todo fill with genesis block?
+        genesis_block = self.create_genesis_block()
+        self.blocks = [genesis_block]  # Initialize the blocks list todo fill with genesis block?
         self.chain = []  # Initialize the chain todo fill with genesis block?
         self.bit_difficulties = [initial_bit_difficulty]
         # self.bit_difficulty = initial_bit_difficulty  # Initialize difficulty todo do we need this?
@@ -47,12 +49,17 @@ class Blockchain:
         self.target_block_mining_time = target_block_time
         self.mining_times = []  # Initialize mining_times
         # self.blocks_to_adjust = adjustment_interval  # Initialize blocks_to_adjust
-        self.logger = logging.getLogger(__name__)
 
         # # Create the genesis block
         # genesis_block = create_genesis_block()
         # self.add_block(genesis_block, clamp_factor=2, smallest_bit_difficulty=4)  # Example values for clamp_factor and smallest_bit_difficulty
         # log_mined_block(genesis_block)
+
+    def create_genesis_block(self):
+        genesis_block = create_genesis_block()
+        log_mined_block(genesis_block)
+        self.logger.debug(f"##################")
+        return genesis_block
 
     def add_blocks(self, number_of_blocks: int, clamp_factor, smallest_bit_difficulty):  # todo move to main.py?
         for i in range(1, number_of_blocks):
