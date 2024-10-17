@@ -42,7 +42,7 @@ class Blockchain:
         self.blocks = []  # Initialize the blocks list todo fill with genesis block?
         self.chain = []  # Initialize the chain todo fill with genesis block?
         self.bit_difficulties = [initial_bit_difficulty]
-        self.bit_difficulty = initial_bit_difficulty  # Initialize difficulty
+        # self.bit_difficulty = initial_bit_difficulty  # Initialize difficulty todo do we need this?
         self.adjustment_interval = adjustment_interval  # Initialize adjustment_interval
         self.target_block_mining_time = target_block_time
         self.mining_times = []  # Initialize mining_times
