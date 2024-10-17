@@ -3,23 +3,24 @@
 #
 #   This code is for a logging_utils.py and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
-import logging
-
 
 # info: 0, debug: 10, warning: 20, error: 30, critical: 40
 
 
-class ErrorCriticalHandler(logging.Handler):
-    def __init__(self):
-        super().__init__()
-        self.error_occurred = False
-        self.critical_occurred = False
-
-    def emit(self, record):
-        if record.levelno == logging.ERROR:
-            self.error_occurred = True
-        elif record.levelno == logging.CRITICAL:
-            self.critical_occurred = True
+# class ErrorCriticalHandler(logging.Handler):
+#     def __init__(self):
+#         super().__init__()
+#         self.error_occurred = False
+#         self.critical_occurred = False
+#         self.warning_occurred = False
+#
+#     def emit(self, record):
+#         if record.levelno == logging.ERROR:
+#             self.error_occurred = True
+#         elif record.levelno == logging.CRITICAL:
+#             self.critical_occurred = True
+#         elif record.levelno == logging.WARNING:
+#             self.warning_occurred = True
 
 
 # # src/logging_utils.py
@@ -34,6 +35,70 @@ class ErrorCriticalHandler(logging.Handler):
 #     def emit(self, record):
 #         if record.levelno > self.max_level:
 #             self.max_level = record.levelno
+
+
+# src/logging_utils.py
+
+# class ErrorCriticalHandler(logging.Handler):  # todo rename
+#     def __init__(self):
+#         super().__init__()
+#         self.critical_occurred = 0
+#         self.error_occurred = 0
+#         self.info_count = 0
+#         self.debug_count = 0
+#         self.warning_count = 0
+#         self.error_count = 0
+#         self.critical_count = 0
+#
+#     def emit(self, record):
+#         if record.levelno == logging.INFO:
+#             self.info_count += 1
+#         elif record.levelno == logging.DEBUG:
+#             self.debug_count += 1
+#         elif record.levelno == logging.WARNING:
+#             self.warning_count += 1
+#         elif record.levelno == logging.ERROR:
+#             self.error_count += 1
+#         elif record.levelno == logging.CRITICAL:
+#             self.critical_count += 1
+
+
+# src/logging_utils.py
+import logging
+
+
+class LogLevelCounterHandler(logging.Handler):
+    def __init__(self):
+        super().__init__()
+        self.notset_count = 0
+        self.info_count = 0
+        self.debug_count = 0
+        self.warning_count = 0
+        self.error_count = 0
+        self.critical_count = 0
+
+    def emit(self, record):
+        if record.levelno == logging.NOTSET:
+            self.notset_count += 1
+        elif record.levelno == logging.INFO:
+            self.info_count += 1
+        elif record.levelno == logging.DEBUG:
+            self.debug_count += 1
+        elif record.levelno == logging.WARNING:
+            self.warning_count += 1
+        elif record.levelno == logging.ERROR:
+            self.error_count += 1
+        elif record.levelno == logging.CRITICAL:
+            self.critical_count += 1
+
+    def print_log_counts(self):
+        logger = logging.getLogger()
+        logger.info(f"NotSet messages: {self.notset_count}")
+        logger.info(f"Info messages: {self.info_count}")
+        logger.debug(f"Debug messages: {self.debug_count}")
+        logger.warning(f"Warning messages: {self.warning_count}")
+        logger.error(f"Error messages: {self.error_count}")
+        logger.critical(f"Critical messages: {self.critical_count}")
 
 
 class ColorFormatter(logging.Formatter):
@@ -61,7 +126,7 @@ class ColorFormatter(logging.Formatter):
         }
         reset_color: str = '\033[0m'
         log_color: str = log_colors.get(record.levelname, reset_color)
-        record.msg: str = f"{log_color}{record.msg}{reset_color}"
+        record.msg = f"{log_color}{record.msg}{reset_color}"
         return super().format(record)
 
 

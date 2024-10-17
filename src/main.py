@@ -10,7 +10,7 @@ import logging
 from blockchain import Blockchain, create_genesis_block, collect_filtered_bit_difficulties
 from logger_singleton import LoggerSingleton
 from plotting import plot_blockchain_statistics
-from src.logging_utils import log_mined_block, ErrorCriticalHandler
+from src.logging_utils import log_mined_block, LogLevelCounterHandler
 
 if __name__ == "__main__":
     # Set the logging level to INFO (or WARNING to reduce more output)
@@ -19,12 +19,8 @@ if __name__ == "__main__":
     logger = LoggerSingleton.get_instance().logger
 
     # Add custom handler to track errors and critical issues
-    error_critical_handler = ErrorCriticalHandler()
-    logger.addHandler(error_critical_handler)
-
-    # # Add custom handler to track errors and critical issues
-    # error_critical_handler = ErrorCriticalHandler()
-    # logger.addHandler(error_critical_handler)
+    log_level_counter_handler = LogLevelCounterHandler()  # todo rename
+    logger.addHandler(log_level_counter_handler)  # todo rename
 
     blockchains = {}
     for base in [
@@ -70,13 +66,4 @@ if __name__ == "__main__":
 
     plot_blockchain_statistics(blockchains)
 
-    # Check if any errors or critical issues occurred
-    if error_critical_handler.error_occurred or error_critical_handler.critical_occurred:
-        logger.critical("!!! ALERT !!! ERRORS OR CRITICAL ISSUES OCCURRED DURING EXECUTION !!!")
-    else:
-        logger.info("Execution completed without errors or critical issues.")
-
-    # # Check the maximum logging level that occurred
-    # max_level = error_critical_handler.max_level
-    # level_name = logging.getLevelName(max_level)
-    # print(f"Maximum logging level during execution: {level_name}")
+    log_level_counter_handler.print_log_counts()
