@@ -65,7 +65,12 @@ class Blockchain:
     def add_block(self, new_block: Block, clamp_factor, smallest_bit_difficulty) -> None:
         new_block.previous_hash = self.get_latest_block().hash if self.blocks else '0'
         start_time = time.time()
-        new_block.mine(self.bit_difficulties[-1])  # Use the last difficulty value
+        # new_block.mine(self.bit_difficulties[-1])  # Use the last difficulty value
+        # ProofOfWork.mine(new_block, bit_difficulty=self.bit_difficulties[-1])  # Use the last difficulty value
+        ProofOfWork.mine(
+            new_block,
+            self.bit_difficulties[-1],
+        )  # Use the last difficulty value
         end_time = time.time()
         actual_mining_time = end_time - start_time
 
