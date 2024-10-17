@@ -54,16 +54,10 @@ class Blockchain:
         # self.add_block(genesis_block, clamp_factor=2, smallest_bit_difficulty=4)  # Example values for clamp_factor and smallest_bit_difficulty
         # log_mined_block(genesis_block)
 
-    def mine_blocks(self, number_of_blocks: int, clamp_factor, smallest_bit_difficulty):
-        """
-        Mine a specified number of blocks.
-
-        Args:
-            number_of_blocks (int): The number of blocks to mine.
-        """
+    def add_blocks(self, number_of_blocks: int, clamp_factor, smallest_bit_difficulty):  # todo move to main.py?
         for i in range(1, number_of_blocks):
             block = Block(i, time.time(), f"Block {i} Data")
-            self.add_block(block, clamp_factor, smallest_bit_difficulty)  # todo smallest_bit_difficulty
+            self.add_block(block, clamp_factor, smallest_bit_difficulty)
 
     def get_latest_block(self) -> Block:
         return self.blocks[-1] if self.blocks else None

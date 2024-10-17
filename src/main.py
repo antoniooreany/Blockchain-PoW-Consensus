@@ -50,8 +50,8 @@ if __name__ == "__main__":
         log_mined_block(genesis_block)
         logger.debug(f"##################")
 
-        blockchain.mine_blocks(number_of_blocks=NUMBER_BLOCKS_TO_ADD, clamp_factor=CLAMP_FACTOR,
-                               smallest_bit_difficulty=SMALLEST_BIT_DIFFICULTY)
+        blockchain.add_blocks(number_of_blocks=NUMBER_BLOCKS_TO_ADD, clamp_factor=CLAMP_FACTOR,
+                              smallest_bit_difficulty=SMALLEST_BIT_DIFFICULTY)
 
         # Collect filtered bit difficulties
         filtered_difficulties = collect_filtered_bit_difficulties(blockchain, ADJUSTMENT_INTERVAL)
