@@ -3,8 +3,37 @@
 #
 #   This code is for a logging_utils.py and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
-
 import logging
+
+
+# info: 0, debug: 10, warning: 20, error: 30, critical: 40
+
+
+class ErrorCriticalHandler(logging.Handler):
+    def __init__(self):
+        super().__init__()
+        self.error_occurred = False
+        self.critical_occurred = False
+
+    def emit(self, record):
+        if record.levelno == logging.ERROR:
+            self.error_occurred = True
+        elif record.levelno == logging.CRITICAL:
+            self.critical_occurred = True
+
+
+# # src/logging_utils.py
+# import logging
+#
+#
+# class ErrorCriticalHandler(logging.Handler):
+#     def __init__(self):
+#         super().__init__()
+#         self.max_level = logging.NOTSET
+#
+#     def emit(self, record):
+#         if record.levelno > self.max_level:
+#             self.max_level = record.levelno
 
 
 class ColorFormatter(logging.Formatter):
