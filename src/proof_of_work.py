@@ -39,7 +39,6 @@ class ProofOfWork:
 
     @staticmethod
     def find_nonce(
-            # self,
             block,
             bit_difficulty: float,
     ) -> None:
