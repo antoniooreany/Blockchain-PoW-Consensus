@@ -38,7 +38,7 @@ def collect_filtered_bit_difficulties(blockchain, adjustment_interval):
 
 class Blockchain:
     def __init__(self, initial_bit_difficulty, adjustment_interval, target_block_time):
-        self.start_time = time.time()  # Initialize start_time
+        # self.start_time = time.time()  # Initialize start_time todo do we need this?
         self.blocks = []  # Initialize the blocks list todo fill with genesis block?
         self.chain = []  # Initialize the chain todo fill with genesis block?
         self.bit_difficulties = [initial_bit_difficulty]
@@ -74,14 +74,6 @@ class Blockchain:
         new_block.mine(self.bit_difficulties[-1])  # Use the last difficulty value
         end_time = time.time()
         actual_mining_time = end_time - start_time
-
-        # if ProofOfWork.validate_proof(new_block, self.bit_difficulties[-1]):
-        #     self.blocks.append(new_block)
-        #
-        #     self.logger.error(f"Block {new_block.index} was mined with a hash that does not meet the difficulty")
-        #     self.logger.error(f"Block hash: {new_block.hash}")
-        #     self.logger.error(f"Target value: {(2 ** (256 - self.bit_difficulties[-1])) - 1}")
-        #     return
 
         if not ProofOfWork.validate_proof(new_block, self.bit_difficulties[-1]):
             self.logger.error(f"Block {new_block.index} was mined with a hash that does not meet the difficulty")
