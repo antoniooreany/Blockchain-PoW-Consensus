@@ -8,6 +8,8 @@
 import logging
 
 from blockchain import Blockchain
+from constants import INITIAL_BIT_DIFFICULTY, ADJUSTMENT_INTERVAL, TARGET_BLOCK_TIME, NUMBER_BLOCKS_TO_ADD, \
+    CLAMP_FACTOR, SMALLEST_BIT_DIFFICULTY
 from helpers import collect_filtered_bit_difficulties
 from logger_singleton import LoggerSingleton
 from plotting import plot_blockchain_statistics
@@ -30,13 +32,13 @@ if __name__ == "__main__":
         # 8,
         # 16,
     ]:
-        INITIAL_BIT_DIFFICULTY = 16  # todo use bit_difficulty, better even linear_difficulty
-        ADJUSTMENT_INTERVAL = 10
-        TARGET_BLOCK_TIME = 0.1
-        NUMBER_BLOCKS_TO_ADD = 50
-
-        CLAMP_FACTOR = 2  # todo 2 bits; bin: 0b10, hex: 0x2, dec: 2: max adjustment factor
-        SMALLEST_BIT_DIFFICULTY = 4  # todo 4 bits; bin: 0b0000, hex: 0x0, dec: 0: smallest bit difficulty
+        # INITIAL_BIT_DIFFICULTY = 16  # todo use bit_difficulty, better even linear_difficulty
+        # ADJUSTMENT_INTERVAL = 10
+        # TARGET_BLOCK_TIME = 0.1
+        # NUMBER_BLOCKS_TO_ADD = 50
+        #
+        # CLAMP_FACTOR = 2  # todo 2 bits; bin: 0b10, hex: 0x2, dec: 2: max adjustment factor
+        # SMALLEST_BIT_DIFFICULTY = 4  # todo 4 bits; bin: 0b0000, hex: 0x0, dec: 0: smallest bit difficulty
 
         blockchain = Blockchain(
             initial_bit_difficulty=INITIAL_BIT_DIFFICULTY,
