@@ -22,12 +22,6 @@ def clamp(log_adjustment_factor: float, clamp_factor: float) -> float:
     return log_adjustment_factor
 
 
-# def create_genesis_block() -> Block:
-#     genesis_block = Block(0, time.time(), "Genesis Block", "0")
-#     genesis_block.hash = genesis_block.calculate_hash()  # Calculate hash without mining
-#     return genesis_block
-
-
 def collect_filtered_bit_difficulties(blockchain, adjustment_interval):
     filtered_bit_difficulties = []
     for i, difficulty in enumerate(blockchain.bit_difficulties):
@@ -50,11 +44,6 @@ class Blockchain:
         self.mining_times = []  # Initialize mining_times
         # self.blocks_to_adjust = adjustment_interval  # Initialize blocks_to_adjust
 
-        # # Create the genesis block
-        # genesis_block = create_genesis_block()
-        # self.add_block(genesis_block, clamp_factor=2, smallest_bit_difficulty=4)  # Example values for clamp_factor and smallest_bit_difficulty
-        # log_mined_block(genesis_block)
-
     def create_genesis_block(self):
         # genesis_block = create_genesis_block()
         genesis_block = Block(0, time.time(), "Genesis Block", "0")
@@ -74,8 +63,6 @@ class Blockchain:
     def add_block(self, new_block: Block, clamp_factor, smallest_bit_difficulty) -> None:
         new_block.previous_hash = self.get_latest_block().hash if self.blocks else '0'
         start_time = time.time()
-        # new_block.mine(self.bit_difficulties[-1])  # Use the last difficulty value
-        # ProofOfWork.mine(new_block, bit_difficulty=self.bit_difficulties[-1])  # Use the last difficulty value
         ProofOfWork.find_nonce(
             new_block,
             self.bit_difficulties[-1],
@@ -98,10 +85,8 @@ class Blockchain:
 
         log_validity(self)
         self.logger.debug(f"Bit Difficulty: {self.bit_difficulties[-1]}")  # Log the bit difficulty
-        # self.logger.debug(f"Expected mining time for block {new_block.index}: {self.target_block_time} seconds")
         self.logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.25f} seconds")
         self.logger.debug(f"##############################################")
-        # self.logger.info(f"Block mined: {new_block.index} with hash {new_block.hash}")
 
     def get_average_mining_time(self, num_blocks: int) -> float:
         if len(self.blocks) < num_blocks + 1:  # Ensure there are enough blocks to average

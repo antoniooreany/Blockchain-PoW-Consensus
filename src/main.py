@@ -45,11 +45,6 @@ if __name__ == "__main__":
         logger.debug(f"Created: blockchain (base: {base}, initial bit difficulty: {INITIAL_BIT_DIFFICULTY})")
         logger.debug(f"##################")
 
-        # # Create the genesis block todo move to Blockchain class
-        # genesis_block = create_genesis_block()
-        # log_mined_block(genesis_block)
-        # logger.debug(f"##################")
-
         blockchain.add_blocks(number_of_blocks=NUMBER_BLOCKS_TO_ADD, clamp_factor=CLAMP_FACTOR,
                               smallest_bit_difficulty=SMALLEST_BIT_DIFFICULTY)
 

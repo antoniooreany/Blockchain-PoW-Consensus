@@ -36,38 +36,3 @@ class Block:
              str(self.nonce))
             .encode('utf-8'))
         return sha.hexdigest()
-
-    # def mine(
-    #         self,
-    #         bit_difficulty: float,
-    # ) -> None:
-    #     max_nonce: int = 2 ** NONCE_BIT_LENGTH - 1  # maximum value for nonce
-    #     self.nonce: int = random.randint(0, max_nonce)  # Start from a random nonce (int)
-    #
-    #     # Calculate the target value based on difficulty
-    #     target_value: float = math.pow(2, HASH_BIT_LENGTH - bit_difficulty) - 1  # todo move to blockchain.py
-    #
-    #     logger.debug(f"target value: {target_value}")
-    #     logger.debug(f"nonce: {self.nonce}")
-    #     logger.debug(f"nonce / max_nonce: {self.nonce / max_nonce}")
-    #
-    #     base_hash_data: bytes = ((str(self.index) +
-    #                               str(self.timestamp) +
-    #                               str(self.data) +
-    #                               str(self.previous_hash))
-    #                              .encode('utf-8'))
-    #
-    #     while True:
-    #         sha: hashlib.sha256 = hashlib.sha256()
-    #         sha.update(base_hash_data + str(self.nonce).encode('utf-8'))
-    #         self.hash: str = sha.hexdigest()  # Get the hash as a hexadecimal string
-    #
-    #         # Convert the hash to an integer
-    #         hash_value: int = int(self.hash, 16)
-    #
-    #         # Check if the hash value is less than the target value: if so, the block is mined
-    #         if hash_value < target_value:  # If the hash meets the target value, the block is mined
-    #             break
-    #
-    #         self.nonce += 1  # Increment the nonce to try a different hash
-    #     log_mined_block(self)  # todo move to blockchain.py or proof_of_work.py
