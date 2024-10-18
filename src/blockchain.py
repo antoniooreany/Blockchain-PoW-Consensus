@@ -150,14 +150,14 @@
 
 # blockchain.py
 import logging
-import math
 import time
 
 from block import Block
 from constants import HASH_BIT_LENGTH
-from helpers import clamp, create_genesis_block
+from helpers import create_genesis_block
 from logging_utils import log_validity
 from proof_of_work import ProofOfWork
+from src.difficulty_adjustment import adjust_difficulty
 
 
 class Blockchain:
@@ -204,7 +204,7 @@ class Blockchain:
         self.bit_difficulties.append(self.bit_difficulties[-1])
 
         if len(self.blocks) % self.adjustment_interval == 0:
-            self.adjust_difficulty(clamp_factor, smallest_bit_difficulty)
+            adjust_difficulty(self, clamp_factor, smallest_bit_difficulty)
 
         log_validity(self)
         self.logger.debug(f"Bit Difficulty: {self.bit_difficulties[-1]}")
@@ -217,31 +217,31 @@ class Blockchain:
         total_time = sum(self.mining_times[-num_blocks:])
         return total_time / num_blocks
 
-    def adjust_difficulty(self, clamp_factor: float, smallest_bit_difficulty: float) -> None:
-        average_mining_time = self.get_average_mining_time(self.adjustment_interval)
-        logging.debug(
-            f"Average mining time: {average_mining_time}, Target block mining time: {self.target_block_mining_time}")
-
-        adjustment_factor = average_mining_time / self.target_block_mining_time
-        logging.debug(f"Adjustment factor: {adjustment_factor}")
-
-        last_bit_difficulty = self.bit_difficulties[-1]
-
-        if adjustment_factor > 0:
-            log_adjustment_factor = math.log2(adjustment_factor)
-            clamped_log_adjustment_factor = clamp(log_adjustment_factor, clamp_factor)
-            new_difficulty = max(smallest_bit_difficulty, last_bit_difficulty - clamped_log_adjustment_factor)
-        else:
-            new_difficulty = smallest_bit_difficulty
-
-        self.bit_difficulties.append(new_difficulty)
-
-        avg_mining_time = self.get_average_mining_time(self.adjustment_interval)
-        self.logger.info(
-            f"Average mining time for the last {self.adjustment_interval} blocks: {avg_mining_time:.25f} seconds")
-        self.logger.info(
-            f"Indices of the last {self.adjustment_interval} blocks: {list(range(len(self.blocks) - self.adjustment_interval + 1, len(self.blocks) + 1))}")
-        self.logger.info(f"New difficulty: {new_difficulty}")
+    # def adjust_difficulty(self, clamp_factor: float, smallest_bit_difficulty: float) -> None:
+    #     average_mining_time = self.get_average_mining_time(self.adjustment_interval)
+    #     logging.debug(
+    #         f"Average mining time: {average_mining_time}, Target block mining time: {self.target_block_mining_time}")
+    #
+    #     adjustment_factor = average_mining_time / self.target_block_mining_time
+    #     logging.debug(f"Adjustment factor: {adjustment_factor}")
+    #
+    #     last_bit_difficulty = self.bit_difficulties[-1]
+    #
+    #     if adjustment_factor > 0:
+    #         log_adjustment_factor = math.log2(adjustment_factor)
+    #         clamped_log_adjustment_factor = clamp(log_adjustment_factor, clamp_factor)
+    #         new_difficulty = max(smallest_bit_difficulty, last_bit_difficulty - clamped_log_adjustment_factor)
+    #     else:
+    #         new_difficulty = smallest_bit_difficulty
+    #
+    #     self.bit_difficulties.append(new_difficulty)
+    #
+    #     avg_mining_time = self.get_average_mining_time(self.adjustment_interval)
+    #     self.logger.info(
+    #         f"Average mining time for the last {self.adjustment_interval} blocks: {avg_mining_time:.25f} seconds")
+    #     self.logger.info(
+    #         f"Indices of the last {self.adjustment_interval} blocks: {list(range(len(self.blocks) - self.adjustment_interval + 1, len(self.blocks) + 1))}")
+    #     self.logger.info(f"New difficulty: {new_difficulty}")
 
     def is_chain_valid(self) -> bool:
         for i in range(1, len(self.chain)):
