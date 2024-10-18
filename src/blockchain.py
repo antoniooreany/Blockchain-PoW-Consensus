@@ -118,7 +118,6 @@ class Blockchain:
             new_difficulty = smallest_bit_difficulty
 
         self.bit_difficulties.append(new_difficulty)
-        # self.start_time = time.time()
 
         # Log intermediate results
         avg_mining_time = self.get_average_mining_time(self.adjustment_interval)
