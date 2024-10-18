@@ -29,7 +29,7 @@ if __name__ == "__main__":
         # 8,
         # 16,
     ]:
-        INITIAL_BIT_DIFFICULTY = 16  # todo avoid base_difficulty, use bit_difficulty, better even linear_difficulty
+        INITIAL_BIT_DIFFICULTY = 16  # todo use bit_difficulty, better even linear_difficulty
         ADJUSTMENT_INTERVAL = 10
         TARGET_BLOCK_TIME = 0.1
         NUMBER_BLOCKS_TO_ADD = 100
