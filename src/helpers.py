@@ -6,9 +6,7 @@
 
 
 # helpers.py
-import time
 
-from block import Block
 from logging_utils import log_mined_block
 
 
@@ -17,6 +15,17 @@ def create_genesis_block():
     genesis_block.hash = genesis_block.calculate_hash()
     log_mined_block(genesis_block)
     return genesis_block
+
+
+# helpers.py
+import time
+from block import Block
+
+
+def add_blocks(blockchain, number_of_blocks: int, clamp_factor, smallest_bit_difficulty):
+    for i in range(1, number_of_blocks):
+        block = Block(i, time.time(), f"Block {i} Data")
+        blockchain.add_block(block, clamp_factor, smallest_bit_difficulty)
 
 
 # helpers.py

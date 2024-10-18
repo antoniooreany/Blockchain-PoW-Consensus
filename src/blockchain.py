@@ -282,10 +282,10 @@ class Blockchain:
         self.target_block_mining_time = target_block_time
         self.mining_times = []
 
-    def add_blocks(self, number_of_blocks: int, clamp_factor, smallest_bit_difficulty):
-        for i in range(1, number_of_blocks):
-            block = Block(i, time.time(), f"Block {i} Data")
-            self.add_block(block, clamp_factor, smallest_bit_difficulty)
+    # def add_blocks(self, number_of_blocks: int, clamp_factor, smallest_bit_difficulty):
+    #     for i in range(1, number_of_blocks):
+    #         block = Block(i, time.time(), f"Block {i} Data")
+    #         self.add_block(block, clamp_factor, smallest_bit_difficulty)
 
     def get_latest_block(self) -> Block:
         return self.blocks[-1] if self.blocks else None

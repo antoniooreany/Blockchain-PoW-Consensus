@@ -10,7 +10,7 @@ import logging
 from blockchain import Blockchain
 from constants import INITIAL_BIT_DIFFICULTY, ADJUSTMENT_INTERVAL, TARGET_BLOCK_TIME, NUMBER_BLOCKS_TO_ADD, \
     CLAMP_FACTOR, SMALLEST_BIT_DIFFICULTY
-from helpers import collect_filtered_bit_difficulties
+from helpers import collect_filtered_bit_difficulties, add_blocks
 from logger_singleton import LoggerSingleton
 from plotting import plot_blockchain_statistics
 from src.logging_utils import LogLevelCounterHandler
@@ -48,8 +48,8 @@ if __name__ == "__main__":
         logger.debug(f"Created: blockchain (base: {base}, initial bit difficulty: {INITIAL_BIT_DIFFICULTY})")
         logger.debug(f"##################")
 
-        blockchain.add_blocks(number_of_blocks=NUMBER_BLOCKS_TO_ADD, clamp_factor=CLAMP_FACTOR,
-                              smallest_bit_difficulty=SMALLEST_BIT_DIFFICULTY)
+        add_blocks(blockchain=blockchain, number_of_blocks=NUMBER_BLOCKS_TO_ADD, clamp_factor=CLAMP_FACTOR,
+                   smallest_bit_difficulty=SMALLEST_BIT_DIFFICULTY)
 
         # Collect filtered bit difficulties
         filtered_difficulties = collect_filtered_bit_difficulties(blockchain, ADJUSTMENT_INTERVAL)
