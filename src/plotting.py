@@ -106,18 +106,16 @@ def plot_mining_times_bar(ax1, blockchain, mining_time_color):
     mining_times = blockchain.mining_times
     num_bars = len(mining_times)
     bar_width = 0.8  # Default bar width in matplotlib
-    # marker_size = (bar_width * 72) ** 2  # Convert bar width to points squared for marker size
-    # marker_size = bar_width  # Convert bar width to points squared for marker size
     marker_size = bar_width  # Convert bar width to points squared for marker size
 
     ax1.bar(
-        range(len(mining_times)),
+        range(num_bars),
         mining_times,
         color=mcolors.to_rgba(mining_time_color, alpha=0.5),
         width=bar_width
     )
     ax1.scatter(
-        range(len(mining_times)),
+        range(num_bars),
         mining_times,
         color='lime',  # Brighter color for the markers
         s=marker_size,  # Size of the markers matching the bar width

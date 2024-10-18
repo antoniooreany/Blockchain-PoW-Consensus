@@ -33,16 +33,13 @@ def collect_filtered_bit_difficulties(blockchain, adjustment_interval):
 class Blockchain:
     def __init__(self, initial_bit_difficulty, adjustment_interval, target_block_time):
         self.logger = logging.getLogger(__name__)
-        # self.start_time = time.time()  # Initialize start_time todo do we need this?
         genesis_block = self.create_genesis_block()
         self.blocks = [genesis_block]  # Initialize the blocks list todo fill with genesis block?
         self.chain = []  # Initialize the chain todo fill with genesis block?
         self.bit_difficulties = [initial_bit_difficulty]
-        # self.bit_difficulty = initial_bit_difficulty  # Initialize difficulty todo do we need this?
         self.adjustment_interval = adjustment_interval  # Initialize adjustment_interval
         self.target_block_mining_time = target_block_time
         self.mining_times = []  # Initialize mining_times
-        # self.blocks_to_adjust = adjustment_interval  # Initialize blocks_to_adjust
 
     def create_genesis_block(self):
         # genesis_block = create_genesis_block()

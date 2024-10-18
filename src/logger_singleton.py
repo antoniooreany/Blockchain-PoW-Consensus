@@ -38,7 +38,8 @@ class LoggerSingleton(object):
             LoggerSingleton._instance = self
             self.logger = self.setup_logger()
 
-    def setup_logger(self, level: int = logging.DEBUG, console_level: int = logging.DEBUG) -> logging.Logger:
+    @staticmethod
+    def setup_logger(level: int = logging.DEBUG, console_level: int = logging.DEBUG) -> logging.Logger:
         """
         Set up the logger.
 

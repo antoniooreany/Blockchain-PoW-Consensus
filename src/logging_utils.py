@@ -46,15 +46,6 @@ class LogLevelCounterHandler(logging.Handler):
 
 class ColorFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
-        """
-        Format a log record and add color to it.
-
-        Args:
-            record: The log record to be formatted. Must not be null.
-
-        Returns:
-            The formatted log record as a string.
-        """
         # Check for null pointer references and other potential issues
         assert record is not None, "Record cannot be null"
         assert record.msg is not None, "Record message cannot be null"
@@ -74,25 +65,10 @@ class ColorFormatter(logging.Formatter):
 
 
 def log_mined_block(block) -> None:
-    """
-    Log the given block as mined.
-
-    Args:
-        block: The block to log. Must not be null.
-
-    Returns:
-        None
-    """
     assert block is not None, "Block cannot be null"
     assert block.index is not None, "Block index cannot be null"
     assert block.hash is not None, "Block hash cannot be null"
     logger: logging.Logger = logging.getLogger()
-    # logger.info(
-    #     f"Mined block: (index: {block.index}, \n"
-    #     f"timestamp: {block.timestamp}, \n"
-    #     f"data: {block.data}, \n"
-    #     f"hash: {block.hash}), \n"
-    #     f"previous_hash: {block.previous_hash}")
     logger.info(f"Block mined:")
     logger.info(f"Index: {block.index}")
     logger.debug(f"Timestamp: {block.timestamp}")
@@ -106,16 +82,6 @@ def log_time(
         average_time: float,  # The actual time
         expected_time: float  # The expected time
 ) -> None:
-    """
-    Log the average time taken to mine a block and the expected time.
-
-    Args:
-        average_time (float): The actual time taken to mine a block. Must not be null.
-        expected_time (float): The expected time taken to mine a block. Must not be null.
-
-    Returns:
-        None
-    """
     logger: logging.Logger = logging.getLogger()
     assert average_time is not None, "Actual time cannot be null"
     assert expected_time is not None, "Expected time cannot be null"
@@ -123,15 +89,6 @@ def log_time(
 
 
 def log_validity(blockchain) -> None:
-    """
-    Log the validity of the given blockchain.
-
-    Args:
-        blockchain (Blockchain): The blockchain to check. Must not be null.
-
-    Returns:
-        None
-    """
     assert blockchain is not None, "Blockchain cannot be null"
     logger: logging.Logger = logging.getLogger()
     # logger.setLevel(logging.CRITICAL)
