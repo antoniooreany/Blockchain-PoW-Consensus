@@ -99,3 +99,13 @@ def log_validity(blockchain) -> None:
         logger.info(f"Blockchain is valid: {is_blockchain_valid}")
     else:
         logger.critical(f"Blockchain validity: {is_blockchain_valid}")
+
+
+# logging_config.py
+import logging
+
+
+def configure_logging():
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+    return logger

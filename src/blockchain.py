@@ -155,15 +155,15 @@ import time
 
 from block import Block
 from constants import HASH_BIT_LENGTH
-from helpers import clamp
-from logging_utils import log_validity, log_mined_block
+from helpers import clamp, create_genesis_block
+from logging_utils import log_validity
 from proof_of_work import ProofOfWork
 
 
 class Blockchain:
     def __init__(self, initial_bit_difficulty, adjustment_interval, target_block_time):
         self.logger = logging.getLogger(__name__)
-        genesis_block = self.create_genesis_block()
+        genesis_block = create_genesis_block()
         self.blocks = [genesis_block]
         self.chain = []
         self.bit_difficulties = [initial_bit_difficulty]
@@ -171,12 +171,12 @@ class Blockchain:
         self.target_block_mining_time = target_block_time
         self.mining_times = []
 
-    def create_genesis_block(self):
-        genesis_block = Block(0, time.time(), "Genesis Block", "0")
-        genesis_block.hash = genesis_block.calculate_hash()
-        log_mined_block(genesis_block)
-        self.logger.debug(f"##################")
-        return genesis_block
+    # def create_genesis_block(self):
+    #     genesis_block = Block(0, time.time(), "Genesis Block", "0")
+    #     genesis_block.hash = genesis_block.calculate_hash()
+    #     log_mined_block(genesis_block)
+    #     self.logger.debug(f"##################")
+    #     return genesis_block
 
     def add_blocks(self, number_of_blocks: int, clamp_factor, smallest_bit_difficulty):
         for i in range(1, number_of_blocks):

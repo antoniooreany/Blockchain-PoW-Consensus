@@ -6,6 +6,20 @@
 
 
 # helpers.py
+import time
+
+from block import Block
+from logging_utils import log_mined_block
+
+
+def create_genesis_block():
+    genesis_block = Block(0, time.time(), "Genesis Block", "0")
+    genesis_block.hash = genesis_block.calculate_hash()
+    log_mined_block(genesis_block)
+    return genesis_block
+
+
+# helpers.py
 def clamp(log_adjustment_factor: float, clamp_factor: float) -> float:
     if log_adjustment_factor > clamp_factor:
         log_adjustment_factor = clamp_factor
