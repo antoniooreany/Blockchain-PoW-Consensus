@@ -10,13 +10,10 @@ import random
 from venv import logger
 
 from block import Block
+from constants import HASH_BIT_LENGTH, NONCE_BIT_LENGTH
 from src.logging_utils import log_mined_block
 
-HASH_BIT_LENGTH = 256  # The length of the hash in bits
-NONCE_BIT_LENGTH = 32  # The length of the nonce in bits
 
-
-# todo redundant class, move methods to Block class
 class ProofOfWork:
     @staticmethod
     def find_nonce(
@@ -29,11 +26,9 @@ class ProofOfWork:
         # Calculate the target value based on difficulty
         target_value: float = math.pow(2, HASH_BIT_LENGTH - bit_difficulty) - 1  # todo move to blockchain.py
 
-        # logger.debug(f"target value: {target_value}")
         logger.debug(f"target value: {int(target_value)}")
-        logger.debug(f"target value in hex: {hex(int(target_value))}")
-        # logger.debug(f"nonce: {block.nonce}")
-        # logger.debug(f"nonce / max_nonce: {block.nonce / max_nonce}")
+        logger.debug(
+            f"target value in hex: {hex(int(target_value))}")  # todo why it is something like 0x1c4041b107f67500000000000000000000000000000000000000000000000 ???
 
         base_hash_data: bytes = ((str(block.index) +
                                   str(block.timestamp) +

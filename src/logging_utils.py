@@ -91,7 +91,6 @@ def log_time(
 def log_validity(blockchain) -> None:
     assert blockchain is not None, "Blockchain cannot be null"
     logger: logging.Logger = logging.getLogger()
-    # logger.setLevel(logging.CRITICAL)
     assert logger is not None, "Logger cannot be null"
     is_blockchain_valid: bool = blockchain.is_chain_valid()
     assert is_blockchain_valid is not None, "Blockchain validity cannot be null"
@@ -99,10 +98,6 @@ def log_validity(blockchain) -> None:
         logger.info(f"Blockchain is valid: {is_blockchain_valid}")
     else:
         logger.critical(f"Blockchain validity: {is_blockchain_valid}")
-
-
-# logging_config.py
-import logging
 
 
 def configure_logging():

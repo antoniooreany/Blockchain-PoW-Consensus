@@ -8,8 +8,13 @@
 import logging
 
 from blockchain import Blockchain
-from constants import INITIAL_BIT_DIFFICULTY, ADJUSTMENT_INTERVAL, TARGET_BLOCK_TIME, NUMBER_BLOCKS_TO_ADD, \
-    CLAMP_FACTOR, SMALLEST_BIT_DIFFICULTY
+from constants import (
+    INITIAL_BIT_DIFFICULTY,
+    ADJUSTMENT_INTERVAL,
+    TARGET_BLOCK_TIME,
+    NUMBER_BLOCKS_TO_ADD,
+    CLAMP_FACTOR, SMALLEST_BIT_DIFFICULTY,
+)
 from helpers import collect_filtered_bit_difficulties, add_blocks
 from logger_singleton import LoggerSingleton
 from plotting import plot_blockchain_statistics
@@ -32,14 +37,6 @@ if __name__ == "__main__":
         # 8,
         # 16,
     ]:
-        # INITIAL_BIT_DIFFICULTY = 16  # todo use bit_difficulty, better even linear_difficulty
-        # ADJUSTMENT_INTERVAL = 10
-        # TARGET_BLOCK_TIME = 0.1
-        # NUMBER_BLOCKS_TO_ADD = 50
-        #
-        # CLAMP_FACTOR = 2  # todo 2 bits; bin: 0b10, hex: 0x2, dec: 2: max adjustment factor
-        # SMALLEST_BIT_DIFFICULTY = 4  # todo 4 bits; bin: 0b0000, hex: 0x0, dec: 0: smallest bit difficulty
-
         blockchain = Blockchain(
             initial_bit_difficulty=INITIAL_BIT_DIFFICULTY,
             adjustment_interval=ADJUSTMENT_INTERVAL,  # todo should it be a property of blockchain?
@@ -55,7 +52,7 @@ if __name__ == "__main__":
         filtered_difficulties = collect_filtered_bit_difficulties(blockchain, ADJUSTMENT_INTERVAL)
         blockchain.bit_difficulties = filtered_difficulties  # Update the blockchain with filtered difficulties
 
-        logger.info(f"Target block time: {TARGET_BLOCK_TIME}")
+        logger.info(f"Target block time: {TARGET_BLOCK_TIME:.17f}")
         average_mining_time_last_half_blocks = blockchain.get_average_mining_time(
             num_blocks=blockchain.blocks.__len__() // 2)
         logger.info(f"Average mining time of the last half of the blockchain: {average_mining_time_last_half_blocks}")

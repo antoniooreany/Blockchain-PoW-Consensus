@@ -6,6 +6,8 @@
 
 import time
 
+import src.helpers
+
 
 class Block:
     def __init__(self, index, timestamp, data, prev_hash):
@@ -55,7 +57,7 @@ def mine_block(blockchain, index):
         new_block.hash = new_block.calculate_hash()
     mining_time = time.time() - start_time
     blockchain.add_block(new_block, mining_time)
-    blockchain.adjust_difficulty()
+    src.helpers.adjust_difficulty()
 
 
 import matplotlib.pyplot as plt

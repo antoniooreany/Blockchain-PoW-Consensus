@@ -7,9 +7,6 @@
 
 import hashlib
 
-# HASH_BIT_LENGTH = 256  # The length of the hash in bits
-# NONCE_BIT_LENGTH = 32  # The length of the nonce in bits
-
 
 class Block:
     def __init__(

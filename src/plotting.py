@@ -9,17 +9,14 @@ import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 from screeninfo import get_monitors
 
+from constants import FONTSIZE, DEFAULT_MARGIN, MARGIN_COEFFICIENT
 from src.blockchain import Blockchain
-
-MARGIN_COEFFICIENT = 0.1
-DEFAULT_MARGIN = 1
-FONTSIZE = 12
 
 
 def plot_blockchain_statistics(
         blockchains: dict[int, Blockchain],  # base as key, Blockchain as value
         scaling_factor: float = 1.0,  # An optional parameter to scale the y-axis for the bit difficulties
-        linewidth: int = 1  # The width of the line to plot
+        line_width: int = 1  # The width of the line to plot
 ) -> None:
     if not blockchains:
         raise ValueError("No blockchains provided")
@@ -71,7 +68,7 @@ def plot_blockchain_statistics(
             range(len(bit_difficulties)),
             bit_difficulties,
             color=difficulty_color,
-            linewidth=linewidth,
+            linewidth=line_width,
             label=f'Bit Difficulty (base={base})'
         )
 
