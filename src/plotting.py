@@ -206,19 +206,42 @@ import matplotlib.pyplot as plt
 from screeninfo import get_monitors
 
 from constants import (
-    FONT_SIZE, DEFAULT_MARGIN, MARGIN_COEFFICIENT,
-    FIGURE_SCALING_FACTOR, PIXEL_TO_INCH_CONVERSION,
-    COLOR_LIST_LENGTH, BAR_WIDTH, EPSILON,
-    GRID_LINE_WIDTH, LEGEND_B_BOX_Y, LEGEND_N_COL,
-    LEGEND_FONT_SIZE, TITLE_FONT_SIZE, MARKER_SIZE
+    SCALING_FACTOR,
+    LINE_WIDTH,
+    PLOT_BACKGROUND,
+    MINING_TIME_COLORS,
+    BIT_DIFFICULTY_COLORS,
+    FONT_SIZE,
+    DEFAULT_MARGIN,
+    MARGIN_COEFFICIENT,
+    FIGURE_SCALING_FACTOR,
+    PIXEL_TO_INCH_CONVERSION,
+    COLOR_LIST_LENGTH,
+    BAR_WIDTH,
+    EPSILON,
+    GRID_LINE_WIDTH,
+    LEGEND_B_BOX_Y,
+    LEGEND_N_COL,
+    LEGEND_FONT_SIZE,
+    TITLE_FONT_SIZE,
+    MARKER_SIZE,
 )
 from src.blockchain import Blockchain
+
+PLOT_TITLE_COLOR = 'white'
+
+PLOT_TITLE_LABEL = 'Blockchain Mining Statistics'
+
+FIGURE_BASE = 0.5
+
+LEGEND_LOCATION = 'upper center'
 
 
 def plot_blockchain_statistics(
         blockchains: dict[int, Blockchain],
-        scaling_factor: float = 1.0,
-        line_width: int = 1
+        scaling_factor: float = SCALING_FACTOR,
+        # An optional parameter to scale the y-axis for the bit difficulties # todo remove from default
+        line_width: int = LINE_WIDTH  # The width of the line to plot # todo remove from default
 ) -> None:
     if not blockchains:
         raise ValueError("No blockchains provided")
@@ -232,11 +255,11 @@ def plot_blockchain_statistics(
         monitor.height * FIGURE_SCALING_FACTOR / PIXEL_TO_INCH_CONVERSION
     )
 
-    plt.style.use('dark_background')
+    plt.style.use(PLOT_BACKGROUND)
     fig, ax1 = plt.subplots(figsize=(fig_width, fig_height))
 
-    mining_time_colors = ['green'] * COLOR_LIST_LENGTH
-    difficulty_colors = ['cyan'] * COLOR_LIST_LENGTH
+    mining_time_colors = [MINING_TIME_COLORS] * COLOR_LIST_LENGTH
+    bit_difficulty_colors = [BIT_DIFFICULTY_COLORS] * COLOR_LIST_LENGTH
     all_bit_difficulties = [difficulty for blockchain in blockchains.values() for difficulty in
                             blockchain.bit_difficulties]
 
@@ -247,12 +270,14 @@ def plot_blockchain_statistics(
 
     for i, (base, blockchain) in enumerate(blockchains.items()):
         plot_mining_times_bar(ax1, blockchain, mining_time_colors[i % len(mining_time_colors)])
-        plot_bit_difficulties(ax1, blockchain, difficulty_colors[i % len(difficulty_colors)], base, scaling_factor,
+        plot_bit_difficulties(ax1, blockchain, bit_difficulty_colors[i % len(bit_difficulty_colors)], base,
+                              scaling_factor,
                               line_width)
 
     fig.tight_layout()
-    fig.legend(loc='upper center', bbox_to_anchor=(0.5, LEGEND_B_BOX_Y), ncol=LEGEND_N_COL, fontsize=LEGEND_FONT_SIZE)
-    plt.title('Blockchain Mining Statistics', fontsize=TITLE_FONT_SIZE, color='white')
+    fig.legend(loc=LEGEND_LOCATION, bbox_to_anchor=(FIGURE_BASE, LEGEND_B_BOX_Y), ncol=LEGEND_N_COL,
+               fontsize=LEGEND_FONT_SIZE)
+    plt.title(PLOT_TITLE_LABEL, fontsize=TITLE_FONT_SIZE, color=PLOT_TITLE_COLOR)
     plt.show()
 
 

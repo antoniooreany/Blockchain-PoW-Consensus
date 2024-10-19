@@ -7,7 +7,7 @@
 import time
 
 from block import Block
-from constants import HASH_BIT_LENGTH
+from constants import HASH_BIT_LENGTH, GENESIS_BLOCK_HASH, BASE
 from helpers import create_genesis_block
 from logging_utils import configure_logging
 from logging_utils import log_validity
@@ -30,7 +30,7 @@ class Blockchain:
         return self.blocks[-1] if self.blocks else None
 
     def add_block(self, new_block: Block, clamp_factor, smallest_bit_difficulty) -> None:
-        new_block.previous_hash = self.get_latest_block().hash if self.blocks else '0'
+        new_block.previous_hash = self.get_latest_block().hash if self.blocks else GENESIS_BLOCK_HASH
         start_time = time.time()
         ProofOfWork.find_nonce(new_block, self.bit_difficulties[-1])
         end_time = time.time()
@@ -39,7 +39,7 @@ class Blockchain:
         if not ProofOfWork.validate_proof(new_block, self.bit_difficulties[-1]):
             self.logger.error(f"Block {new_block.index} was mined with a hash that does not meet the difficulty")
             self.logger.error(f"Block hash: {new_block.hash}")
-            self.logger.error(f"Target value: {(2 ** (HASH_BIT_LENGTH - self.bit_difficulties[-1])) - 1}")
+            self.logger.error(f"Target value: {(BASE ** (HASH_BIT_LENGTH - self.bit_difficulties[-1])) - 1}")
             return
 
         self.blocks.append(new_block)

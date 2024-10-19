@@ -49,7 +49,7 @@ class ColorFormatter(logging.Formatter):
         # Check for null pointer references and other potential issues
         assert record is not None, "Record cannot be null"
         assert record.msg is not None, "Record message cannot be null"
-        assert record.levelname is not None, "Record levelname cannot be null"
+        assert record.levelname is not None, "Record level name cannot be null"
 
         log_colors: dict = {
             'DEBUG': '\033[94m',  # Blue

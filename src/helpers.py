@@ -8,19 +8,20 @@ import math
 import time
 
 from block import Block
+from constants import GENESIS_BLOCK_DATA, GENESIS_BLOCK_PREVIOUS_HASH
 from logging_utils import log_mined_block
 
 
 def create_genesis_block():
-    genesis_block = Block(0, time.time(), "Genesis Block", "0")
+    genesis_block = Block(0, time.time(), GENESIS_BLOCK_DATA, GENESIS_BLOCK_PREVIOUS_HASH)
     genesis_block.hash = genesis_block.calculate_hash()
     log_mined_block(genesis_block)
     return genesis_block
 
 
 def add_blocks(blockchain, number_of_blocks: int, clamp_factor, smallest_bit_difficulty):
-    for i in range(1, number_of_blocks):
-        block = Block(i, time.time(), f"Block {i} Data")
+    for index in range(1, number_of_blocks):
+        block = Block(index, time.time(), f"Block {index} Data")
         blockchain.add_block(block, clamp_factor, smallest_bit_difficulty)
 
 

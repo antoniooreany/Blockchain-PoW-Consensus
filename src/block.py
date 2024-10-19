@@ -7,6 +7,8 @@
 
 import hashlib
 
+from constants import ENCODING
+
 
 class Block:
     def __init__(
@@ -20,7 +22,7 @@ class Block:
         self.timestamp: float = timestamp
         self.data: str = data
         self.previous_hash: str = previous_hash
-        self.nonce: int = 0
+        self.nonce: int = 0  # todo move to ProofOfWork?
         self.hash: str = self.calculate_hash()
 
     def calculate_hash(self) -> str:
@@ -31,5 +33,5 @@ class Block:
              str(self.data) +
              str(self.previous_hash) +
              str(self.nonce))
-            .encode('utf-8'))
+            .encode(ENCODING))
         return sha.hexdigest()
