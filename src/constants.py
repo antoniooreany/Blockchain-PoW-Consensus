@@ -6,7 +6,7 @@
 
 # properties of the execution:
 INITIAL_BIT_DIFFICULTY = 16  # bit difficulty of the first block; todo is it better to use linear_difficulty?
-NUMBER_BLOCKS_TO_ADD = 1000  # how many blocks do we plan to add; property of the current execution
+NUMBER_BLOCKS_TO_ADD = 100  # how many blocks do we plan to add; property of the current execution
 
 # properties of the blockchain:
 TARGET_BLOCK_TIME = 0.01  # what is the desirable time to mine a block
