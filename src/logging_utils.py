@@ -71,21 +71,21 @@ def log_mined_block(block) -> None:
     logger: logging.Logger = logging.getLogger()
     logger.info(f"Block mined:")
     logger.info(f"Index: {block.index}")
-    logger.debug(f"Timestamp: {block.timestamp}")
-    logger.debug(f"Data: {block.data}")
-    logger.debug(f"Previous hash: {block.previous_hash}")
-    logger.debug(f"Nonce: {block.nonce}")
-    logger.debug(f"Hash: {block.hash}")
+    logger.info(f"Timestamp: {block.timestamp}")
+    logger.info(f"Data: {block.data}")
+    logger.info(f"Previous hash: {block.previous_hash}")
+    logger.info(f"Nonce: {block.nonce}")
+    logger.info(f"Hash: {block.hash}")
 
 
-def log_time(
-        average_time: float,  # The actual time
-        expected_time: float  # The expected time
-) -> None:
-    logger: logging.Logger = logging.getLogger()
-    assert average_time is not None, "Actual time cannot be null"
-    assert expected_time is not None, "Expected time cannot be null"
-    logger.info(f"Average time: {average_time}, Expected time: {expected_time}")
+# def log_time(
+#         average_time: float,  # The actual time
+#         expected_time: float  # The expected time
+# ) -> None:
+#     logger: logging.Logger = logging.getLogger()
+#     assert average_time is not None, "Actual time cannot be null"
+#     assert expected_time is not None, "Expected time cannot be null"
+#     logger.info(f"Average time: {average_time}, Expected time: {expected_time}")
 
 
 def log_validity(blockchain) -> None:

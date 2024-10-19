@@ -13,12 +13,16 @@ from constants import (
     ADJUSTMENT_INTERVAL,
     TARGET_BLOCK_TIME,
     NUMBER_BLOCKS_TO_ADD,
-    CLAMP_FACTOR, SMALLEST_BIT_DIFFICULTY,
+    CLAMP_FACTOR,
+    SMALLEST_BIT_DIFFICULTY,
+    STATISTICS_PARTITION_INTERVAL_FACTOR,
 )
 from helpers import collect_filtered_bit_difficulties, add_blocks
 from logger_singleton import LoggerSingleton
 from plotting import plot_blockchain_statistics
 from src.logging_utils import LogLevelCounterHandler
+
+# I = 2
 
 if __name__ == "__main__":
     # Set the logging level to INFO (or WARNING to reduce more output)
@@ -54,7 +58,7 @@ if __name__ == "__main__":
 
         logger.info(f"Target block time: {TARGET_BLOCK_TIME:.17f}")
         average_mining_time_last_half_blocks = blockchain.get_average_mining_time(
-            num_blocks=blockchain.blocks.__len__() // 2)
+            num_blocks=blockchain.blocks.__len__() // STATISTICS_PARTITION_INTERVAL_FACTOR)
         logger.info(f"Average mining time of the last half of the blockchain: {average_mining_time_last_half_blocks}")
 
         blockchains[base] = blockchain
