@@ -9,6 +9,7 @@ import logging
 
 from blockchain import Blockchain
 from constants import (
+    BASE,
     INITIAL_BIT_DIFFICULTY,
     ADJUSTMENT_INTERVAL,
     TARGET_BLOCK_TIME,
@@ -34,7 +35,7 @@ if __name__ == "__main__":
 
     blockchains = {}
     for base in [
-        2,
+        BASE,
         # 4,
         # 8,
         # 16,

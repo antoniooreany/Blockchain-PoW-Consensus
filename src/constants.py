@@ -6,7 +6,8 @@
 
 # properties of the execution:
 INITIAL_BIT_DIFFICULTY = 16  # bit difficulty of the first block; todo is it better to use linear_difficulty?
-NUMBER_BLOCKS_TO_ADD = 100  # how many blocks do we plan to add; property of the current execution
+# NUMBER_BLOCKS_TO_ADD = 10_000  # how many blocks do we plan to add; property of the current execution
+NUMBER_BLOCKS_TO_ADD = 20  # how many blocks do we plan to add; property of the current execution
 
 # properties of the blockchain:
 BASE = 2  # base for the blockchain
@@ -30,7 +31,8 @@ DEFAULT_MARGIN = 0.1  # margin for the plotting of bit_difficulties when min_bit
 
 # properties of the plotting: general:
 FONT_SIZE = 12  # font size for the plotting: axes label titles
-FIGURE_SCALING_FACTOR = 0.9  # scaling factor for the plotting
+FIGURE_HEIGHT_SCALING_FACTOR = 0.9  # scaling factor for the plotting
+FIGURE_WIDHT_SCALING_FACTOR = 0.9  # scaling factor for the plotting
 PIXEL_TO_INCH_CONVERSION = 100  # conversion factor from pixels to inches
 COLOR_LIST_LENGTH = 3  # length of the color list for the plotting
 BAR_WIDTH = 0.8  # width of the bars in the bar plot
@@ -39,7 +41,11 @@ GRID_LINE_WIDTH = 0.5  # width of the grid lines in the plot
 LEGEND_B_BOX_Y = -0.1  # y-coordinate of the legend bounding box
 LEGEND_N_COL = 3  # number of columns in the legend
 LEGEND_FONT_SIZE = 10  # font size of the legend
-TITLE_FONT_SIZE = 14  # font size of the title
+LEGEND_LOCATION = 'upper center'
+PLOT_TITLE_FONT_SIZE = 14  # font size of the title
+PLOT_TITLE_COLOR = 'white'
+PLOT_TITLE_LABEL = 'Blockchain Mining Statistics'
+PLOT_TITLE_Y = 1.0
 MARKER_SIZE = 0.5  # size of the markers in the plot
 
 # properties of the project: # todo correct the values
@@ -86,7 +92,5 @@ AX2_PLOT_LABEL = 'Bit Difficulty'
 
 # properties of the plotting: scatter:
 SCATTER_COLOR = 'lime'
-PLOT_TITLE_COLOR = 'white'
-PLOT_TITLE_LABEL = 'Blockchain Mining Statistics'
-LEGEND_LOCATION = 'upper center'
+
 FIGURE_BASE = 0.5

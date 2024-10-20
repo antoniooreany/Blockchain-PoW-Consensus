@@ -19,7 +19,7 @@ from constants import (
     FONT_SIZE,
     DEFAULT_MARGIN,
     MARGIN_COEFFICIENT,
-    FIGURE_SCALING_FACTOR,
+    FIGURE_HEIGHT_SCALING_FACTOR,
     PIXEL_TO_INCH_CONVERSION,
     COLOR_LIST_LENGTH,
     BAR_WIDTH,
@@ -28,7 +28,7 @@ from constants import (
     LEGEND_B_BOX_Y,
     LEGEND_N_COL,
     LEGEND_FONT_SIZE,
-    TITLE_FONT_SIZE,
+    PLOT_TITLE_FONT_SIZE,
     MARKER_SIZE,
 
     AX1_GRID_LINE_STYLE,
@@ -50,8 +50,9 @@ from constants import (
     SCATTER_COLOR,
     PLOT_TITLE_COLOR,
     PLOT_TITLE_LABEL,
-    FIGURE_BASE,
     LEGEND_LOCATION,
+    FIGURE_BASE, FIGURE_WIDHT_SCALING_FACTOR, PLOT_TITLE_Y,
+
 )
 from src.blockchain import Blockchain
 
@@ -70,8 +71,9 @@ def plot_blockchain_statistics(
         raise RuntimeError("No monitor found")
 
     (fig_width, fig_height) = (
-        monitor.width * FIGURE_SCALING_FACTOR / PIXEL_TO_INCH_CONVERSION,
-        monitor.height * FIGURE_SCALING_FACTOR / PIXEL_TO_INCH_CONVERSION
+        monitor.width * FIGURE_WIDHT_SCALING_FACTOR / PIXEL_TO_INCH_CONVERSION,
+        monitor.height * FIGURE_HEIGHT_SCALING_FACTOR / PIXEL_TO_INCH_CONVERSION,
+        # monitor.height * 3.0 / PIXEL_TO_INCH_CONVERSION,
     )
 
     plt.style.use(PLOT_BACKGROUND)
@@ -83,8 +85,10 @@ def plot_blockchain_statistics(
     all_bit_difficulties = [difficulty for blockchain in blockchains.values() for difficulty in
                             blockchain.bit_difficulties]
 
-    min_bit_difficulty, max_bit_difficulty = min(all_bit_difficulties) * scaling_factor, max(
-        all_bit_difficulties) * scaling_factor
+    min_bit_difficulty, max_bit_difficulty = (
+        min(all_bit_difficulties) * scaling_factor,
+        max(all_bit_difficulties) * scaling_factor
+    )
     if min_bit_difficulty == max_bit_difficulty:
         max_bit_difficulty += EPSILON
 
@@ -103,9 +107,21 @@ def plot_blockchain_statistics(
         )  # todo Type 'Axes' doesn't have expected attributes 'set_ylim', 'set_ylabel', 'tick_params', 'grid', 'relim', 'autoscale_view'
 
     fig.tight_layout()
-    fig.legend(loc=LEGEND_LOCATION, bbox_to_anchor=(FIGURE_BASE, LEGEND_B_BOX_Y), ncol=LEGEND_N_COL,
-               fontsize=LEGEND_FONT_SIZE)
-    plt.title(PLOT_TITLE_LABEL, fontsize=TITLE_FONT_SIZE, color=PLOT_TITLE_COLOR)
+    fig.legend(
+        loc=LEGEND_LOCATION,
+        bbox_to_anchor=(
+            FIGURE_BASE,
+            LEGEND_B_BOX_Y
+        ),
+        ncol=LEGEND_N_COL,
+        fontsize=LEGEND_FONT_SIZE
+    )
+    plt.title(
+        PLOT_TITLE_LABEL,
+        fontsize=PLOT_TITLE_FONT_SIZE,
+        color=PLOT_TITLE_COLOR,
+        y=PLOT_TITLE_Y,
+    )
     plt.show()
 
 
@@ -143,6 +159,7 @@ def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, lin
 
     # ax2.set_ylim(min_bit_difficulty - margin, max_bit_difficulty + margin)
     ax2.set_ylim(0, max_bit_difficulty + margin)
+    # ax2.set_ylim(0, (max_bit_difficulty + margin) * 0.95)
     ax2.set_ylabel(AX2_Y_LABEL_TEXT, fontsize=FONT_SIZE, color=difficulty_color)
     ax2.tick_params(axis=AX2_TICK_PARAMS_AXIS, labelcolor=difficulty_color)
     ax2.grid(
