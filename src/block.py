@@ -13,12 +13,14 @@ from constants import ENCODING
 class Block:
     def __init__(
             self,
+            bit_difficulty: float,
             index: int,
             timestamp: float,
             data: str,
             previous_hash: str = '',
     ) -> None:
         self.index: int = index
+        self.bit_difficulty: float = bit_difficulty
         self.timestamp: float = timestamp
         self.data: str = data
         self.previous_hash: str = previous_hash

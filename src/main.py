@@ -43,7 +43,7 @@ if __name__ == "__main__":
         blockchain = Blockchain(
             initial_bit_difficulty=INITIAL_BIT_DIFFICULTY,
             adjustment_interval=ADJUSTMENT_INTERVAL,  # todo should it be a property of blockchain?
-            target_block_time=TARGET_BLOCK_TIME,
+            target_block_mining_time=TARGET_BLOCK_TIME,
         )
         logger.debug(f"Created: blockchain (base: {base}, initial bit difficulty: {INITIAL_BIT_DIFFICULTY})")
         logger.debug(f"##################")

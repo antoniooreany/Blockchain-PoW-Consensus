@@ -16,15 +16,15 @@ from src.helpers import adjust_difficulty
 
 
 class Blockchain:
-    def __init__(self, initial_bit_difficulty, adjustment_interval, target_block_time):
+    def __init__(self, initial_bit_difficulty, adjustment_interval, target_block_mining_time):
         self.logger = configure_logging()
-        genesis_block = create_genesis_block()
+        genesis_block = create_genesis_block(initial_bit_difficulty)
         self.blocks = [genesis_block]
         # self.chain = []
         self.chain = [genesis_block]
         self.bit_difficulties = [initial_bit_difficulty]
         self.adjustment_interval = adjustment_interval
-        self.target_block_mining_time = target_block_time
+        self.target_block_mining_time = target_block_mining_time
         # self.mining_times = []
         self.mining_times = [0.0]
 

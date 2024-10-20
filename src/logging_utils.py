@@ -9,6 +9,8 @@
 
 import logging
 
+from src.block import Block
+
 
 class LogLevelCounterHandler(logging.Handler):
     def __init__(self):
@@ -64,13 +66,14 @@ class ColorFormatter(logging.Formatter):
         return super().format(record)
 
 
-def log_mined_block(block) -> None:
+def log_mined_block(block: Block) -> None:
     assert block is not None, "Block cannot be null"
     assert block.index is not None, "Block index cannot be null"
     assert block.hash is not None, "Block hash cannot be null"
     logger: logging.Logger = logging.getLogger()
     logger.info(f"Block mined:")
     logger.info(f"Index: {block.index}")
+    logger.info(f"Bit Difficulty: {block.bit_difficulty}")
     logger.info(f"Timestamp: {block.timestamp}")
     logger.info(f"Data: {block.data}")
     logger.info(f"Previous hash: {block.previous_hash}")

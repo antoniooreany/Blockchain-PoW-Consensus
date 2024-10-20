@@ -12,8 +12,14 @@ from constants import GENESIS_BLOCK_DATA, GENESIS_BLOCK_PREVIOUS_HASH
 from logging_utils import log_mined_block
 
 
-def create_genesis_block():
-    genesis_block = Block(0, time.time(), GENESIS_BLOCK_DATA, GENESIS_BLOCK_PREVIOUS_HASH)
+def create_genesis_block(initial_bit_difficulty: float) -> Block:
+    genesis_block = Block(
+        bit_difficulty=initial_bit_difficulty,
+        index=0,
+        timestamp=time.time(),
+        data=GENESIS_BLOCK_DATA,
+        previous_hash=GENESIS_BLOCK_PREVIOUS_HASH,
+    )
     genesis_block.hash = genesis_block.calculate_hash()
     # blockchain.add_block(genesis_block, blockchain.clamp_factor, blockchain.smallest_bit_difficulty)
     log_mined_block(genesis_block)
@@ -22,7 +28,8 @@ def create_genesis_block():
 
 def add_blocks(blockchain, number_of_blocks: int, clamp_factor, smallest_bit_difficulty):
     for index in range(1, number_of_blocks):
-        block = Block(index, time.time(), f"Block {index} Data")
+        block = Block(bit_difficulty=blockchain.bit_difficulties[-1], index=index, timestamp=time.time(),
+                      data=f"Block {index} Data")
         blockchain.add_block(block, clamp_factor, smallest_bit_difficulty)
 
 
