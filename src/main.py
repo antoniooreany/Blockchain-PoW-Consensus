@@ -45,8 +45,8 @@ if __name__ == "__main__":
             adjustment_interval=ADJUSTMENT_INTERVAL,  # todo should it be a property of blockchain?
             target_block_mining_time=TARGET_BLOCK_TIME,
         )
-        logger.debug(f"Created: blockchain (base: {base}, initial bit difficulty: {INITIAL_BIT_DIFFICULTY})")
-        logger.debug(f"##################")
+        # logger.debug(f"Created: blockchain (base: {base}, initial bit difficulty: {INITIAL_BIT_DIFFICULTY})")
+        # logger.debug(f"##################")
 
         add_blocks(blockchain=blockchain, number_of_blocks=NUMBER_BLOCKS_TO_ADD, clamp_factor=CLAMP_FACTOR,
                    smallest_bit_difficulty=SMALLEST_BIT_DIFFICULTY)
@@ -55,7 +55,7 @@ if __name__ == "__main__":
         # filtered_difficulties = collect_filtered_bit_difficulties(blockchain, ADJUSTMENT_INTERVAL)
         # blockchain.bit_difficulties = filtered_difficulties  # todo ??? should we: Update the blockchain with filtered difficulties for plotting
 
-        logger.info(f"Target block time: {TARGET_BLOCK_TIME:.17f}")
+        logger.info(f"Target block time: {TARGET_BLOCK_TIME:.16f}")
         average_mining_time_last_half_blocks = blockchain.get_average_mining_time(
             num_blocks=blockchain.blocks.__len__() // STATISTICS_PARTITION_INTERVAL_FACTOR)
         logger.info(f"Average mining time of the last half of the blockchain: {average_mining_time_last_half_blocks}")

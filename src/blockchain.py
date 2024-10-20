@@ -5,6 +5,7 @@
 
 
 import time
+from venv import logger
 
 from block import Block
 from constants import HASH_BIT_LENGTH, GENESIS_BLOCK_HASH, BASE
@@ -13,6 +14,7 @@ from logging_utils import configure_logging
 from logging_utils import log_validity
 from proof_of_work import ProofOfWork
 from src.helpers import adjust_difficulty
+from src.logging_utils import log_mined_block
 
 
 class Blockchain:
@@ -27,6 +29,13 @@ class Blockchain:
         self.target_block_mining_time = target_block_mining_time
         # self.mining_times = []
         self.mining_times = [0.0]
+        logger.debug(f"Blockchain created")
+        logger.debug(f"##############################################")
+        log_mined_block(genesis_block)
+
+        log_validity(self)
+        self.logger.debug(f"Actual mining time for block {genesis_block.index}: {0.0:.25f} seconds")
+        self.logger.debug(f"##############################################")
 
     def get_latest_block(self) -> Block:
         return self.blocks[-1] if self.blocks else None
@@ -56,7 +65,6 @@ class Blockchain:
         adjust_difficulty(self, clamp_factor, smallest_bit_difficulty)
 
         log_validity(self)
-        # self.logger.debug(f"Bit Difficulty: {self.bit_difficulties[-1]}")
         self.logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.25f} seconds")
         self.logger.debug(f"##############################################")
 
