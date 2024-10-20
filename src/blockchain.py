@@ -56,7 +56,7 @@ class Blockchain:
         adjust_difficulty(self, clamp_factor, smallest_bit_difficulty)
 
         log_validity(self)
-        self.logger.debug(f"Bit Difficulty: {self.bit_difficulties[-1]}")
+        # self.logger.debug(f"Bit Difficulty: {self.bit_difficulties[-1]}")
         self.logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.25f} seconds")
         self.logger.debug(f"##############################################")
 

@@ -7,7 +7,6 @@
 import hashlib
 import math
 import random
-from venv import logger
 
 from block import Block
 from constants import HASH_BIT_LENGTH, NONCE_BIT_LENGTH
@@ -26,9 +25,9 @@ class ProofOfWork:
         # Calculate the target value based on difficulty
         target_value: float = math.pow(2, HASH_BIT_LENGTH - bit_difficulty) - 1  # todo move to blockchain.py
 
-        logger.debug(f"target value: {int(target_value)}")
-        logger.debug(
-            f"target value in hex: {hex(int(target_value))}")  # todo why it is something like 0x1c4041b107f67500000000000000000000000000000000000000000000000 ???
+        # logger.debug(f"target value: {int(target_value)}")
+        # logger.debug(
+        #     f"target value in hex: {hex(int(target_value))}")  # todo why it is something like 0x1c4041b107f67500000000000000000000000000000000000000000000000 ???
 
         base_hash_data: bytes = ((str(block.index) +
                                   str(block.timestamp) +
