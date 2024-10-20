@@ -69,10 +69,11 @@ def collect_filtered_bit_difficulties(blockchain, adjustment_interval):  # todo 
 
 
 def adjust_difficulty(blockchain, clamp_factor, smallest_bit_difficulty):
-    # if len(blockchain.blocks) % blockchain.adjustment_interval == 0:
-    # if len(blockchain.blocks) % blockchain.adjustment_interval == 1:
-    # if len(blockchain.blocks) % (blockchain.adjustment_interval - 1) == 2:
-    if len(blockchain.blocks) % (blockchain.adjustment_interval - 1) == 1:
+    if len(blockchain.blocks) % blockchain.adjustment_interval == 0:
+        # if len(blockchain.blocks) % blockchain.adjustment_interval == 1:
+        # if len(blockchain.blocks) % (blockchain.adjustment_interval - 1) == 2:
+        # if len(blockchain.blocks) % (blockchain.adjustment_interval - 1) == 1:
+        # if len(blockchain.blocks) % blockchain.adjustment_interval == 1:
         # if len(blockchain.blocks) % (blockchain.adjustment_interval - 1) == 0:
         # if (len(blockchain.blocks) - 1) % blockchain.adjustment_interval == 0:
         average_mining_time = blockchain.get_average_mining_time(blockchain.adjustment_interval)
@@ -87,4 +88,6 @@ def adjust_difficulty(blockchain, clamp_factor, smallest_bit_difficulty):
         else:
             new_difficulty = smallest_bit_difficulty
 
-        blockchain.bit_difficulties.append(new_difficulty)
+        # blockchain.bit_difficulties.append(new_difficulty)
+        # todo not append, but update the last element
+        blockchain.bit_difficulties[-1] = new_difficulty
