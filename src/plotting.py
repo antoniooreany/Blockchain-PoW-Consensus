@@ -141,7 +141,8 @@ def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, lin
     margin = DEFAULT_MARGIN if min_bit_difficulty == max_bit_difficulty \
         else (max_bit_difficulty - min_bit_difficulty) * MARGIN_COEFFICIENT
 
-    ax2.set_ylim(min_bit_difficulty - margin, max_bit_difficulty + margin)
+    # ax2.set_ylim(min_bit_difficulty - margin, max_bit_difficulty + margin)
+    ax2.set_ylim(0, max_bit_difficulty + margin)
     ax2.set_ylabel(AX2_Y_LABEL_TEXT, fontsize=FONT_SIZE, color=difficulty_color)
     ax2.tick_params(axis=AX2_TICK_PARAMS_AXIS, labelcolor=difficulty_color)
     ax2.grid(
