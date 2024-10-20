@@ -89,11 +89,18 @@ def plot_blockchain_statistics(
         max_bit_difficulty += EPSILON
 
     for i, (base, blockchain) in enumerate(blockchains.items()):
-        plot_mining_times_bar(ax1, blockchain, mining_time_colors[
-            i % len(mining_time_colors)])  # todo doesnt expect ax1 in both functions
-        plot_bit_difficulties(ax1, blockchain, bit_difficulty_colors[i % len(bit_difficulty_colors)], base,
-                              scaling_factor,
-                              line_width)
+        plot_mining_times_bar(
+            ax1,
+            blockchain,
+            mining_time_colors[i % len(mining_time_colors)],
+        )  # todo Type 'Axes' doesn't have expected attributes 'set_xlabel', 'set_ylabel', 'tick_params', 'grid', 'relim', 'autoscale_view'
+        plot_bit_difficulties(
+            ax1,
+            blockchain,
+            bit_difficulty_colors[i % len(bit_difficulty_colors)],
+            scaling_factor,
+            line_width,
+        )  # todo Type 'Axes' doesn't have expected attributes 'set_ylim', 'set_ylabel', 'tick_params', 'grid', 'relim', 'autoscale_view'
 
     fig.tight_layout()
     fig.legend(loc=LEGEND_LOCATION, bbox_to_anchor=(FIGURE_BASE, LEGEND_B_BOX_Y), ncol=LEGEND_N_COL,
@@ -123,7 +130,7 @@ def plot_mining_times_bar(ax1, blockchain, mining_time_color):
     ax1.autoscale_view()
 
 
-def plot_bit_difficulties(ax1, blockchain, difficulty_color, base, scaling_factor, line_width):
+def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, line_width):
     ax2 = ax1.twinx()
     bit_difficulties = [difficulty * scaling_factor for difficulty in blockchain.bit_difficulties]
 

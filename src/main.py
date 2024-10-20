@@ -22,8 +22,6 @@ from logger_singleton import LoggerSingleton
 from plotting import plot_blockchain_statistics
 from src.logging_utils import LogLevelCounterHandler
 
-# I = 2
-
 if __name__ == "__main__":
     # Set the logging level to INFO (or WARNING to reduce more output)
     logging.getLogger('matplotlib').setLevel(logging.INFO)
