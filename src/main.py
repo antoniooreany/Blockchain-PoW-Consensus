@@ -18,7 +18,7 @@ from constants import (
     SMALLEST_BIT_DIFFICULTY,
     STATISTICS_PARTITION_INTERVAL_FACTOR,
 )
-from helpers import collect_filtered_bit_difficulties, add_blocks
+from helpers import add_blocks
 from logger_singleton import LoggerSingleton
 from plotting import plot_blockchain_statistics
 from src.logging_utils import LogLevelCounterHandler
@@ -52,8 +52,8 @@ if __name__ == "__main__":
                    smallest_bit_difficulty=SMALLEST_BIT_DIFFICULTY)
 
         # Collect filtered bit difficulties
-        filtered_difficulties = collect_filtered_bit_difficulties(blockchain, ADJUSTMENT_INTERVAL)
-        blockchain.bit_difficulties = filtered_difficulties  # Update the blockchain with filtered difficulties
+        # filtered_difficulties = collect_filtered_bit_difficulties(blockchain, ADJUSTMENT_INTERVAL)
+        # blockchain.bit_difficulties = filtered_difficulties  # todo ??? should we: Update the blockchain with filtered difficulties for plotting
 
         logger.info(f"Target block time: {TARGET_BLOCK_TIME:.17f}")
         average_mining_time_last_half_blocks = blockchain.get_average_mining_time(

@@ -7,14 +7,14 @@
 # properties of the execution:
 INITIAL_BIT_DIFFICULTY = 16  # bit difficulty of the first block; todo is it better to use linear_difficulty?
 # NUMBER_BLOCKS_TO_ADD = 10_000  # how many blocks do we plan to add; property of the current execution
-NUMBER_BLOCKS_TO_ADD = 20  # how many blocks do we plan to add; property of the current execution
+NUMBER_BLOCKS_TO_ADD = 22  # how many blocks do we plan to add; property of the current execution
 
 # properties of the blockchain:
 BASE = 2  # base for the blockchain
 TARGET_BLOCK_TIME = 0.01  # what is the desirable time to mine a block
 
 # properties of the difficulty adjustment:
-ADJUSTMENT_INTERVAL = 10  # how many blocks to wait before adjusting the difficulty
+ADJUSTMENT_INTERVAL = 3  # how many blocks to wait before adjusting the difficulty
 CLAMP_FACTOR = 2  # max adjustment factor to increase / decrease the difficulty
 SMALLEST_BIT_DIFFICULTY = 4  # the smallest bit difficulty that we can adjust to; todo 4 bits; bin: 0b0000, hex: 0x0,
 
@@ -91,6 +91,9 @@ AX2_Y_LABEL_TEXT = 'Bit Difficulty, bits'
 AX2_PLOT_LABEL = 'Bit Difficulty'
 
 # properties of the plotting: scatter:
-SCATTER_COLOR = 'lime'
+MINING_TIMES_SCATTER_COLOR = 'lime'
+BIT_DIFFICULTY_SCATTER_COLOR = 'red'
+
+AX2_SCATTER_Z_ORDER = 3
 
 FIGURE_BASE = 0.5

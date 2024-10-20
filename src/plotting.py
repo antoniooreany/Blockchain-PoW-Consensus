@@ -47,11 +47,11 @@ from constants import (
     AX2_PLOT_LABEL,
     AX2_GRID_LINE_STYLE,
 
-    SCATTER_COLOR,
+    MINING_TIMES_SCATTER_COLOR,
     PLOT_TITLE_COLOR,
     PLOT_TITLE_LABEL,
     LEGEND_LOCATION,
-    FIGURE_BASE, FIGURE_WIDHT_SCALING_FACTOR, PLOT_TITLE_Y,
+    FIGURE_BASE, FIGURE_WIDHT_SCALING_FACTOR, PLOT_TITLE_Y, BIT_DIFFICULTY_SCATTER_COLOR, AX2_SCATTER_Z_ORDER,
 
 )
 from src.blockchain import Blockchain
@@ -131,7 +131,8 @@ def plot_mining_times_bar(ax1, blockchain, mining_time_color):
 
     ax1.bar(range(len(mining_times)), mining_times, color=mcolors.to_rgba(mining_time_color, alpha=AX1_BAR_ALPHA),
             width=BAR_WIDTH)
-    ax1.scatter(range(len(mining_times)), mining_times, color=SCATTER_COLOR, s=marker_size, zorder=AX1_SCATTER_Z_ORDER)
+    ax1.scatter(range(len(mining_times)), mining_times, color=MINING_TIMES_SCATTER_COLOR, s=marker_size,
+                zorder=AX1_SCATTER_Z_ORDER)
     ax1.set_xlabel(AX1_X_LABEL_TEXT, fontsize=FONT_SIZE)
     ax1.set_ylabel(AX1_Y_LABEL_TEXT, fontsize=FONT_SIZE, color=mining_time_color)
     ax1.tick_params(axis=AX1_TICK_PARAMS_AXIS, labelcolor=mining_time_color)
@@ -152,6 +153,10 @@ def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, lin
 
     ax2.plot(range(len(bit_difficulties)), bit_difficulties, color=difficulty_color, linewidth=line_width,
              label=AX2_PLOT_LABEL)
+    ax2.scatter(range(len(bit_difficulties)), bit_difficulties, color=BIT_DIFFICULTY_SCATTER_COLOR, s=MARKER_SIZE,
+                zorder=AX2_SCATTER_Z_ORDER)  # Add dots
+
+    # ax2.set_xlabel(AX2_X_LABEL_TEXT, fontsize=FONT_SIZE)
 
     min_bit_difficulty, max_bit_difficulty = min(bit_difficulties), max(bit_difficulties)
     margin = DEFAULT_MARGIN if min_bit_difficulty == max_bit_difficulty \
