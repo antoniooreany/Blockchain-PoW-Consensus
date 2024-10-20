@@ -51,7 +51,7 @@ from constants import (
     PLOT_TITLE_COLOR,
     PLOT_TITLE_LABEL,
     LEGEND_LOCATION,
-    FIGURE_BASE, FIGURE_WIDHT_SCALING_FACTOR, PLOT_TITLE_Y, BIT_DIFFICULTY_SCATTER_COLOR, AX2_SCATTER_Z_ORDER,
+    FIGURE_BASE, FIGURE_WIDTH_SCALING_FACTOR, PLOT_TITLE_Y, BIT_DIFFICULTY_SCATTER_COLOR, AX2_SCATTER_Z_ORDER,
 
 )
 from src.blockchain import Blockchain
@@ -71,7 +71,7 @@ def plot_blockchain_statistics(
         raise RuntimeError("No monitor found")
 
     (fig_width, fig_height) = (
-        monitor.width * FIGURE_WIDHT_SCALING_FACTOR / PIXEL_TO_INCH_CONVERSION,
+        monitor.width * FIGURE_WIDTH_SCALING_FACTOR / PIXEL_TO_INCH_CONVERSION,
         monitor.height * FIGURE_HEIGHT_SCALING_FACTOR / PIXEL_TO_INCH_CONVERSION,
         # monitor.height * 3.0 / PIXEL_TO_INCH_CONVERSION,
     )

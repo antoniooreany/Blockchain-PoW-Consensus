@@ -14,7 +14,7 @@ BASE = 2  # base for the blockchain
 TARGET_BLOCK_TIME = 0.1  # what is the desirable time to mine a block
 # todo why Target block time: 0.10000000000000001 ???
 # properties of the difficulty adjustment:
-ADJUSTMENT_INTERVAL = 2  # how many blocks to wait before adjusting the difficulty
+ADJUSTMENT_INTERVAL = 3  # how many blocks to wait before adjusting the difficulty
 CLAMP_FACTOR = 2  # max adjustment factor to increase / decrease the difficulty
 SMALLEST_BIT_DIFFICULTY = 4  # the smallest bit difficulty that we can adjust to; todo 4 bits; bin: 0b0000, hex: 0x0,
 
@@ -32,7 +32,7 @@ DEFAULT_MARGIN = 0.1  # margin for the plotting of bit_difficulties when min_bit
 # properties of the plotting: general:
 FONT_SIZE = 12  # font size for the plotting: axes label titles
 FIGURE_HEIGHT_SCALING_FACTOR = 0.9  # scaling factor for the plotting
-FIGURE_WIDHT_SCALING_FACTOR = 0.9  # scaling factor for the plotting
+FIGURE_WIDTH_SCALING_FACTOR = 0.9  # scaling factor for the plotting
 PIXEL_TO_INCH_CONVERSION = 100  # conversion factor from pixels to inches
 COLOR_LIST_LENGTH = 3  # length of the color list for the plotting
 BAR_WIDTH = 0.8  # width of the bars in the bar plot
