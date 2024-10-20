@@ -15,6 +15,7 @@ from logging_utils import log_mined_block
 def create_genesis_block():
     genesis_block = Block(0, time.time(), GENESIS_BLOCK_DATA, GENESIS_BLOCK_PREVIOUS_HASH)
     genesis_block.hash = genesis_block.calculate_hash()
+    # blockchain.add_block(genesis_block, blockchain.clamp_factor, blockchain.smallest_bit_difficulty)
     log_mined_block(genesis_block)
     return genesis_block
 

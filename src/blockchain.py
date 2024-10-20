@@ -20,11 +20,13 @@ class Blockchain:
         self.logger = configure_logging()
         genesis_block = create_genesis_block()
         self.blocks = [genesis_block]
-        self.chain = []
+        # self.chain = []
+        self.chain = [genesis_block]
         self.bit_difficulties = [initial_bit_difficulty]
         self.adjustment_interval = adjustment_interval
         self.target_block_mining_time = target_block_time
-        self.mining_times = []
+        # self.mining_times = []
+        self.mining_times = [0]
 
     def get_latest_block(self) -> Block:
         return self.blocks[-1] if self.blocks else None
