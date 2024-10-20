@@ -9,6 +9,7 @@ INITIAL_BIT_DIFFICULTY = 16  # bit difficulty of the first block; todo is it bet
 NUMBER_BLOCKS_TO_ADD = 100  # how many blocks do we plan to add; property of the current execution
 
 # properties of the blockchain:
+BASE = 2  # base for the blockchain
 TARGET_BLOCK_TIME = 0.01  # what is the desirable time to mine a block
 
 # properties of the difficulty adjustment:
@@ -42,7 +43,7 @@ TITLE_FONT_SIZE = 14  # font size of the title
 MARKER_SIZE = 0.5  # size of the markers in the plot
 
 # properties of the project: # todo correct the values
-PROJECT_NAME = "blockchain"
+PROJECT_NAME = "Blockchain-PoW-Simulator"
 PROJECT_AUTHOR = "Anton Gorshkov"
 PROJECT_EMAIL = "antoniooreany@gmail.com"
 PROJECT_YEAR = 2024
@@ -52,13 +53,40 @@ PROJECT_ALL_RIGHTS_RESERVED = "All rights reserved."
 PROJECT_CONTACT = f"For any questions or concerns, please contact {PROJECT_AUTHOR} at {PROJECT_EMAIL}"
 PROJECT_COPYRIGHT_NOTICE = f"{PROJECT_COPYRIGHT}\n\n{PROJECT_DESCRIPTION}\n{PROJECT_CONTACT}"
 
+# properties of
 ENCODING = "utf-8"  # encoding for the strings
 GENESIS_BLOCK_HASH = "0"  # genesis block hash
 GENESIS_BLOCK_PREVIOUS_HASH = "0"  # genesis block hash
-GENESIS_BLOCK_DATA = "Genesis Block"
-BASE = 2  # base for the blockchain
+GENESIS_BLOCK_DATA = "Genesis Block"  # genesis block data
+
+# properties of the plotting: general:
 SCALING_FACTOR = 1.0  # scaling factor for the plotting
 LINE_WIDTH = 1  # width of the lines in the plot
-PLOT_BACKGROUND = 'dark_background'
-BIT_DIFFICULTY_COLORS = 'cyan'
-MINING_TIME_COLORS = 'green'
+PLOT_BACKGROUND = 'dark_background'  # background color of the plot
+BIT_DIFFICULTY_COLORS = 'cyan'  # color of the bit difficulty plot
+MINING_TIME_COLORS = 'green'  # color of the mining time plot
+
+# properties of the plotting: axes:
+AX1_GRID_BOOL = True
+AX1_GRID_WHICH = 'both'
+AX1_GRID_LINE_STYLE = ':'
+AX1_TICK_PARAMS_AXIS = 'y'
+AX1_X_LABEL_TEXT = 'Block Index'
+AX1_Y_LABEL_TEXT = 'Mining Time, seconds'
+AX1_SCATTER_Z_ORDER = 3
+AX1_BAR_ALPHA = 0.5
+
+# properties of the plotting: axes:
+AX2_GRID_BOOL = True
+AX2_GRID_WHICH = 'both'
+AX2_GRID_LINE_STYLE = ':'
+AX2_TICK_PARAMS_AXIS = 'y'
+AX2_Y_LABEL_TEXT = 'Bit Difficulty, bits'
+AX2_PLOT_LABEL = 'Bit Difficulty'
+
+# properties of the plotting: scatter:
+SCATTER_COLOR = 'lime'
+PLOT_TITLE_COLOR = 'white'
+PLOT_TITLE_LABEL = 'Blockchain Mining Statistics'
+LEGEND_LOCATION = 'upper center'
+FIGURE_BASE = 0.5

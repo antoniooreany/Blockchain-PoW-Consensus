@@ -1,8 +1,8 @@
-# # #   Copyright (c) 2024, Anton Gorshkov
-# # #   All rights reserved.
-# # #
-# # #   This code is for a plotting and its unit tests.
-# # #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
+#   Copyright (c) 2024, Anton Gorshkov
+#   All rights reserved.
+#
+#   This code is for a plotting and its unit tests.
+#   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
 
 import matplotlib.colors as mcolors
@@ -30,48 +30,30 @@ from constants import (
     LEGEND_FONT_SIZE,
     TITLE_FONT_SIZE,
     MARKER_SIZE,
+
+    AX1_GRID_LINE_STYLE,
+    AX1_GRID_BOOL,
+    AX1_GRID_WHICH,
+    AX1_TICK_PARAMS_AXIS,
+    AX1_Y_LABEL_TEXT,
+    AX1_X_LABEL_TEXT,
+    AX1_SCATTER_Z_ORDER,
+    AX1_BAR_ALPHA,
+
+    AX2_GRID_WHICH,
+    AX2_GRID_BOOL,
+    AX2_TICK_PARAMS_AXIS,
+    AX2_Y_LABEL_TEXT,
+    AX2_PLOT_LABEL,
+    AX2_GRID_LINE_STYLE,
+
+    SCATTER_COLOR,
+    PLOT_TITLE_COLOR,
+    PLOT_TITLE_LABEL,
+    FIGURE_BASE,
+    LEGEND_LOCATION,
 )
 from src.blockchain import Blockchain
-
-AX1_GRID_ = ':'
-
-AX2_GRID_WHICH = 'both'
-
-AX2_GRID_BOOL = True
-
-AX2_TICK_PARAMS_AXIS = 'y'
-
-AX2_Y_LABEL_TEXT = 'Bit Difficulty, bits'
-
-AX2_PLOT_LABEL = f'Bit Difficulty'
-
-AX2_GRID_LINESTYLE = ':'
-
-AX1_GRID_LINESTYLE = ':'
-
-AX1_GRID_BOOL = True
-
-AX1_GRID_WHICH = 'both'
-
-AX1_TICK_PARAMS_AXIS = 'y'
-
-AX1_Y_LABEL_TEXT = 'Mining Time, seconds'
-
-AX1_X_LABEL_TEXT = 'Block Index'
-
-AX1_SCATTER_ZORDER = 3
-
-AX1_BAR_ALPHA = 0.5
-
-SCATTER_COLOR = 'lime'
-
-PLOT_TITLE_COLOR = 'white'
-
-PLOT_TITLE_LABEL = 'Blockchain Mining Statistics'
-
-FIGURE_BASE = 0.5
-
-LEGEND_LOCATION = 'upper center'
 
 
 def plot_blockchain_statistics(
@@ -126,14 +108,14 @@ def plot_mining_times_bar(ax1, blockchain, mining_time_color):
 
     ax1.bar(range(len(mining_times)), mining_times, color=mcolors.to_rgba(mining_time_color, alpha=AX1_BAR_ALPHA),
             width=BAR_WIDTH)
-    ax1.scatter(range(len(mining_times)), mining_times, color=SCATTER_COLOR, s=marker_size, zorder=AX1_SCATTER_ZORDER)
+    ax1.scatter(range(len(mining_times)), mining_times, color=SCATTER_COLOR, s=marker_size, zorder=AX1_SCATTER_Z_ORDER)
     ax1.set_xlabel(AX1_X_LABEL_TEXT, fontsize=FONT_SIZE)
     ax1.set_ylabel(AX1_Y_LABEL_TEXT, fontsize=FONT_SIZE, color=mining_time_color)
     ax1.tick_params(axis=AX1_TICK_PARAMS_AXIS, labelcolor=mining_time_color)
     ax1.grid(
         AX1_GRID_BOOL,
         which=AX1_GRID_WHICH,
-        linestyle=AX1_GRID_LINESTYLE,
+        linestyle=AX1_GRID_LINE_STYLE,
         linewidth=GRID_LINE_WIDTH,
         color=mining_time_color,
     )
@@ -158,7 +140,7 @@ def plot_bit_difficulties(ax1, blockchain, difficulty_color, base, scaling_facto
     ax2.grid(
         AX2_GRID_BOOL,
         which=AX2_GRID_WHICH,
-        linestyle=AX2_GRID_LINESTYLE,
+        linestyle=AX2_GRID_LINE_STYLE,
         linewidth=GRID_LINE_WIDTH,
         color=difficulty_color,
     )
