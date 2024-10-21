@@ -66,6 +66,10 @@ class Blockchain:
 
         log_validity(self)
         self.logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.25f} seconds")
+
+        # # todo calculate number of blocks mined with 0.0 seconds
+        # zero_mining_time_blocks = sum(1 for time in self.mining_times if time == 0.0)
+        # self.logger.debug(f"Number of blocks mined with 0.0 seconds: {zero_mining_time_blocks}")
         self.logger.debug(f"##############################################")
 
     # def get_average_mining_time(self, num_blocks: int) -> float:

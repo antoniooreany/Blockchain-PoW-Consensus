@@ -66,6 +66,11 @@ if __name__ == "__main__":
         logger.info(f"Relative deviation from the target block time of the statistical partition: "
                     f"{((average_mining_time_last_half_blocks - TARGET_BLOCK_TIME) / TARGET_BLOCK_TIME) * 100: .25f} %")
 
+        # Number of blocks mined with 0.0 seconds:
+        zero_mining_time_blocks = sum(1 for time in blockchain.mining_times if time == 0.0)
+        logger.info(
+            f"Number of blocks mined with 0.0 seconds: {zero_mining_time_blocks - 1}")  # -1 for the Genesis Block
+
         blockchains[base] = blockchain
 
     plot_blockchain_statistics(blockchains)
