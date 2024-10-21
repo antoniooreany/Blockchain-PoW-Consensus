@@ -39,6 +39,7 @@ class LogLevelCounterHandler(logging.Handler):
 
     def print_log_counts(self):
         logger = logging.getLogger()
+        logger.info(f"Log log-levels:")
         logger.info(f"NotSet messages: {self.notset_count}")
         logger.info(f"Info messages: {self.info_count}")
         logger.debug(f"Debug messages: {self.debug_count}")
