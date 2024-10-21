@@ -9,11 +9,15 @@ import math
 import random
 
 from block import Block
-from constants import HASH_BIT_LENGTH, NONCE_BIT_LENGTH
+from constants import (
+    HASH_BIT_LENGTH,
+    NONCE_BIT_LENGTH,
+)
 from src.logging_utils import log_mined_block
 
 
 class ProofOfWork:
+
     @staticmethod
     def find_nonce(
             block,
@@ -29,11 +33,13 @@ class ProofOfWork:
         # logger.debug(
         #     f"target value in hex: {hex(int(target_value))}")  # todo why it is something like 0x1c4041b107f67500000000000000000000000000000000000000000000000 ???
 
-        base_hash_data: bytes = ((str(block.index) +
-                                  str(block.timestamp) +
-                                  str(block.data) +
-                                  str(block.previous_hash))
-                                 .encode('utf-8'))
+        base_hash_data: bytes = (
+            (str(block.index) +
+             str(block.timestamp) +
+             str(block.data) +
+             str(block.previous_hash))
+            .encode('utf-8')
+        )
 
         while True:
             sha: hashlib.sha256 = hashlib.sha256()

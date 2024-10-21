@@ -57,27 +57,11 @@ class Blockchain:
         self.mining_times.append(actual_mining_time)
         self.bit_difficulties.append(self.bit_difficulties[-1])
 
-        # if (len(self.blocks) - 1) % self.adjustment_interval == 0:
-
-        # if len(self.blocks) % self.adjustment_interval == 0:
-        #     adjust_difficulty(self, clamp_factor, smallest_bit_difficulty)
-
         adjust_difficulty(self, clamp_factor, smallest_bit_difficulty)
 
         log_validity(self)
         self.logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.25f} seconds")
-
-        # # todo calculate number of blocks mined with 0.0 seconds
-        # zero_mining_time_blocks = sum(1 for time in self.mining_times if time == 0.0)
-        # self.logger.debug(f"Number of blocks mined with 0.0 seconds: {zero_mining_time_blocks}")
         self.logger.debug(f"##############################################")
-
-    # def get_average_mining_time(self, num_blocks: int) -> float:
-    #     if len(self.blocks) < num_blocks + 1:
-    #     # if len(self.blocks) < num_blocks:
-    #         return sum(self.mining_times) / len(self.mining_times)
-    #     total_time = sum(self.mining_times[-num_blocks:])
-    #     return total_time / num_blocks
 
     def get_average_mining_time(self, num_blocks: int) -> float:
         if len(self.blocks) <= 1:

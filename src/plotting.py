@@ -51,8 +51,11 @@ from constants import (
     PLOT_TITLE_COLOR,
     PLOT_TITLE_LABEL,
     LEGEND_LOCATION,
-    FIGURE_BASE, FIGURE_WIDTH_SCALING_FACTOR, PLOT_TITLE_Y, BIT_DIFFICULTY_SCATTER_COLOR, AX2_SCATTER_Z_ORDER,
-
+    FIGURE_BASE,
+    FIGURE_WIDTH_SCALING_FACTOR,
+    PLOT_TITLE_Y,
+    BIT_DIFFICULTY_SCATTER_COLOR,
+    AX2_SCATTER_Z_ORDER,
 )
 from src.blockchain import Blockchain
 
@@ -60,7 +63,7 @@ from src.blockchain import Blockchain
 def plot_blockchain_statistics(
         blockchains: dict[int, Blockchain],
         scaling_factor: float = SCALING_FACTOR,
-        # An optional parameter to scale the y-axis for the bit difficulties # todo remove from default
+        # An optional parameter to scale the y-axis for the bit difficulties
         line_width: int = LINE_WIDTH  # The width of the line to plot # todo remove from default
 ) -> None:
     if not blockchains:
@@ -70,10 +73,12 @@ def plot_blockchain_statistics(
     if not monitor:
         raise RuntimeError("No monitor found")
 
-    (fig_width, fig_height) = (
+    (
+        fig_width,
+        fig_height
+    ) = (
         monitor.width * FIGURE_WIDTH_SCALING_FACTOR / PIXEL_TO_INCH_CONVERSION,
         monitor.height * FIGURE_HEIGHT_SCALING_FACTOR / PIXEL_TO_INCH_CONVERSION,
-        # monitor.height * 3.0 / PIXEL_TO_INCH_CONVERSION,
     )
 
     plt.style.use(PLOT_BACKGROUND)
@@ -82,8 +87,8 @@ def plot_blockchain_statistics(
 
     mining_time_colors = [MINING_TIME_COLORS] * COLOR_LIST_LENGTH
     bit_difficulty_colors = [BIT_DIFFICULTY_COLORS] * COLOR_LIST_LENGTH
-    all_bit_difficulties = [difficulty for blockchain in blockchains.values() for difficulty in
-                            blockchain.bit_difficulties]
+    all_bit_difficulties = [difficulty for blockchain in blockchains.values()
+                            for difficulty in blockchain.bit_difficulties]
 
     min_bit_difficulty, max_bit_difficulty = (
         min(all_bit_difficulties) * scaling_factor,
@@ -164,7 +169,6 @@ def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, lin
 
     # ax2.set_ylim(min_bit_difficulty - margin, max_bit_difficulty + margin)
     ax2.set_ylim(0, max_bit_difficulty + margin)
-    # ax2.set_ylim(0, (max_bit_difficulty + margin) * 0.95)
     ax2.set_ylabel(AX2_Y_LABEL_TEXT, fontsize=FONT_SIZE, color=difficulty_color)
     ax2.tick_params(axis=AX2_TICK_PARAMS_AXIS, labelcolor=difficulty_color)
     ax2.grid(

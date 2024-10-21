@@ -10,7 +10,11 @@
 import logging
 
 from src.block import Block
-from src.constants import TARGET_BLOCK_TIME, STATISTICS_PARTITION_INTERVAL_FACTOR, NUMBER_BLOCKS_TO_ADD
+from src.constants import (
+    TARGET_BLOCK_TIME,
+    STATISTICS_PARTITION_INTERVAL_FACTOR,
+    NUMBER_BLOCKS_TO_ADD,
+)
 
 
 class LogLevelCounterHandler(logging.Handler):
@@ -62,7 +66,7 @@ class ColorFormatter(logging.Formatter):
             'ERROR': '\033[91m',  # Red
             'CRITICAL': '\033[95m'  # Magenta
         }
-        reset_color: str = '\033[0m'
+        reset_color: str = '\033[0m'  # Reset color
         log_color: str = log_colors.get(record.levelname, reset_color)
         record.msg = f"{log_color}{record.msg}{reset_color}"
         return super().format(record)
@@ -102,16 +106,6 @@ def log_blockchain_statistics(logger, blockchain):
                 f"{zero_mining_time_blocks - 1}")  # -1 for the Genesis Block
     logger.info(f"Relative number of blocks mined with 0.0 seconds: "
                 f"{((zero_mining_time_blocks - 1) / NUMBER_BLOCKS_TO_ADD) * 100:.25f} %")
-
-
-# def log_time(
-#         average_time: float,  # The actual time
-#         expected_time: float  # The expected time
-# ) -> None:
-#     logger: logging.Logger = logging.getLogger()
-#     assert average_time is not None, "Actual time cannot be null"
-#     assert expected_time is not None, "Expected time cannot be null"
-#     logger.info(f"Average time: {average_time}, Expected time: {expected_time}")
 
 
 def log_validity(blockchain) -> None:
