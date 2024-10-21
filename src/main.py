@@ -16,12 +16,11 @@ from constants import (
     NUMBER_BLOCKS_TO_ADD,
     CLAMP_FACTOR,
     SMALLEST_BIT_DIFFICULTY,
-    STATISTICS_PARTITION_INTERVAL_FACTOR,
 )
 from helpers import add_blocks
 from logger_singleton import LoggerSingleton
 from plotting import plot_blockchain_statistics
-from src.logging_utils import LogLevelCounterHandler
+from src.logging_utils import LogLevelCounterHandler, log_blockchain_statistics
 
 if __name__ == "__main__":
     # Set the logging level to INFO (or WARNING to reduce more output)
@@ -55,21 +54,25 @@ if __name__ == "__main__":
         # filtered_difficulties = collect_filtered_bit_difficulties(blockchain, ADJUSTMENT_INTERVAL)
         # blockchain.bit_difficulties = filtered_difficulties  # todo ??? should we: Update the blockchain with filtered difficulties for plotting
 
-        logger.info(f"Target block time: {TARGET_BLOCK_TIME:.25f} seconds")
-        average_mining_time_last_half_blocks = blockchain.get_average_mining_time(
-            num_blocks=blockchain.blocks.__len__() // STATISTICS_PARTITION_INTERVAL_FACTOR)
-        logger.info(f"STATISTICS_PARTITION_INTERVAL_FACTOR: {STATISTICS_PARTITION_INTERVAL_FACTOR}")
-        logger.info(f"Average mining time of the statistical partition: "
-                    f"{average_mining_time_last_half_blocks: .25f} seconds")
-        logger.info(f"Absolute deviation from the target block time of the statistical partition: "
-                    f"{(average_mining_time_last_half_blocks - TARGET_BLOCK_TIME): .25f} seconds")
-        logger.info(f"Relative deviation from the target block time of the statistical partition: "
-                    f"{((average_mining_time_last_half_blocks - TARGET_BLOCK_TIME) / TARGET_BLOCK_TIME) * 100: .25f} %")
+        # logger.info(f"Target block time: {TARGET_BLOCK_TIME:.25f} seconds")
+        # average_mining_time_last_half_blocks = blockchain.get_average_mining_time(
+        #     num_blocks=blockchain.blocks.__len__() // STATISTICS_PARTITION_INTERVAL_FACTOR)
+        # logger.info(f"STATISTICS_PARTITION_INTERVAL_FACTOR: {STATISTICS_PARTITION_INTERVAL_FACTOR}")
+        # logger.info(f"Average mining time of the statistical partition: "
+        #             f"{average_mining_time_last_half_blocks: .25f} seconds")
+        # logger.info(f"Absolute deviation from the target block time of the statistical partition: "
+        #             f"{(average_mining_time_last_half_blocks - TARGET_BLOCK_TIME): .25f} seconds")
+        # logger.info(f"Relative deviation from the target block time of the statistical partition: "
+        #             f"{((average_mining_time_last_half_blocks - TARGET_BLOCK_TIME) / TARGET_BLOCK_TIME) * 100: .25f} %")
 
-        # Number of blocks mined with 0.0 seconds:
-        zero_mining_time_blocks = sum(1 for time in blockchain.mining_times if time == 0.0)
-        logger.info(
-            f"Number of blocks mined with 0.0 seconds: {zero_mining_time_blocks - 1}")  # -1 for the Genesis Block
+        log_blockchain_statistics(logger, blockchain)
+
+        # # Number of blocks mined with 0.0 seconds:
+        # zero_mining_time_blocks = sum(1 for time in blockchain.mining_times if time == 0.0)
+        # logger.info(f"Number of blocks mined with 0.0 seconds: "
+        #             f"{zero_mining_time_blocks - 1}")  # -1 for the Genesis Block
+        # logger.info(f"Relative number of blocks mined with 0.0 seconds: "
+        #             f"{((zero_mining_time_blocks - 1) / NUMBER_BLOCKS_TO_ADD) * 100:.25f} %")
 
         blockchains[base] = blockchain
 

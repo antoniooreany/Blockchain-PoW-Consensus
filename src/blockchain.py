@@ -88,7 +88,7 @@ class Blockchain:
         return total_time / num_blocks
 
     def is_chain_valid(self) -> bool:
-        for i in range(1, len(self.chain)):
+        for i in range(1, len(self.chain)):  # todo why doesn't work with self.blocks ?
             current_block = self.chain[i]
             previous_block = self.chain[i - 1]
 

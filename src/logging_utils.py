@@ -10,6 +10,7 @@
 import logging
 
 from src.block import Block
+from src.constants import TARGET_BLOCK_TIME, STATISTICS_PARTITION_INTERVAL_FACTOR, NUMBER_BLOCKS_TO_ADD
 
 
 class LogLevelCounterHandler(logging.Handler):
@@ -79,6 +80,27 @@ def log_mined_block(block: Block) -> None:
     # logger.info(f"Previous hash: {block.previous_hash}")
     logger.info(f"Nonce: {block.nonce}")
     logger.info(f"Hash: {block.hash}")
+
+
+def log_blockchain_statistics(logger, blockchain):
+    logger.info(f"Blockchain statistics:")
+    logger.info(f"Target block time: {TARGET_BLOCK_TIME:.25f} seconds")
+    average_mining_time_last_half_blocks = blockchain.get_average_mining_time(
+        num_blocks=blockchain.blocks.__len__() // STATISTICS_PARTITION_INTERVAL_FACTOR)
+    logger.info(f"STATISTICS_PARTITION_INTERVAL_FACTOR: {STATISTICS_PARTITION_INTERVAL_FACTOR}")
+    logger.info(f"Average mining time of the statistical partition: "
+                f"{average_mining_time_last_half_blocks: .25f} seconds")
+    logger.info(f"Absolute deviation from the target block time of the statistical partition: "
+                f"{(average_mining_time_last_half_blocks - TARGET_BLOCK_TIME): .25f} seconds")
+    logger.info(f"Relative deviation from the target block time of the statistical partition: "
+                f"{((average_mining_time_last_half_blocks - TARGET_BLOCK_TIME) / TARGET_BLOCK_TIME) * 100: .25f} %")
+
+    # Number of blocks mined with 0.0 seconds:
+    zero_mining_time_blocks = sum(1 for time in blockchain.mining_times if time == 0.0)
+    logger.info(f"Number of blocks mined with 0.0 seconds: "
+                f"{zero_mining_time_blocks - 1}")  # -1 for the Genesis Block
+    logger.info(f"Relative number of blocks mined with 0.0 seconds: "
+                f"{((zero_mining_time_blocks - 1) / NUMBER_BLOCKS_TO_ADD) * 100:.25f} %")
 
 
 # def log_time(
