@@ -47,7 +47,8 @@ LEGEND_FONT_SIZE = 10  # font size of the legend
 LEGEND_LOCATION = 'upper center'
 PLOT_TITLE_FONT_SIZE = 14  # font size of the title
 PLOT_TITLE_COLOR = 'white'
-PLOT_TITLE_LABEL = 'Blockchain Mining Statistics'
+# PLOT_TITLE_LABEL = 'Blockchain Mining Statistics'
+PLOT_TITLE_LABEL = ''
 PLOT_TITLE_Y = 1.0
 MARKER_SIZE = 0.5  # size of the markers in the plot
 
