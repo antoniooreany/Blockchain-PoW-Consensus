@@ -82,7 +82,7 @@ AX1_GRID_WHICH = 'both'
 AX1_GRID_LINE_STYLE = ':'
 AX1_TICK_PARAMS_AXIS = 'y'
 AX1_X_LABEL_TEXT = 'Block Index'
-AX1_Y_LABEL_TEXT = 'Mining Time, seconds'
+AX1_Y_LABEL_TEXT = 'Block Mining Time, seconds'
 AX1_SCATTER_Z_ORDER = 3
 AX1_BAR_ALPHA = 0.5
 
