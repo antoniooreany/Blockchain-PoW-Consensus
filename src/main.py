@@ -58,7 +58,12 @@ if __name__ == "__main__":
         logger.info(f"Target block time: {TARGET_BLOCK_TIME:.16f}")
         average_mining_time_last_half_blocks = blockchain.get_average_mining_time(
             num_blocks=blockchain.blocks.__len__() // STATISTICS_PARTITION_INTERVAL_FACTOR)
-        logger.info(f"Average mining time of the last half of the blockchain: {average_mining_time_last_half_blocks}")
+        logger.info(f"Average mining time of the last half of the blockchain: "
+                    f"{average_mining_time_last_half_blocks}")
+        logger.info(f"Deviation from the target block time: "
+                    f"{average_mining_time_last_half_blocks - TARGET_BLOCK_TIME}")
+        logger.info(f"Relative deviation from the target block time: "
+                    f"{(average_mining_time_last_half_blocks - TARGET_BLOCK_TIME) / TARGET_BLOCK_TIME}%")
 
         blockchains[base] = blockchain
 
