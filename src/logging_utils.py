@@ -8,6 +8,7 @@
 
 
 import logging
+from statistics import variance, covariance
 
 from src.block import Block
 from src.constants import (
@@ -88,17 +89,52 @@ def log_mined_block(block: Block) -> None:
 
 
 def log_blockchain_statistics(logger, blockchain):
+    # Ensure both lists have the same length before calculating covariance
+    min_length = min(len(blockchain.mining_times), len(blockchain.bit_difficulties))
+    mining_times_for_covariance = blockchain.mining_times[:min_length]
+    bit_difficulties_for_covariance = blockchain.bit_difficulties[:min_length]
+
+    num_blocks = int(len(blockchain.mining_times) / STATISTICS_PARTITION_INTERVAL_FACTOR)
+    average_mining_time_last_blocks = blockchain.get_average_mining_time(num_blocks=num_blocks)
+    absolute_deviation_mining_time_last_blocks = abs(average_mining_time_last_blocks - TARGET_BLOCK_TIME)
+    relative_deviation_mining_time_last_blocks = (
+                                                             absolute_deviation_mining_time_last_blocks / TARGET_BLOCK_TIME) * 100.0
+    # variance_mining_time = variance(mining_times_for_covariance)
+    # variance_bit_difficulty = variance(bit_difficulties_for_covariance)
+    variance_mining_time = variance(blockchain.mining_times)
+    variance_bit_difficulty = variance(blockchain.bit_difficulties)
+    standard_deviation_mining_time = variance_mining_time ** 0.5
+    standard_deviation_bit_difficulty = variance_bit_difficulty ** 0.5
+    # covariance_mining_time_bit_difficulty = covariance(blockchain.mining_times, blockchain.bit_difficulties)
+    covariance_mining_time_bit_difficulty = covariance(mining_times_for_covariance, bit_difficulties_for_covariance)
+    correlation_mining_time_bit_difficulty = (covariance_mining_time_bit_difficulty /
+                                              (standard_deviation_mining_time * standard_deviation_bit_difficulty))
+
     logger.info(f"Blockchain statistics:")
-    logger.info(f"Target block time: {TARGET_BLOCK_TIME:.25f} seconds")
-    average_mining_time_last_half_blocks = blockchain.get_average_mining_time(
-        num_blocks=blockchain.blocks.__len__() // STATISTICS_PARTITION_INTERVAL_FACTOR)
+    logger.info(f"Target mining block time: {TARGET_BLOCK_TIME:.25f} seconds")
     logger.info(f"STATISTICS_PARTITION_INTERVAL_FACTOR: {STATISTICS_PARTITION_INTERVAL_FACTOR}")
+
     logger.info(f"Average mining time of the statistical partition: "
-                f"{average_mining_time_last_half_blocks: .25f} seconds")
+                f"{average_mining_time_last_blocks: .25f} seconds")
     logger.info(f"Absolute deviation from the target block time of the statistical partition: "
-                f"{(average_mining_time_last_half_blocks - TARGET_BLOCK_TIME): .25f} seconds")
+                f"{absolute_deviation_mining_time_last_blocks: .25f} seconds")
     logger.info(f"Relative deviation from the target block time of the statistical partition: "
-                f"{((average_mining_time_last_half_blocks - TARGET_BLOCK_TIME) / TARGET_BLOCK_TIME) * 100: .25f} %")
+                f"{relative_deviation_mining_time_last_blocks: .25f} %")
+    logger.info(f"")
+
+    logger.info(f"Variance of the mining time: "
+                f"{variance_mining_time: .25f}")
+    logger.info(f"Variance of the bit difficulty: "
+                f"{variance_bit_difficulty: .25f}")
+    logger.info(f"Standard deviation of the mining time: "
+                f"{standard_deviation_mining_time: .25f}")
+    logger.info(f"Standard deviation of the bit difficulty: "
+                f"{standard_deviation_bit_difficulty: .25f}")
+    logger.info(f"Covariance of the mining time and the bit difficulty: "
+                f"{covariance_mining_time_bit_difficulty: .25f}")
+    logger.info(f"Correlation of the mining time and the bit difficulty: "
+                f"{correlation_mining_time_bit_difficulty: .25f}")
+    logger.info(f"")
 
     # Number of blocks mined with 0.0 seconds:
     zero_mining_time_blocks = sum(1 for time in blockchain.mining_times if time == 0.0)
@@ -106,6 +142,7 @@ def log_blockchain_statistics(logger, blockchain):
                 f"{zero_mining_time_blocks - 1}")  # -1 for the Genesis Block
     logger.info(f"Relative number of blocks mined with 0.0 seconds: "
                 f"{((zero_mining_time_blocks - 1) / NUMBER_BLOCKS_TO_ADD) * 100:.25f} %")
+    logger.info(f"")
 
 
 def log_validity(blockchain) -> None:

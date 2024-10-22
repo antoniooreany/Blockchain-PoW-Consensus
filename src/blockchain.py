@@ -30,12 +30,12 @@ class Blockchain:
         # self.mining_times = []
         self.mining_times = [0.0]
         logger.debug(f"Blockchain created")
-        logger.debug(f"##############################################")
+        logger.debug(f"")
         log_mined_block(genesis_block)
 
         log_validity(self)
         self.logger.debug(f"Actual mining time for block {genesis_block.index}: {0.0:.25f} seconds")
-        self.logger.debug(f"##############################################")
+        self.logger.debug(f"")
 
     def get_latest_block(self) -> Block:
         return self.blocks[-1] if self.blocks else None
@@ -61,7 +61,7 @@ class Blockchain:
 
         log_validity(self)
         self.logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.25f} seconds")
-        self.logger.debug(f"##############################################")
+        self.logger.debug(f"")
 
     def get_average_mining_time(self, num_blocks: int) -> float:
         if len(self.blocks) <= 1:

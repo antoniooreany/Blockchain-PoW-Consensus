@@ -13,7 +13,7 @@ NUMBER_BLOCKS_TO_ADD = 100  # how many blocks do we plan to add; property of the
 
 # properties of the blockchain:
 BASE = 2  # base for the blockchain
-TARGET_BLOCK_TIME = 0.05  # what is the desirable time to mine a block
+TARGET_BLOCK_TIME = 0.1  # what is the desirable time to mine a block
 # todo why Target block time: 0.10000000000000001 ???
 # properties of the difficulty adjustment:
 # ADJUSTMENT_INTERVAL = 3  # how many blocks to wait before adjusting the difficulty
