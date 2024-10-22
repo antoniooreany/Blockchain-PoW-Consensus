@@ -89,30 +89,43 @@ def log_mined_block(block: Block) -> None:
 
 
 def log_blockchain_statistics(logger, blockchain):
-    # Ensure both lists have the same length before calculating covariance
-    min_length = min(len(blockchain.mining_times), len(blockchain.bit_difficulties))
-    mining_times_for_covariance = blockchain.mining_times[:min_length]
-    bit_difficulties_for_covariance = blockchain.bit_difficulties[:min_length]
-
     num_blocks = int(len(blockchain.mining_times) / STATISTICS_PARTITION_INTERVAL_FACTOR)
+
+    # todo slice the lists to the num_blocks length
+    mining_times_slice = blockchain.mining_times[:num_blocks]
+    bit_difficulties_slice = blockchain.bit_difficulties[:num_blocks]
+
+    # # Ensure both lists have the same length before calculating covariance
+    # min_length = min(len(blockchain.mining_times_slice), len(blockchain.bit_difficulties_slice))
+    # mining_times_for_covariance = blockchain.mining_times_slice[:min_length]
+    # bit_difficulties_for_covariance = blockchain.bit_difficulties_slice[:min_length]
+
     average_mining_time_last_blocks = blockchain.get_average_mining_time(num_blocks=num_blocks)
     absolute_deviation_mining_time_last_blocks = abs(average_mining_time_last_blocks - TARGET_BLOCK_TIME)
     relative_deviation_mining_time_last_blocks = (
-                                                             absolute_deviation_mining_time_last_blocks / TARGET_BLOCK_TIME) * 100.0
-    # variance_mining_time = variance(mining_times_for_covariance)
-    # variance_bit_difficulty = variance(bit_difficulties_for_covariance)
-    variance_mining_time = variance(blockchain.mining_times)
-    variance_bit_difficulty = variance(blockchain.bit_difficulties)
+                                                         absolute_deviation_mining_time_last_blocks / TARGET_BLOCK_TIME) * 100.0
+
+    # variance_mining_time = variance(blockchain.mining_times_slice)
+    # variance_bit_difficulty = variance(blockchain.bit_difficulties_slice)
+    # standard_deviation_mining_time = variance_mining_time ** 0.5
+    # standard_deviation_bit_difficulty = variance_bit_difficulty ** 0.5
+    # covariance_mining_time_bit_difficulty = covariance(mining_times_for_covariance, bit_difficulties_for_covariance)
+    # correlation_mining_time_bit_difficulty = (covariance_mining_time_bit_difficulty /
+    #                                           (standard_deviation_mining_time * standard_deviation_bit_difficulty))
+
+    variance_mining_time = variance(mining_times_slice)
+    variance_bit_difficulty = variance(bit_difficulties_slice)
     standard_deviation_mining_time = variance_mining_time ** 0.5
     standard_deviation_bit_difficulty = variance_bit_difficulty ** 0.5
-    # covariance_mining_time_bit_difficulty = covariance(blockchain.mining_times, blockchain.bit_difficulties)
-    covariance_mining_time_bit_difficulty = covariance(mining_times_for_covariance, bit_difficulties_for_covariance)
+    covariance_mining_time_bit_difficulty = covariance(mining_times_slice, bit_difficulties_slice)
     correlation_mining_time_bit_difficulty = (covariance_mining_time_bit_difficulty /
                                               (standard_deviation_mining_time * standard_deviation_bit_difficulty))
 
     logger.info(f"Blockchain statistics:")
     logger.info(f"Target mining block time: {TARGET_BLOCK_TIME:.25f} seconds")
     logger.info(f"STATISTICS_PARTITION_INTERVAL_FACTOR: {STATISTICS_PARTITION_INTERVAL_FACTOR}")
+    logger.info(f"Number of blocks in the statistical partition: {num_blocks}")
+    logger.info(f"")
 
     logger.info(f"Average mining time of the statistical partition: "
                 f"{average_mining_time_last_blocks: .25f} seconds")
@@ -122,17 +135,17 @@ def log_blockchain_statistics(logger, blockchain):
                 f"{relative_deviation_mining_time_last_blocks: .25f} %")
     logger.info(f"")
 
-    logger.info(f"Variance of the mining time: "
+    logger.info(f"Variance of the mining time of the statistical partition: "
                 f"{variance_mining_time: .25f}")
-    logger.info(f"Variance of the bit difficulty: "
+    logger.info(f"Variance of the bit difficulty of the statistical partition: "
                 f"{variance_bit_difficulty: .25f}")
-    logger.info(f"Standard deviation of the mining time: "
+    logger.info(f"Standard deviation of the mining time of the statistical partition: "
                 f"{standard_deviation_mining_time: .25f}")
-    logger.info(f"Standard deviation of the bit difficulty: "
+    logger.info(f"Standard deviation of the bit difficulty of the statistical partition: "
                 f"{standard_deviation_bit_difficulty: .25f}")
-    logger.info(f"Covariance of the mining time and the bit difficulty: "
+    logger.info(f"Covariance of the mining time and the bit difficulty of the statistical partition: "
                 f"{covariance_mining_time_bit_difficulty: .25f}")
-    logger.info(f"Correlation of the mining time and the bit difficulty: "
+    logger.info(f"Correlation of the mining time and the bit difficulty of the statistical partition: "
                 f"{correlation_mining_time_bit_difficulty: .25f}")
     logger.info(f"")
 
