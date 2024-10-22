@@ -105,17 +105,24 @@ def log_blockchain_statistics(logger, blockchain):
         blockchain, STATISTICS_PARTITION_INTERVAL_FACTOR)
 
     logger.info(f"Blockchain statistics:")
-    logger.info(f"Target mining block time: {TARGET_BLOCK_TIME:.25f} seconds")
+    # logger.info(f"Target mining block time: {TARGET_BLOCK_TIME:.25f} seconds")
+    logger.info(f"Target mining block time: N/A seconds")
     logger.info(f"STATISTICS_PARTITION_INTERVAL_FACTOR: {STATISTICS_PARTITION_INTERVAL_FACTOR}")
     logger.info(f"Number of blocks in the statistical partition: {num_blocks}")
     logger.info(f"")
 
     logger.info(f"Average mining time of the statistical partition: "
                 f"{average_mining_time: .25f} seconds")
-    logger.info(f"Absolute deviation from the target block time of the statistical partition: "
-                f"{absolute_deviation_mining_time: .25f} seconds")
-    logger.info(f"Relative deviation from the target block time of the statistical partition: "
-                f"{relative_deviation_mining_time_last_blocks: .25f} %")
+    logger.info(
+        f"Absolute deviation from the target block time of the statistical partition: "
+        # f"{absolute_deviation_mining_time: .25f} seconds"
+        f"N/A seconds"  # todo make it initialized in the constants.py or somewhere else
+    )
+    logger.info(
+        f"Relative deviation from the target block time of the statistical partition: "
+        # f"{relative_deviation_mining_time_last_blocks: .25f} %"
+        f"N/A %"  # todo make it initialized in the constants.py or somewhere else
+    )
     logger.info(f"")
 
     logger.info(f"Variance of the mining time of the statistical partition: "
