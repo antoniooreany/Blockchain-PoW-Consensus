@@ -89,37 +89,20 @@ def log_mined_block(block: Block) -> None:
 
 
 def log_blockchain_statistics(logger, blockchain):
-    num_blocks = int(len(blockchain.mining_times) / STATISTICS_PARTITION_INTERVAL_FACTOR)
-
-    # todo slice the lists to the num_blocks length
-    mining_times_slice = blockchain.mining_times[:num_blocks]
-    bit_difficulties_slice = blockchain.bit_difficulties[:num_blocks]
-
-    # # Ensure both lists have the same length before calculating covariance
-    # min_length = min(len(blockchain.mining_times_slice), len(blockchain.bit_difficulties_slice))
-    # mining_times_for_covariance = blockchain.mining_times_slice[:min_length]
-    # bit_difficulties_for_covariance = blockchain.bit_difficulties_slice[:min_length]
-
-    average_mining_time_last_blocks = blockchain.get_average_mining_time(num_blocks=num_blocks)
-    absolute_deviation_mining_time_last_blocks = abs(average_mining_time_last_blocks - TARGET_BLOCK_TIME)
-    relative_deviation_mining_time_last_blocks = (
-                                                         absolute_deviation_mining_time_last_blocks / TARGET_BLOCK_TIME) * 100.0
-
-    # variance_mining_time = variance(blockchain.mining_times_slice)
-    # variance_bit_difficulty = variance(blockchain.bit_difficulties_slice)
-    # standard_deviation_mining_time = variance_mining_time ** 0.5
-    # standard_deviation_bit_difficulty = variance_bit_difficulty ** 0.5
-    # covariance_mining_time_bit_difficulty = covariance(mining_times_for_covariance, bit_difficulties_for_covariance)
-    # correlation_mining_time_bit_difficulty = (covariance_mining_time_bit_difficulty /
-    #                                           (standard_deviation_mining_time * standard_deviation_bit_difficulty))
-
-    variance_mining_time = variance(mining_times_slice)
-    variance_bit_difficulty = variance(bit_difficulties_slice)
-    standard_deviation_mining_time = variance_mining_time ** 0.5
-    standard_deviation_bit_difficulty = variance_bit_difficulty ** 0.5
-    covariance_mining_time_bit_difficulty = covariance(mining_times_slice, bit_difficulties_slice)
-    correlation_mining_time_bit_difficulty = (covariance_mining_time_bit_difficulty /
-                                              (standard_deviation_mining_time * standard_deviation_bit_difficulty))
+    (
+        num_blocks,
+        absolute_deviation_mining_time,
+        average_mining_time,
+        correlation_mining_time_bit_difficulty,
+        covariance_mining_time_bit_difficulty,
+        relative_deviation_mining_time_last_blocks,
+        standard_deviation_bit_difficulty,
+        standard_deviation_mining_time,
+        variance_bit_difficulty,
+        variance_mining_time,
+        zero_mining_time_blocks,
+    ) = get_blockchain_statistics(
+        blockchain, STATISTICS_PARTITION_INTERVAL_FACTOR)
 
     logger.info(f"Blockchain statistics:")
     logger.info(f"Target mining block time: {TARGET_BLOCK_TIME:.25f} seconds")
@@ -128,9 +111,9 @@ def log_blockchain_statistics(logger, blockchain):
     logger.info(f"")
 
     logger.info(f"Average mining time of the statistical partition: "
-                f"{average_mining_time_last_blocks: .25f} seconds")
+                f"{average_mining_time: .25f} seconds")
     logger.info(f"Absolute deviation from the target block time of the statistical partition: "
-                f"{absolute_deviation_mining_time_last_blocks: .25f} seconds")
+                f"{absolute_deviation_mining_time: .25f} seconds")
     logger.info(f"Relative deviation from the target block time of the statistical partition: "
                 f"{relative_deviation_mining_time_last_blocks: .25f} %")
     logger.info(f"")
@@ -149,13 +132,46 @@ def log_blockchain_statistics(logger, blockchain):
                 f"{correlation_mining_time_bit_difficulty: .25f}")
     logger.info(f"")
 
-    # Number of blocks mined with 0.0 seconds:
-    zero_mining_time_blocks = sum(1 for time in blockchain.mining_times if time == 0.0)
     logger.info(f"Number of blocks mined with 0.0 seconds: "
                 f"{zero_mining_time_blocks - 1}")  # -1 for the Genesis Block
     logger.info(f"Relative number of blocks mined with 0.0 seconds: "
                 f"{((zero_mining_time_blocks - 1) / NUMBER_BLOCKS_TO_ADD) * 100:.25f} %")
     logger.info(f"")
+
+
+def get_blockchain_statistics(blockchain, statistics_partition_interval_factor):
+    num_blocks = int(len(blockchain.mining_times) / statistics_partition_interval_factor)
+    # Slice the lists to the num_blocks length
+    mining_times_slice = blockchain.mining_times[:num_blocks]
+    bit_difficulties_slice = blockchain.bit_difficulties[:num_blocks]
+
+    average_mining_time = blockchain.get_average_mining_time(num_blocks=num_blocks)
+    absolute_deviation_mining_time = abs(average_mining_time - TARGET_BLOCK_TIME)
+    relative_deviation_mining_time = (
+                                             absolute_deviation_mining_time / TARGET_BLOCK_TIME) * 100.0
+    variance_mining_time = variance(mining_times_slice)
+    variance_bit_difficulty = variance(bit_difficulties_slice)
+    standard_deviation_mining_time = variance_mining_time ** 0.5
+    standard_deviation_bit_difficulty = variance_bit_difficulty ** 0.5
+    covariance_mining_time_bit_difficulty = covariance(mining_times_slice, bit_difficulties_slice)
+    correlation_mining_time_bit_difficulty = (covariance_mining_time_bit_difficulty /
+                                              (standard_deviation_mining_time * standard_deviation_bit_difficulty))
+    # Number of blocks mined with 0.0 seconds:
+    zero_mining_time_blocks = sum(1 for time in blockchain.mining_times if time == 0.0)
+
+    return (
+        num_blocks,
+        absolute_deviation_mining_time,
+        average_mining_time,
+        correlation_mining_time_bit_difficulty,
+        covariance_mining_time_bit_difficulty,
+        relative_deviation_mining_time,
+        standard_deviation_bit_difficulty,
+        standard_deviation_mining_time,
+        variance_bit_difficulty,
+        variance_mining_time,
+        zero_mining_time_blocks,
+    )
 
 
 def log_validity(blockchain) -> None:
