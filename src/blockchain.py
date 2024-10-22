@@ -13,20 +13,24 @@ from helpers import create_genesis_block
 from logging_utils import configure_logging
 from logging_utils import log_validity
 from proof_of_work import ProofOfWork
-from src.helpers import adjust_difficulty
 from src.logging_utils import log_mined_block
 
 
 class Blockchain:
-    def __init__(self, initial_bit_difficulty, adjustment_interval, target_block_mining_time):
+    def __init__(
+            self,
+            initial_bit_difficulty,
+            # adjustment_interval,
+            # target_block_mining_time,
+    ):
         self.logger = configure_logging()
         self.bit_difficulties = [initial_bit_difficulty]
         genesis_block = create_genesis_block(self, initial_bit_difficulty)
         self.blocks = [genesis_block]
         # self.chain = []
         self.chain = [genesis_block]
-        self.adjustment_interval = adjustment_interval
-        self.target_block_mining_time = target_block_mining_time
+        # self.adjustment_interval = adjustment_interval
+        # self.target_block_mining_time = target_block_mining_time
         # self.mining_times = []
         self.mining_times = [0.0]
         logger.debug(f"Blockchain created")
@@ -57,7 +61,7 @@ class Blockchain:
         self.mining_times.append(actual_mining_time)
         self.bit_difficulties.append(self.bit_difficulties[-1])
 
-        adjust_difficulty(self, clamp_factor, smallest_bit_difficulty)
+        # adjust_difficulty(self, clamp_factor, smallest_bit_difficulty)
 
         log_validity(self)
         self.logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.25f} seconds")
