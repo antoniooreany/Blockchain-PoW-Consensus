@@ -44,7 +44,12 @@ class Blockchain:
     def get_latest_block(self) -> Block:
         return self.blocks[-1] if self.blocks else None
 
-    def add_block(self, new_block: Block, clamp_factor, smallest_bit_difficulty) -> None:
+    def add_block(
+            self,
+            new_block: Block,
+            # clamp_factor,
+            # smallest_bit_difficulty,
+    ) -> None:
         new_block.previous_hash = self.get_latest_block().hash if self.blocks else GENESIS_BLOCK_HASH
         start_time = time.time()
         ProofOfWork.find_nonce(new_block, self.bit_difficulties[-1])

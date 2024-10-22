@@ -12,8 +12,6 @@ from constants import (
     BASE,
     INITIAL_BIT_DIFFICULTY,
     NUMBER_BLOCKS_TO_ADD,
-    CLAMP_FACTOR,
-    SMALLEST_BIT_DIFFICULTY,
 )
 from helpers import add_blocks
 from logger_singleton import LoggerSingleton
@@ -46,8 +44,8 @@ if __name__ == "__main__":
         add_blocks(
             blockchain=blockchain,
             number_of_blocks=NUMBER_BLOCKS_TO_ADD,
-            clamp_factor=CLAMP_FACTOR,
-            smallest_bit_difficulty=SMALLEST_BIT_DIFFICULTY,
+            # clamp_factor=CLAMP_FACTOR,
+            # smallest_bit_difficulty=SMALLEST_BIT_DIFFICULTY,
         )
 
         # Collect filtered bit difficulties
