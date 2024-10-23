@@ -154,8 +154,15 @@ def get_blockchain_statistics(blockchain, statistics_partition_interval_factor):
     standard_deviation_mining_time = variance_mining_time ** 0.5
     standard_deviation_bit_difficulty = variance_bit_difficulty ** 0.5
     covariance_mining_time_bit_difficulty = covariance(mining_times_slice, bit_difficulties_slice)
-    correlation_mining_time_bit_difficulty = (covariance_mining_time_bit_difficulty /
-                                              (standard_deviation_mining_time * standard_deviation_bit_difficulty))
+    # correlation_mining_time_bit_difficulty = (covariance_mining_time_bit_difficulty /
+    #                                           (standard_deviation_mining_time * standard_deviation_bit_difficulty))
+
+    if standard_deviation_mining_time == 0 or standard_deviation_bit_difficulty == 0:
+        correlation_mining_time_bit_difficulty = 0
+    else:
+        correlation_mining_time_bit_difficulty = (covariance_mining_time_bit_difficulty /
+                                                  (standard_deviation_mining_time * standard_deviation_bit_difficulty))
+
     # Number of blocks mined with 0.0 seconds:
     zero_mining_time_blocks = sum(1 for time in blockchain.mining_times if time == 0.0)
 
