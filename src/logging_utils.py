@@ -91,19 +91,29 @@ def log_mined_block(block: Block) -> None:
 def log_blockchain_statistics(logger, blockchain):
     (
         num_blocks,
-        absolute_deviation_mining_time,
+
         average_mining_time,
-        correlation_mining_time_bit_difficulty,
-        covariance_mining_time_bit_difficulty,
-        relative_deviation_mining_time_last_blocks,
-        standard_deviation_bit_difficulty,
-        standard_deviation_mining_time,
-        variance_bit_difficulty,
+        absolute_deviation_mining_time,
+        relative_deviation_mining_time,
+
+        average_bit_difficulty,
+        absolute_deviation_bit_difficulty,
+        relative_deviation_bit_difficulty,
+
         variance_mining_time,
+        variance_bit_difficulty,
+
+        standard_deviation_mining_time,
+        standard_deviation_bit_difficulty,
+
+        covariance_mining_time_bit_difficulty,
+
+        correlation_mining_time_bit_difficulty,
+
         zero_mining_time_blocks,
+
     ) = get_blockchain_statistics(
         blockchain, STATISTICS_PARTITION_INTERVAL_FACTOR)
-
     logger.info(f"Blockchain statistics:")
     logger.info(f"Target mining block time: {TARGET_BLOCK_TIME:.25f} seconds")
     logger.info(f"STATISTICS_PARTITION_INTERVAL_FACTOR: {STATISTICS_PARTITION_INTERVAL_FACTOR}")
@@ -115,21 +125,33 @@ def log_blockchain_statistics(logger, blockchain):
     logger.info(f"Absolute deviation from the target block time of the statistical partition: "
                 f"{absolute_deviation_mining_time: .25f} seconds")
     logger.info(f"Relative deviation from the target block time of the statistical partition: "
-                f"{relative_deviation_mining_time_last_blocks: .25f} %")
+                f"{relative_deviation_mining_time: .25f} %")
+    logger.info(f"")
+
+    logger.info(f"Average bit difficulty of the statistical partition: "
+                f"{average_bit_difficulty: .25f} bits")
+    logger.info(f"Absolute deviation from the bit difficulty of the statistical partition: "
+                f"{absolute_deviation_bit_difficulty: .25f} bits")
+    logger.info(f"Relative deviation from the bit difficulty of the statistical partition: "
+                f"{relative_deviation_bit_difficulty: .25f} %")
     logger.info(f"")
 
     logger.info(f"Variance of the mining time of the statistical partition: "
                 f"{variance_mining_time: .25f}")
     logger.info(f"Variance of the bit difficulty of the statistical partition: "
                 f"{variance_bit_difficulty: .25f}")
+
     logger.info(f"Standard deviation of the mining time of the statistical partition: "
                 f"{standard_deviation_mining_time: .25f}")
     logger.info(f"Standard deviation of the bit difficulty of the statistical partition: "
                 f"{standard_deviation_bit_difficulty: .25f}")
+
     logger.info(f"Covariance of the mining time and the bit difficulty of the statistical partition: "
                 f"{covariance_mining_time_bit_difficulty: .25f}")
+
     logger.info(f"Correlation of the mining time and the bit difficulty of the statistical partition: "
                 f"{correlation_mining_time_bit_difficulty: .25f}")
+
     logger.info(f"")
 
     logger.info(f"Number of blocks mined with 0.0 seconds: "
@@ -149,6 +171,13 @@ def get_blockchain_statistics(blockchain, statistics_partition_interval_factor):
     absolute_deviation_mining_time = abs(average_mining_time - TARGET_BLOCK_TIME)
     relative_deviation_mining_time = (
                                              absolute_deviation_mining_time / TARGET_BLOCK_TIME) * 100.0
+
+    average_bit_difficulty = sum(bit_difficulties_slice) / num_blocks
+    absolute_deviation_bit_difficulty = abs(average_bit_difficulty - blockchain.bit_difficulties[-1])
+    relative_deviation_bit_difficulty = (
+                                                absolute_deviation_bit_difficulty / blockchain.bit_difficulties[
+                                            -1]) * 100.0
+
     variance_mining_time = variance(mining_times_slice)
     variance_bit_difficulty = variance(bit_difficulties_slice)
     standard_deviation_mining_time = variance_mining_time ** 0.5
@@ -168,15 +197,25 @@ def get_blockchain_statistics(blockchain, statistics_partition_interval_factor):
 
     return (
         num_blocks,
-        absolute_deviation_mining_time,
+
         average_mining_time,
-        correlation_mining_time_bit_difficulty,
-        covariance_mining_time_bit_difficulty,
+        absolute_deviation_mining_time,
         relative_deviation_mining_time,
-        standard_deviation_bit_difficulty,
-        standard_deviation_mining_time,
-        variance_bit_difficulty,
+
+        average_bit_difficulty,
+        absolute_deviation_bit_difficulty,
+        relative_deviation_bit_difficulty,
+
         variance_mining_time,
+        variance_bit_difficulty,
+
+        standard_deviation_mining_time,
+        standard_deviation_bit_difficulty,
+
+        covariance_mining_time_bit_difficulty,
+
+        correlation_mining_time_bit_difficulty,
+
         zero_mining_time_blocks,
     )
 
