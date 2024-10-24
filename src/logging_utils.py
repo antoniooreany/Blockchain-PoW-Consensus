@@ -12,9 +12,9 @@ from statistics import variance, covariance
 
 from src.block import Block
 from src.constants import (
-    TARGET_BLOCK_TIME,
+    TARGET_BLOCK_MINING_TIME,
     STATISTICS_PARTITION_INTERVAL_FACTOR,
-    NUMBER_BLOCKS_TO_ADD,
+    NUMBER_BLOCKS_TO_ADD, INITIAL_BIT_DIFFICULTY, ADJUSTMENT_INTERVAL, CLAMP_FACTOR, SMALLEST_BIT_DIFFICULTY,
 )
 
 
@@ -90,7 +90,12 @@ def log_mined_block(block: Block) -> None:
 
 def log_blockchain_statistics(logger, blockchain):
     (
+        initial_bit_difficulty,
         num_blocks,
+        target_block_time,
+        adjustment_interval,
+        clamp_factor,
+        smallest_bit_difficulty,
 
         average_mining_time,
         absolute_deviation_from_target_mining_time,
@@ -115,7 +120,7 @@ def log_blockchain_statistics(logger, blockchain):
     ) = get_blockchain_statistics(
         blockchain, STATISTICS_PARTITION_INTERVAL_FACTOR)
     logger.info(f"Blockchain statistics:")
-    logger.info(f"Target mining block time: {TARGET_BLOCK_TIME:.25f} seconds")
+    logger.info(f"Target mining block time: {TARGET_BLOCK_MINING_TIME:.25f} seconds")
     logger.info(f"STATISTICS_PARTITION_INTERVAL_FACTOR: {STATISTICS_PARTITION_INTERVAL_FACTOR}")
     logger.info(f"Number of blocks in the statistical partition: {num_blocks}")
     logger.info(f"")
@@ -162,17 +167,17 @@ def log_blockchain_statistics(logger, blockchain):
 
 
 def get_blockchain_statistics(blockchain, statistics_partition_interval_factor):
-    num_blocks = int(len(blockchain.mining_times) / statistics_partition_interval_factor)
-    # Slice the lists to the num_blocks length
-    mining_times_slice = blockchain.mining_times[:num_blocks]
-    bit_difficulties_slice = blockchain.bit_difficulties[:num_blocks]
+    num_blocks_slice = int(len(blockchain.mining_times) / statistics_partition_interval_factor)
+    # Slice the lists to the num_blocks_slice length
+    mining_times_slice = blockchain.mining_times[:num_blocks_slice]
+    bit_difficulties_slice = blockchain.bit_difficulties[:num_blocks_slice]
 
-    average_mining_time = blockchain.get_average_mining_time(num_blocks=num_blocks)
-    absolute_deviation_from_target_mining_time = abs(average_mining_time - TARGET_BLOCK_TIME)
+    average_mining_time = blockchain.get_average_mining_time(num_blocks=num_blocks_slice)
+    absolute_deviation_from_target_mining_time = abs(average_mining_time - TARGET_BLOCK_MINING_TIME)
     relative_deviation_from_target_mining_time = (
-                                                         absolute_deviation_from_target_mining_time / TARGET_BLOCK_TIME) * 100.0
+                                                         absolute_deviation_from_target_mining_time / TARGET_BLOCK_MINING_TIME) * 100.0
 
-    average_bit_difficulty = sum(bit_difficulties_slice) / num_blocks
+    average_bit_difficulty = sum(bit_difficulties_slice) / num_blocks_slice
     # absolute_deviation_bit_difficulty = abs(average_bit_difficulty - blockchain.bit_difficulties[-1])
     # relative_deviation_bit_difficulty = (
     #                                             absolute_deviation_bit_difficulty / blockchain.bit_difficulties[
@@ -196,7 +201,12 @@ def get_blockchain_statistics(blockchain, statistics_partition_interval_factor):
     zero_mining_time_blocks = sum(1 for time in blockchain.mining_times if time == 0.0)
 
     return (
-        num_blocks,
+        INITIAL_BIT_DIFFICULTY,
+        num_blocks_slice,
+        TARGET_BLOCK_MINING_TIME,
+        ADJUSTMENT_INTERVAL,
+        CLAMP_FACTOR,
+        SMALLEST_BIT_DIFFICULTY,
 
         average_mining_time,
         absolute_deviation_from_target_mining_time,

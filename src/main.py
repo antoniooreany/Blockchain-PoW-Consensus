@@ -12,7 +12,7 @@ from constants import (
     BASE,
     INITIAL_BIT_DIFFICULTY,
     ADJUSTMENT_INTERVAL,
-    TARGET_BLOCK_TIME,
+    TARGET_BLOCK_MINING_TIME,
     NUMBER_BLOCKS_TO_ADD,
     CLAMP_FACTOR,
     SMALLEST_BIT_DIFFICULTY,
@@ -42,7 +42,7 @@ if __name__ == "__main__":
         blockchain = Blockchain(
             initial_bit_difficulty=INITIAL_BIT_DIFFICULTY,
             adjustment_interval=ADJUSTMENT_INTERVAL,  # todo should it be a property of blockchain?
-            target_block_mining_time=TARGET_BLOCK_TIME,
+            target_block_mining_time=TARGET_BLOCK_MINING_TIME,
         )
 
         add_blocks(blockchain=blockchain, number_of_blocks=NUMBER_BLOCKS_TO_ADD, clamp_factor=CLAMP_FACTOR,
