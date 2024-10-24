@@ -12,15 +12,15 @@ BASE = 2  # base for the blockchain
 TARGET_BLOCK_MINING_TIME = 0.1  # what is the desirable time to mine a block
 # todo why Target block time: 0.10000000000000001 ???
 # properties of the difficulty adjustment:
-# ADJUSTMENT_INTERVAL = 3  # how many blocks to wait before adjusting the difficulty
-ADJUSTMENT_INTERVAL = 10  # how many blocks to wait before adjusting the difficulty
+ADJUSTMENT_INTERVAL = 3  # how many blocks to wait before adjusting the difficulty
+# ADJUSTMENT_INTERVAL = 10  # how many blocks to wait before adjusting the difficulty
 # ADJUSTMENT_INTERVAL = 1000  # how many blocks to wait before adjusting the difficulty
 CLAMP_FACTOR = 2.0  # max adjustment factor to increase / decrease the difficulty
 SMALLEST_BIT_DIFFICULTY = 4.0  # the smallest bit difficulty that we can adjust to; todo 4 bits; bin: 0b0000, hex: 0x0,
 
 # properties of the execution:
-# NUMBER_BLOCKS_TO_ADD = 20  # how many blocks do we plan to add; property of the current execution
-NUMBER_BLOCKS_TO_ADD = 100  # how many blocks do we plan to add; property of the current execution
+NUMBER_BLOCKS_TO_ADD = 20  # how many blocks do we plan to add; property of the current execution
+# NUMBER_BLOCKS_TO_ADD = 100  # how many blocks do we plan to add; property of the current execution
 # NUMBER_BLOCKS_TO_ADD = 1_000  # how many blocks do we plan to add; property of the current execution
 # NUMBER_BLOCKS_TO_ADD = 10_000  # how many blocks do we plan to add; property of the current execution
 
@@ -29,53 +29,36 @@ HASH_BIT_LENGTH = 256  # The length of the hash in bits
 NONCE_BIT_LENGTH = 32  # The length of the nonce in bits
 
 # properties of statistics:
-STATISTICS_PARTITION_INTERVAL_FACTOR = 2  # which last part of the blockchain to consider for the statistics
+SLICE_FACTOR = 2.0  # which last part of the blockchain to consider for the statistics
 
 # properties of the plotting: bit_difficulties:
 MARGIN_COEFFICIENT = 0.05  # margin coefficient for the plotting of bit_difficulties
 DEFAULT_MARGIN = 0.1  # margin for the plotting of bit_difficulties when min_bit_difficulty == max_bit_difficulty
 
-# constants of the logging dict:
-# INITIAL_BIT_DIFFICULTY_KEY: INITIAL_BIT_DIFFICULTY,
-# NUMBER_BLOCKS_TO_ADD_KEY: NUMBER_BLOCKS_TO_ADD,
-# STATISTICS_PARTITION_INTERVAL_FACTOR_KEY: STATISTICS_PARTITION_INTERVAL_FACTOR,
-# NUMBER_BLOCKS_SLICE_KEY: num_blocks_slice,
-# TARGET_BLOCK_MINING_TIME_KEY: TARGET_BLOCK_MINING_TIME,
-# ADJUSTMENT_INTERVAL_KEY: ADJUSTMENT_INTERVAL,
-# CLAMP_FACTOR_KEY: CLAMP_FACTOR,
-# SMALLEST_BIT_DIFFICULTY_KEY: SMALLEST_BIT_DIFFICULTY,
-# AVERAGE_MINING_TIME_KEY: average_mining_time,
-# ABSOLUTE_DEVIATION_FROM_TARGET_MINING_TIME_KEY: absolute_deviation_from_target_mining_time,
-# RELATIVE_DEVIATION_FROM_TARGET_MINING_TIME_KEY: relative_deviation_from_target_mining_time,
-# AVERAGE_BIT_DIFFICULTY_KEY: average_bit_difficulty,
-# VARIANCE_MINING_TIME_KEY: variance_mining_time,
-# VARIANCE_BIT_DIFFICULTY_KEY: variance_bit_difficulty,
-# STANDARD_DEVIATION_MINING_TIME_KEY: standard_deviation_mining_time,
-# STANDARD_DEVIATION_BIT_DIFFICULTY_KEY: standard_deviation_bit_difficulty,
-# COVARIANCE_MINING_TIME_BIT_DIFFICULTY_KEY: covariance_mining_time_bit_difficulty,
-# CORRELATION_MINING_TIME_BIT_DIFFICULTY_KEY: correlation_mining_time_bit_difficulty,
-# ZERO_MINING_TIME_BLOCKS_KEY: zero_mining_time_blocks,
-
+# properties for the statistics naming:
 INITIAL_BIT_DIFFICULTY_KEY = "initial_bit_difficulty"
 NUMBER_BLOCKS_TO_ADD_KEY = "number_of_blocks_to_add"
-STATISTICS_PARTITION_INTERVAL_FACTOR_KEY = "statistics_partition_interval_factor"
+
+SLICE_FACTOR_KEY = "slice_factor"
 NUMBER_BLOCKS_SLICE_KEY = "number_blocks_slice"
 TARGET_BLOCK_MINING_TIME_KEY = "target_block_mining_time"
 ADJUSTMENT_INTERVAL_KEY = "adjustment_interval"
 CLAMP_FACTOR_KEY = "clamp_factor"
 SMALLEST_BIT_DIFFICULTY_KEY = "smallest_bit_difficulty"
-AVERAGE_MINING_TIME_KEY = "average_mining_time"
-ABSOLUTE_DEVIATION_FROM_TARGET_MINING_TIME_KEY = "absolute_deviation_from_target_mining_time"
-RELATIVE_DEVIATION_FROM_TARGET_MINING_TIME_KEY = "relative_deviation_from_target_mining_time"
-AVERAGE_BIT_DIFFICULTY_KEY = "average_bit_difficulty"
-VARIANCE_MINING_TIME_KEY = "variance_mining_time"
-VARIANCE_BIT_DIFFICULTY_KEY = "variance_bit_difficulty"
-STANDARD_DEVIATION_MINING_TIME_KEY = "standard_deviation_mining_time"
-STANDARD_DEVIATION_BIT_DIFFICULTY_KEY = "standard_deviation_bit_difficulty"
-COVARIANCE_MINING_TIME_BIT_DIFFICULTY_KEY = "covariance_mining_time_bit_difficulty"
-CORRELATION_MINING_TIME_BIT_DIFFICULTY_KEY = "correlation_mining_time_bit_difficulty"
-ZERO_MINING_TIME_BLOCKS_KEY = "zero_mining_time_blocks"
-RELATIVE_ZERO_MINING_TIME_BLOCKS_KEY = "relative_zero_mining_time_blocks"
+
+AVERAGE_MINING_TIME_SLICE_KEY = "average_mining_time_slice"
+ABSOLUTE_DEVIATION_FROM_TARGET_MINING_TIME_SLICE_KEY = "absolute_deviation_from_target_mining_time_slice"
+RELATIVE_DEVIATION_FROM_TARGET_MINING_TIME_SLICE_KEY = "relative_deviation_from_target_mining_time_slice"
+AVERAGE_BIT_DIFFICULTY_SLICE_KEY = "average_bit_difficulty_slice"
+VARIANCE_MINING_TIME_SLICE_KEY = "variance_mining_time_slice"
+VARIANCE_BIT_DIFFICULTY_SLICE_KEY = "variance_bit_difficulty_slice"
+STANDARD_DEVIATION_MINING_TIME_SLICE_KEY = "standard_deviation_mining_time_slice"
+STANDARD_DEVIATION_BIT_DIFFICULTY_SLICE_KEY = "standard_deviation_bit_difficulty_slice"
+COVARIANCE_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY = "covariance_mining_time_bit_difficulty_slice"
+CORRELATION_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY = "correlation_mining_time_bit_difficulty_slice"
+
+ZERO_MINING_TIME_BLOCKS_NUMBER_KEY = "zero_mining_time_blocks_number"
+RELATIVE_ZERO_MINING_TIME_BLOCKS_NUMBER_KEY = "relative_zero_mining_time_blocks_number"
 
 # properties of the plotting: general:
 FONT_SIZE = 12  # font size for the plotting: axes label titles

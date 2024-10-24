@@ -13,7 +13,7 @@ from statistics import variance, covariance
 from src.block import Block
 from src.constants import (
     TARGET_BLOCK_MINING_TIME,
-    STATISTICS_PARTITION_INTERVAL_FACTOR,
+    SLICE_FACTOR,
     NUMBER_BLOCKS_TO_ADD,
     INITIAL_BIT_DIFFICULTY,
     ADJUSTMENT_INTERVAL,
@@ -22,25 +22,31 @@ from src.constants import (
 
     INITIAL_BIT_DIFFICULTY_KEY,
     NUMBER_BLOCKS_TO_ADD_KEY,
-    STATISTICS_PARTITION_INTERVAL_FACTOR_KEY,
+
+    SLICE_FACTOR_KEY,
     NUMBER_BLOCKS_SLICE_KEY,
     TARGET_BLOCK_MINING_TIME_KEY,
     ADJUSTMENT_INTERVAL_KEY,
     CLAMP_FACTOR_KEY,
     SMALLEST_BIT_DIFFICULTY_KEY,
-    AVERAGE_MINING_TIME_KEY,
-    ABSOLUTE_DEVIATION_FROM_TARGET_MINING_TIME_KEY,
-    RELATIVE_DEVIATION_FROM_TARGET_MINING_TIME_KEY,
-    AVERAGE_BIT_DIFFICULTY_KEY,
-    # ABSOLUTE_DEVIATION_BIT_DIFFICULTY_KEY,
-    # RELATIVE_DEVIATION_BIT_DIFFICULTY_KEY,
-    VARIANCE_MINING_TIME_KEY,
-    VARIANCE_BIT_DIFFICULTY_KEY,
-    STANDARD_DEVIATION_MINING_TIME_KEY,
-    STANDARD_DEVIATION_BIT_DIFFICULTY_KEY,
-    COVARIANCE_MINING_TIME_BIT_DIFFICULTY_KEY,
-    CORRELATION_MINING_TIME_BIT_DIFFICULTY_KEY,
-    ZERO_MINING_TIME_BLOCKS_KEY, RELATIVE_ZERO_MINING_TIME_BLOCKS_KEY,
+
+    AVERAGE_MINING_TIME_SLICE_KEY,
+    ABSOLUTE_DEVIATION_FROM_TARGET_MINING_TIME_SLICE_KEY,
+    RELATIVE_DEVIATION_FROM_TARGET_MINING_TIME_SLICE_KEY,
+
+    AVERAGE_BIT_DIFFICULTY_SLICE_KEY,
+
+    VARIANCE_MINING_TIME_SLICE_KEY,
+    VARIANCE_BIT_DIFFICULTY_SLICE_KEY,
+
+    STANDARD_DEVIATION_MINING_TIME_SLICE_KEY,
+    STANDARD_DEVIATION_BIT_DIFFICULTY_SLICE_KEY,
+
+    COVARIANCE_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY,
+    CORRELATION_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY,
+
+    ZERO_MINING_TIME_BLOCKS_NUMBER_KEY,
+    RELATIVE_ZERO_MINING_TIME_BLOCKS_NUMBER_KEY,
     # ZERO_BIT_DIFFICULTY_BLOCKS_KEY,
     # ZERO_VARIANCE_MINING_TIME_BLOCKS_KEY,
     # ZERO_VARIANCE_BIT_DIFFICULTY_BLOCKS_KEY,
@@ -49,11 +55,6 @@ from src.constants import (
     # ZERO_COVARIANCE_MINING_TIME_BIT_DIFFICULTY_BLOCKS_KEY,
     # ZERO_CORRELATION_MINING_TIME_BIT_DIFFICULTY_BLOCKS_KEY,
 )
-
-
-# INITIAL_BIT_DIFFICULTY_KEY = "initial_bit_difficulty"
-# NUMBER_BLOCKS_TO_ADD_KEY = "number_of_blocks_to_add"
-# STATISTICS_PARTITION_INTERVAL_FACTOR_KEY = "statistics_partition_interval_factor"
 
 
 class LogLevelCounterHandler(logging.Handler):
@@ -83,6 +84,7 @@ class LogLevelCounterHandler(logging.Handler):
     def print_log_counts(self):
         logger = logging.getLogger()
         logger.info(f"Log log-levels:")
+        logger.info(f"")
         logger.info(f"NotSet messages: {self.notset_count}")
         logger.info(f"Info messages: {self.info_count}")
         logger.debug(f"Debug messages: {self.debug_count}")
@@ -127,41 +129,9 @@ def log_mined_block(block: Block) -> None:
 
 
 def log_blockchain_statistics(logger, blockchain):
-    # (
-    #     initial_bit_difficulty,
-    #     number_of_blocks_to_add,
-    #     statistics_partition_interval_factor,
-    #     num_blocks_slice,
-    #     target_block_mining_time,
-    #     adjustment_interval,
-    #     clamp_factor,
-    #     smallest_bit_difficulty,
-    #
-    #     average_mining_time,
-    #     absolute_deviation_from_target_mining_time,
-    #     relative_deviation_from_target_mining_time,
-    #
-    #     average_bit_difficulty,
-    #     # absolute_deviation_bit_difficulty,
-    #     # relative_deviation_bit_difficulty,
-    #
-    #     variance_mining_time,
-    #     variance_bit_difficulty,
-    #
-    #     standard_deviation_mining_time,
-    #     standard_deviation_bit_difficulty,
-    #
-    #     covariance_mining_time_bit_difficulty,
-    #
-    #     correlation_mining_time_bit_difficulty,
-    #
-    #     zero_mining_time_blocks,
-    #
-    # ) \
-
     blockchain_stats = get_blockchain_statistics(
         blockchain=blockchain,
-        statistics_partition_interval_factor=STATISTICS_PARTITION_INTERVAL_FACTOR,
+        statistics_partition_interval_factor=SLICE_FACTOR,
     )
 
     logger.info(f"Blockchain statistics:")
@@ -179,99 +149,40 @@ def log_blockchain_statistics(logger, blockchain):
     logger.info(create_log_message(NUMBER_BLOCKS_TO_ADD_KEY, blockchain_stats, ""))
     logger.info(f"")
 
-    logger.info(create_log_message(STATISTICS_PARTITION_INTERVAL_FACTOR_KEY, blockchain_stats, ""))
+    logger.info(create_log_message(SLICE_FACTOR_KEY, blockchain_stats, ""))
     logger.info(create_log_message(NUMBER_BLOCKS_SLICE_KEY, blockchain_stats, ""))
     logger.info(f"")
 
-    # todo for the statistical partition
-    logger.info(create_log_message(AVERAGE_MINING_TIME_KEY, blockchain_stats, "second"))
-    logger.info(create_log_message(ABSOLUTE_DEVIATION_FROM_TARGET_MINING_TIME_KEY, blockchain_stats, "second"))
-    logger.info(create_log_message(RELATIVE_DEVIATION_FROM_TARGET_MINING_TIME_KEY, blockchain_stats, "%"))
+    # for the statistical partition
+    logger.info(create_log_message(AVERAGE_MINING_TIME_SLICE_KEY, blockchain_stats, "second"))
+    logger.info(create_log_message(ABSOLUTE_DEVIATION_FROM_TARGET_MINING_TIME_SLICE_KEY, blockchain_stats, "second"))
+    logger.info(create_log_message(RELATIVE_DEVIATION_FROM_TARGET_MINING_TIME_SLICE_KEY, blockchain_stats, "%"))
     logger.info(f"")
 
-    logger.info(create_log_message(AVERAGE_BIT_DIFFICULTY_KEY, blockchain_stats, "bits"))
+    logger.info(create_log_message(AVERAGE_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, "bits"))
     # logger.info(create_log_message(ABSOLUTE_DEVIATION_BIT_DIFFICULTY_KEY, blockchain_stats, "bit"))
     # logger.info(create_log_message(RELATIVE_DEVIATION_BIT_DIFFICULTY_KEY, blockchain_stats, "%"))
     logger.info(f"")
 
-    logger.info(create_log_message(VARIANCE_MINING_TIME_KEY, blockchain_stats, "second*second"))
-    logger.info(create_log_message(VARIANCE_BIT_DIFFICULTY_KEY, blockchain_stats, "bit*bit"))
+    logger.info(create_log_message(VARIANCE_MINING_TIME_SLICE_KEY, blockchain_stats, "second*second"))
+    logger.info(create_log_message(VARIANCE_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, "bit*bit"))
     logger.info(f"")
 
-    logger.info(create_log_message(STANDARD_DEVIATION_MINING_TIME_KEY, blockchain_stats, "second"))
-    logger.info(create_log_message(STANDARD_DEVIATION_BIT_DIFFICULTY_KEY, blockchain_stats, "bits"))
+    logger.info(create_log_message(STANDARD_DEVIATION_MINING_TIME_SLICE_KEY, blockchain_stats, "second"))
+    logger.info(create_log_message(STANDARD_DEVIATION_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, "bits"))
     logger.info(f"")
 
-    logger.info(create_log_message(COVARIANCE_MINING_TIME_BIT_DIFFICULTY_KEY, blockchain_stats, "second*bit"))
-    logger.info(create_log_message(CORRELATION_MINING_TIME_BIT_DIFFICULTY_KEY, blockchain_stats, ""))
+    logger.info(create_log_message(COVARIANCE_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, "second*bit"))
+    logger.info(create_log_message(CORRELATION_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, ""))
     logger.info(f"")
 
-    logger.info(create_log_message(ZERO_MINING_TIME_BLOCKS_KEY, blockchain_stats, ""))
-    logger.info(create_log_message(RELATIVE_ZERO_MINING_TIME_BLOCKS_KEY, blockchain_stats, "%"))
+    logger.info(create_log_message(ZERO_MINING_TIME_BLOCKS_NUMBER_KEY, blockchain_stats, ""))
+    logger.info(create_log_message(RELATIVE_ZERO_MINING_TIME_BLOCKS_NUMBER_KEY, blockchain_stats, "%"))
     logger.info(f"")
-
-    # logger.info(f"Inital bit difficulty: {initial_bit_difficulty:.25f} bits")
-    # logger.info(f"Target block mining time: {target_block_mining_time:.25f} seconds")
-    #
-    # logger.info(f"Adjustment interval: {adjustment_interval:.25f} seconds")
-    # logger.info(f"Clamp factor: {clamp_factor:.25f} ")
-    # logger.info(f"Smallest bit difficulty: {smallest_bit_difficulty:.25f} bits")
-    # logger.info(f"")
-    #
-    # logger.info(f"Number of blocks to add: {NUMBER_BLOCKS_TO_ADD}")
-    # logger.info(f"")
-    #
-    # # logger.info(f"Number of blocks in the statistical partition: {num_blocks_slice}")
-    # logger.info(f"Statistics partition interval factor: {statistics_partition_interval_factor}")
-    # logger.info(f"Number of blocks in the statistical partition: {num_blocks_slice}")
-    # logger.info(f"")
-    #
-    # logger.info(f"Average mining time of the statistical partition: "
-    #             f"{average_mining_time: .25f} seconds")
-    # logger.info(f"Absolute deviation of the average from the target block time of the statistical partition: "
-    #             f"{absolute_deviation_from_target_mining_time: .25f} seconds")
-    # logger.info(f"Relative deviation of the average from the target block time of the statistical partition: "
-    #             f"{relative_deviation_from_target_mining_time: .25f} %")
-    # logger.info(f"")
-    #
-    # logger.info(f"Average bit difficulty of the statistical partition: "
-    #             f"{average_bit_difficulty: .25f} bits")
-    # # logger.info(f"Absolute deviation from the bit difficulty of the statistical partition: "
-    # #             f"{absolute_deviation_bit_difficulty: .25f} bits")
-    # # logger.info(f"Relative deviation from the bit difficulty of the statistical partition: "
-    # #             f"{relative_deviation_bit_difficulty: .25f} %")
-    # logger.info(f"")
-    #
-    # logger.info(f"Variance of the mining time of the statistical partition: "
-    #             f"{variance_mining_time: .25f}")
-    # logger.info(f"Variance of the bit difficulty of the statistical partition: "
-    #             f"{variance_bit_difficulty: .25f}")
-    #
-    # logger.info(f"Standard deviation of the mining time of the statistical partition: "
-    #             f"{standard_deviation_mining_time: .25f}")
-    # logger.info(f"Standard deviation of the bit difficulty of the statistical partition: "
-    #             f"{standard_deviation_bit_difficulty: .25f}")
-    #
-    # logger.info(f"Covariance of the mining time and the bit difficulty of the statistical partition: "
-    #             f"{covariance_mining_time_bit_difficulty: .25f}")
-    #
-    # logger.info(f"Correlation of the mining time and the bit difficulty of the statistical partition: "
-    #             f"{correlation_mining_time_bit_difficulty: .25f}")
-    #
-    # logger.info(f"")
-    #
-    # logger.info(f"Number of blocks mined with 0.0 seconds: "
-    #             f"{zero_mining_time_blocks - 1}")  # -1 for the Genesis Block
-    # logger.info(f"Relative number of blocks mined with 0.0 seconds: "
-    #             f"{((zero_mining_time_blocks - 1) / NUMBER_BLOCKS_TO_ADD) * 100:.25f} %")
-    # logger.info(f"")
-
-    # logger.info(f"{INITIAL_BIT_DIFFICULTY_KEY}: {blockchain_stats[INITIAL_BIT_DIFFICULTY_KEY]:.25f} bits")
-    # logger.info(f"{TARGET_BLOCK_MINING_TIME_KEY}: {blockchain_stats[TARGET_BLOCK_MINING_TIME_KEY]:.25f} seconds")
 
 
 def create_log_message(key: str, blockchain_stats: dict[str, float], unit: str) -> str:
-    return f"{key}: {blockchain_stats[key]:.25f}, {unit}"
+    return f"{key}: {blockchain_stats[key]:.25f} {unit}"
 
 
 def get_blockchain_statistics(blockchain, statistics_partition_interval_factor):
@@ -280,106 +191,57 @@ def get_blockchain_statistics(blockchain, statistics_partition_interval_factor):
     mining_times_slice = blockchain.mining_times[:num_blocks_slice]
     bit_difficulties_slice = blockchain.bit_difficulties[:num_blocks_slice]
 
-    average_mining_time = blockchain.get_average_mining_time(num_blocks=num_blocks_slice)
-    absolute_deviation_from_target_mining_time = abs(average_mining_time - TARGET_BLOCK_MINING_TIME)
-    relative_deviation_from_target_mining_time = (
-                                                         absolute_deviation_from_target_mining_time / TARGET_BLOCK_MINING_TIME) * 100.0
+    average_mining_time_slice = blockchain.get_average_mining_time(num_blocks=num_blocks_slice)
+    absolute_deviation_from_target_mining_time_slice = abs(average_mining_time_slice - TARGET_BLOCK_MINING_TIME)
+    relative_deviation_from_target_mining_time_slice = (
+                                                               absolute_deviation_from_target_mining_time_slice / TARGET_BLOCK_MINING_TIME) * 100.0
 
-    average_bit_difficulty = sum(bit_difficulties_slice) / num_blocks_slice
-    # absolute_deviation_bit_difficulty = abs(average_bit_difficulty - blockchain.bit_difficulties[-1])
-    # relative_deviation_bit_difficulty = (
-    #                                             absolute_deviation_bit_difficulty / blockchain.bit_difficulties[
+    average_bit_difficulty_slice = sum(bit_difficulties_slice) / num_blocks_slice
+    # absolute_deviation_bit_difficulty_slice = abs(average_bit_difficulty_slice - blockchain.bit_difficulties[-1])
+    # relative_deviation_bit_difficulty_slice = (
+    #                                             absolute_deviation_bit_difficulty_slice / blockchain.bit_difficulties[
     #                                         -1]) * 100.0
 
-    variance_mining_time = variance(mining_times_slice)
-    variance_bit_difficulty = variance(bit_difficulties_slice)
-    standard_deviation_mining_time = variance_mining_time ** 0.5
-    standard_deviation_bit_difficulty = variance_bit_difficulty ** 0.5
-    covariance_mining_time_bit_difficulty = covariance(mining_times_slice, bit_difficulties_slice)
-    # correlation_mining_time_bit_difficulty = (covariance_mining_time_bit_difficulty /
-    #                                           (standard_deviation_mining_time * standard_deviation_bit_difficulty))
+    variance_mining_time_slice = variance(mining_times_slice)
+    variance_bit_difficulty_slice = variance(bit_difficulties_slice)
+    standard_deviation_mining_time_slice = variance_mining_time_slice ** 0.5
+    standard_deviation_bit_difficulty_slice = variance_bit_difficulty_slice ** 0.5
+    covariance_mining_time_bit_difficulty_slice = covariance(mining_times_slice, bit_difficulties_slice)
 
-    if standard_deviation_mining_time == 0 or standard_deviation_bit_difficulty == 0:
-        correlation_mining_time_bit_difficulty = 0
+    if standard_deviation_mining_time_slice == 0 or standard_deviation_bit_difficulty_slice == 0:
+        correlation_mining_time_bit_difficulty_slice = 0
     else:
-        correlation_mining_time_bit_difficulty = (covariance_mining_time_bit_difficulty /
-                                                  (standard_deviation_mining_time * standard_deviation_bit_difficulty))
+        correlation_mining_time_bit_difficulty_slice = (covariance_mining_time_bit_difficulty_slice /
+                                                        (
+                                                                standard_deviation_mining_time_slice * standard_deviation_bit_difficulty_slice))
 
     # Number of blocks mined with 0.0 seconds:
-    zero_mining_time_blocks = sum(1 for time in blockchain.mining_times if time == 0.0) - 1  # -1 for the Genesis Block
-    relative_zero_mining_time_blocks = (zero_mining_time_blocks / NUMBER_BLOCKS_TO_ADD) * 100.0
-
-    # return (
-    #     INITIAL_BIT_DIFFICULTY,
-    #     NUMBER_BLOCKS_TO_ADD,
-    #     STATISTICS_PARTITION_INTERVAL_FACTOR,
-    #     num_blocks_slice,
-    #     TARGET_BLOCK_MINING_TIME,
-    #     ADJUSTMENT_INTERVAL,
-    #     CLAMP_FACTOR,
-    #     SMALLEST_BIT_DIFFICULTY,
-    #
-    #     average_mining_time,
-    #     absolute_deviation_from_target_mining_time,
-    #     relative_deviation_from_target_mining_time,
-    #
-    #     average_bit_difficulty,
-    #     # absolute_deviation_bit_difficulty,
-    #     # relative_deviation_bit_difficulty,
-    #
-    #     variance_mining_time,
-    #     variance_bit_difficulty,
-    #
-    #     standard_deviation_mining_time,
-    #     standard_deviation_bit_difficulty,
-    #
-    #     covariance_mining_time_bit_difficulty,
-    #
-    #     correlation_mining_time_bit_difficulty,
-    #
-    #     zero_mining_time_blocks,
-    # )
+    zero_mining_time_blocks_number = sum(
+        1 for time in blockchain.mining_times if time == 0.0) - 1  # -1 for the Genesis Block
+    relative_zero_mining_time_blocks_number = (zero_mining_time_blocks_number / NUMBER_BLOCKS_TO_ADD) * 100.0
 
     return {
         INITIAL_BIT_DIFFICULTY_KEY: INITIAL_BIT_DIFFICULTY,
         NUMBER_BLOCKS_TO_ADD_KEY: NUMBER_BLOCKS_TO_ADD,
-        STATISTICS_PARTITION_INTERVAL_FACTOR_KEY: STATISTICS_PARTITION_INTERVAL_FACTOR,
+        SLICE_FACTOR_KEY: SLICE_FACTOR,
         NUMBER_BLOCKS_SLICE_KEY: num_blocks_slice,
         TARGET_BLOCK_MINING_TIME_KEY: TARGET_BLOCK_MINING_TIME,
         ADJUSTMENT_INTERVAL_KEY: ADJUSTMENT_INTERVAL,
         CLAMP_FACTOR_KEY: CLAMP_FACTOR,
         SMALLEST_BIT_DIFFICULTY_KEY: SMALLEST_BIT_DIFFICULTY,
-        AVERAGE_MINING_TIME_KEY: average_mining_time,
-        ABSOLUTE_DEVIATION_FROM_TARGET_MINING_TIME_KEY: absolute_deviation_from_target_mining_time,
-        RELATIVE_DEVIATION_FROM_TARGET_MINING_TIME_KEY: relative_deviation_from_target_mining_time,
-        AVERAGE_BIT_DIFFICULTY_KEY: average_bit_difficulty,
-        VARIANCE_MINING_TIME_KEY: variance_mining_time,
-        VARIANCE_BIT_DIFFICULTY_KEY: variance_bit_difficulty,
-        STANDARD_DEVIATION_MINING_TIME_KEY: standard_deviation_mining_time,
-        STANDARD_DEVIATION_BIT_DIFFICULTY_KEY: standard_deviation_bit_difficulty,
-        COVARIANCE_MINING_TIME_BIT_DIFFICULTY_KEY: covariance_mining_time_bit_difficulty,
-        CORRELATION_MINING_TIME_BIT_DIFFICULTY_KEY: correlation_mining_time_bit_difficulty,
-        ZERO_MINING_TIME_BLOCKS_KEY: zero_mining_time_blocks,
-        RELATIVE_ZERO_MINING_TIME_BLOCKS_KEY: relative_zero_mining_time_blocks,
+        AVERAGE_MINING_TIME_SLICE_KEY: average_mining_time_slice,
+        ABSOLUTE_DEVIATION_FROM_TARGET_MINING_TIME_SLICE_KEY: absolute_deviation_from_target_mining_time_slice,
+        RELATIVE_DEVIATION_FROM_TARGET_MINING_TIME_SLICE_KEY: relative_deviation_from_target_mining_time_slice,
+        AVERAGE_BIT_DIFFICULTY_SLICE_KEY: average_bit_difficulty_slice,
+        VARIANCE_MINING_TIME_SLICE_KEY: variance_mining_time_slice,
+        VARIANCE_BIT_DIFFICULTY_SLICE_KEY: variance_bit_difficulty_slice,
+        STANDARD_DEVIATION_MINING_TIME_SLICE_KEY: standard_deviation_mining_time_slice,
+        STANDARD_DEVIATION_BIT_DIFFICULTY_SLICE_KEY: standard_deviation_bit_difficulty_slice,
+        COVARIANCE_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY: covariance_mining_time_bit_difficulty_slice,
+        CORRELATION_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY: correlation_mining_time_bit_difficulty_slice,
+        ZERO_MINING_TIME_BLOCKS_NUMBER_KEY: zero_mining_time_blocks_number,
+        RELATIVE_ZERO_MINING_TIME_BLOCKS_NUMBER_KEY: relative_zero_mining_time_blocks_number,
 
-        # "number_of_blocks_to_add": NUMBER_BLOCKS_TO_ADD,
-        # "statistics_partition_interval_factor": STATISTICS_PARTITION_INTERVAL_FACTOR,
-        # "num_blocks_slice": num_blocks_slice,
-        # "target_block_mining_time": TARGET_BLOCK_MINING_TIME,
-        # "adjustment_interval": ADJUSTMENT_INTERVAL,
-        # "clamp_factor": CLAMP_FACTOR,
-        # "smallest_bit_difficulty": SMALLEST_BIT_DIFFICULTY,
-        # "average_mining_time": average_mining_time,
-        # "absolute_deviation_from_target_mining_time": absolute_deviation_from_target_mining_time,
-        # "relative_deviation_from_target_mining_time": relative_deviation_from_target_mining_time,
-        # "average_bit_difficulty": average_bit_difficulty,
-        # "variance_mining_time": variance_mining_time,
-        # "variance_bit_difficulty": variance_bit_difficulty,
-        # "standard_deviation_mining_time": standard_deviation_mining_time,
-        # "standard_deviation_bit_difficulty": standard_deviation_bit_difficulty,
-        # "covariance_mining_time_bit_difficulty": covariance_mining_time_bit_difficulty,
-        # "correlation_mining_time_bit_difficulty": correlation_mining_time_bit_difficulty,
-        # "zero_mining_time_blocks": zero_mining_time_blocks,
     }
 
 
