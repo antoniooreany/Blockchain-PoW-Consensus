@@ -91,8 +91,10 @@ def log_mined_block(block: Block) -> None:
 def log_blockchain_statistics(logger, blockchain):
     (
         initial_bit_difficulty,
-        num_blocks,
-        target_block_time,
+        number_of_blocks_to_add,
+        statistics_partition_interval_factor,
+        num_blocks_slice,
+        target_block_mining_time,
         adjustment_interval,
         clamp_factor,
         smallest_bit_difficulty,
@@ -118,11 +120,26 @@ def log_blockchain_statistics(logger, blockchain):
         zero_mining_time_blocks,
 
     ) = get_blockchain_statistics(
-        blockchain, STATISTICS_PARTITION_INTERVAL_FACTOR)
+        blockchain=blockchain,
+        statistics_partition_interval_factor=STATISTICS_PARTITION_INTERVAL_FACTOR,
+    )
     logger.info(f"Blockchain statistics:")
-    logger.info(f"Target mining block time: {TARGET_BLOCK_MINING_TIME:.25f} seconds")
-    logger.info(f"STATISTICS_PARTITION_INTERVAL_FACTOR: {STATISTICS_PARTITION_INTERVAL_FACTOR}")
-    logger.info(f"Number of blocks in the statistical partition: {num_blocks}")
+    # logger.info(f"Target mining block time: {TARGET_BLOCK_MINING_TIME:.25f} seconds")
+    # logger.info(f"STATISTICS_PARTITION_INTERVAL_FACTOR: {STATISTICS_PARTITION_INTERVAL_FACTOR}")
+
+    logger.info(f"Initial bit difficulty: {initial_bit_difficulty:.25f} bits")
+    logger.info(f"Number of blocks to add: {NUMBER_BLOCKS_TO_ADD}")
+    # logger.info(f"Statistics partition interval factor: {statistics_partition_interval_factor}")
+    # logger.info(f"Number of blocks in the statistical partition: {num_blocks_slice}")
+    logger.info(f"Target block mining time: {target_block_mining_time:.25f} seconds")
+    logger.info(f"Adjustment interval: {adjustment_interval:.25f} seconds")
+    logger.info(f"Clamp factor: {clamp_factor:.25f} ")
+    logger.info(f"Smallest bit difficulty: {smallest_bit_difficulty:.25f} bits")
+    logger.info(f"")
+
+    # logger.info(f"Number of blocks in the statistical partition: {num_blocks_slice}")
+    logger.info(f"Statistics partition interval factor: {statistics_partition_interval_factor}")
+    logger.info(f"Number of blocks in the statistical partition: {num_blocks_slice}")
     logger.info(f"")
 
     logger.info(f"Average mining time of the statistical partition: "
@@ -202,6 +219,8 @@ def get_blockchain_statistics(blockchain, statistics_partition_interval_factor):
 
     return (
         INITIAL_BIT_DIFFICULTY,
+        NUMBER_BLOCKS_TO_ADD,
+        STATISTICS_PARTITION_INTERVAL_FACTOR,
         num_blocks_slice,
         TARGET_BLOCK_MINING_TIME,
         ADJUSTMENT_INTERVAL,
