@@ -63,7 +63,7 @@ ZERO_MINING_TIME_BLOCKS_NUMBER_KEY = "zero_mining_time_blocks_number"
 RELATIVE_ZERO_MINING_TIME_BLOCKS_NUMBER_KEY = "relative_zero_mining_time_blocks_number"
 
 # properties of the plotting: general:
-FONT_SIZE = 12  # font size for the plotting: axes label titles
+FONT_SIZE = 16  # font size for the plotting: axes label titles
 FIGURE_HEIGHT_SCALING_FACTOR = 0.9  # scaling factor for the plotting
 FIGURE_WIDTH_SCALING_FACTOR = 0.9  # scaling factor for the plotting
 PIXEL_TO_INCH_CONVERSION = 100  # conversion factor from pixels to inches
@@ -112,7 +112,7 @@ AX1_GRID_WHICH = 'both'
 AX1_GRID_LINE_STYLE = ':'
 AX1_TICK_PARAMS_AXIS = 'y'
 AX1_X_LABEL_TEXT = 'Block Index'
-AX1_Y_LABEL_TEXT = 'Block Mining Time, second'
+AX1_Y_LABEL_TEXT = 'Block Mining Time, seconds'
 AX1_SCATTER_Z_ORDER = 3
 AX1_BAR_ALPHA = 0.5
 
@@ -121,7 +121,7 @@ AX2_GRID_BOOL = True
 AX2_GRID_WHICH = 'both'
 AX2_GRID_LINE_STYLE = ':'
 AX2_TICK_PARAMS_AXIS = 'y'
-AX2_Y_LABEL_TEXT = 'Bit Difficulty, bit     /     Difficulty, 1'
+AX2_Y_LABEL_TEXT = 'Bit Difficulty, bits     /     Difficulty, 1'
 AX2_PLOT_LABEL = 'Bit Difficulty'
 
 # properties of the plotting: scatter:

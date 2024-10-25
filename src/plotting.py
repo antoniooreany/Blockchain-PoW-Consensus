@@ -190,5 +190,6 @@ def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, lin
     # ax2.set_yscale('log', base=2)
     # ax2.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{float(x):.2f}' if x > 0 else "- INFINITY"))
     ax2.yaxis.set_major_formatter(
-        plt.FuncFormatter(lambda x, _: f'{float(np.log2(x)):.3f} / {x:_.0f}' if x > 0 else "- INFINITY"))
+        plt.FuncFormatter(lambda x, _: f'{float(np.log2(x)):.3f} / {x:_.0f}' if x > 0
+        else " - INFINITY  /  0"))
     # ax2.yaxis.set_major_locator(plt.LogLocator(base=2, subs='auto', numticks=16))
