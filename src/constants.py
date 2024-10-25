@@ -6,6 +6,8 @@
 
 # properties of the execution:
 INITIAL_BIT_DIFFICULTY = 16.0  # bit difficulty of the first block; todo is it better to use linear_difficulty?
+# INITIAL_BIT_DIFFICULTY = 20.0  # bit difficulty of the first block; todo is it better to use linear_difficulty?
+# INITIAL_BIT_DIFFICULTY = 24.0  # bit difficulty of the first block; todo is it better to use linear_difficulty?
 
 # properties of the blockchain:
 BASE = 2  # base for the blockchain
