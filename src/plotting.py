@@ -184,3 +184,10 @@ def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, lin
     )
     ax2.relim()
     ax2.autoscale_view()
+
+    # # Set the y-axis to log scale
+    # ax2.set_yscale('log', base=2)
+    # ax2.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{float(np.log2(x))}'))
+    # ax2.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{int(np.log2(x))}'))
+    # ax2.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{int(np.log2(x)) if x > 0 else 0}'))
+    ax2.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{float(np.log2(x)) if x > 0 else "-infinity"}'))
