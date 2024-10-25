@@ -16,7 +16,7 @@ TARGET_BLOCK_MINING_TIME = 0.01  # what is the desirable time to mine a block
 # properties of the difficulty adjustment:
 # ADJUSTMENT_INTERVAL = 3  # how many blocks to wait before adjusting the difficulty
 ADJUSTMENT_INTERVAL = 10  # how many blocks to wait before adjusting the difficulty
-# ADJUSTMENT_INTERVAL = 1000  # how many blocks to wait before adjusting the difficulty
+# ADJUSTMENT_INTERVAL = 1000  # todo for static constant difficulty
 CLAMP_FACTOR = 2.0  # max adjustment factor to increase / decrease the difficulty
 SMALLEST_BIT_DIFFICULTY = 4.0  # the smallest bit difficulty that we can adjust to; todo 4 bits; bin: 0b0000, hex: 0x0,
 

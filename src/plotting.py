@@ -18,7 +18,6 @@ from constants import (
     MINING_TIME_COLORS,
     BIT_DIFFICULTY_COLORS,
     FONT_SIZE,
-    DEFAULT_MARGIN,
     MARGIN_COEFFICIENT,
     FIGURE_HEIGHT_SCALING_FACTOR,
     PIXEL_TO_INCH_CONVERSION,
@@ -168,12 +167,15 @@ def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, lin
 
     # ax2.set_xlabel(AX2_X_LABEL_TEXT, fontsize=FONT_SIZE)
 
-    min_bit_difficulty, max_bit_difficulty = min(difficulties), max(difficulties)
-    margin = DEFAULT_MARGIN if min_bit_difficulty == max_bit_difficulty \
-        else (max_bit_difficulty - min_bit_difficulty) * MARGIN_COEFFICIENT
+    min_difficulty, max_difficulty = min(difficulties), max(difficulties)
+    # margin = DEFAULT_MARGIN if min_difficulty == max_difficulty \
+    # margin = (max_difficulty - 0.0) * MARGIN_COEFFICIENT \
+    margin = max_difficulty * MARGIN_COEFFICIENT \
+        # if min_difficulty == max_difficulty \
+    # else (max_difficulty - min_difficulty) * MARGIN_COEFFICIENT  # todo do we need this? maybe margin = max_difficulty * MARGIN_COEFFICIENT?
 
-    # ax2.set_ylim(min_bit_difficulty - margin, max_bit_difficulty + margin)
-    ax2.set_ylim(0, max_bit_difficulty + margin)
+    # ax2.set_ylim(min_difficulty - margin, max_difficulty + margin)
+    ax2.set_ylim(0, max_difficulty + margin)
     ax2.set_ylabel(AX2_Y_LABEL_TEXT, fontsize=FONT_SIZE, color=difficulty_color)
     ax2.tick_params(axis=AX2_TICK_PARAMS_AXIS, labelcolor=difficulty_color)
     ax2.grid(
@@ -190,6 +192,6 @@ def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, lin
     # ax2.set_yscale('log', base=2)
     # ax2.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{float(x):.2f}' if x > 0 else "- INFINITY"))
     ax2.yaxis.set_major_formatter(
-        plt.FuncFormatter(lambda x, _: f'{float(np.log2(x)):.3f} / {x:_.0f}' if x > 0
-        else " - INFINITY  /  0"))
+        plt.FuncFormatter(lambda x, _: f'{float(np.log2(x)):.2f} / {x:_.0f}' if x > 0
+        else " -INFINITY  /  0_000"))
     # ax2.yaxis.set_major_locator(plt.LogLocator(base=2, subs='auto', numticks=16))
