@@ -155,10 +155,11 @@ def plot_mining_times_bar(ax1, blockchain, mining_time_color):
 
 def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, line_width):
     ax2 = ax1.twinx()
-    # difficulties = [bit_difficulty * scaling_factor for bit_difficulty in blockchain.difficulties]
+    # difficulties = [bit_difficulty * scaling_factor for bit_difficulty in blockchain.bit_difficulties]
     difficulties = [(2 ** bit_difficulty) * scaling_factor for bit_difficulty in
                     blockchain.bit_difficulties]  # todo is it ok to use bit_difficulty here?
-    bit_difficulties = [np.log2(d) if d > 0 else "- INF" for d in difficulties]  # Handle zero values
+    bit_difficulties = [np.log2(d) if d > 0 else "- INF" for d in
+                        difficulties]  # Handle zero values todo do we need bit_difficulties here?
 
     ax2.plot(range(len(difficulties)), difficulties, color=difficulty_color, linewidth=line_width,
              label=AX2_PLOT_LABEL)
@@ -185,5 +186,9 @@ def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, lin
     ax2.relim()
     ax2.autoscale_view()
 
-    ax2.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{float(np.log2(x)):.2f}' if x > 0 else "- INFINITY"))
+    # Set the y-axis to be log scale
+    # ax2.set_yscale('log', base=2)
+    # ax2.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{float(x):.2f}' if x > 0 else "- INFINITY"))
+    ax2.yaxis.set_major_formatter(
+        plt.FuncFormatter(lambda x, _: f'{float(np.log2(x)):.3f} / {x:_.0f}' if x > 0 else "- INFINITY"))
     # ax2.yaxis.set_major_locator(plt.LogLocator(base=2, subs='auto', numticks=16))

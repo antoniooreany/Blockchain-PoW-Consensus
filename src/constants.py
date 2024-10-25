@@ -112,7 +112,7 @@ AX1_GRID_WHICH = 'both'
 AX1_GRID_LINE_STYLE = ':'
 AX1_TICK_PARAMS_AXIS = 'y'
 AX1_X_LABEL_TEXT = 'Block Index'
-AX1_Y_LABEL_TEXT = 'Block Mining Time, seconds'
+AX1_Y_LABEL_TEXT = 'Block Mining Time, second'
 AX1_SCATTER_Z_ORDER = 3
 AX1_BAR_ALPHA = 0.5
 
@@ -121,7 +121,7 @@ AX2_GRID_BOOL = True
 AX2_GRID_WHICH = 'both'
 AX2_GRID_LINE_STYLE = ':'
 AX2_TICK_PARAMS_AXIS = 'y'
-AX2_Y_LABEL_TEXT = 'Bit Difficulty, bits'
+AX2_Y_LABEL_TEXT = 'Bit Difficulty, bit     /     Difficulty, 1'
 AX2_PLOT_LABEL = 'Bit Difficulty'
 
 # properties of the plotting: scatter:
