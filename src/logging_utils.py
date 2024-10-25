@@ -131,7 +131,7 @@ def log_mined_block(block: Block) -> None:
 def log_blockchain_statistics(logger, blockchain):
     blockchain_stats = get_blockchain_statistics(
         blockchain=blockchain,
-        statistics_partition_interval_factor=SLICE_FACTOR,
+        slice_factor=SLICE_FACTOR,
     )
 
     logger.info(f"Blockchain statistics:")
@@ -185,8 +185,8 @@ def create_log_message(key: str, blockchain_stats: dict[str, float], unit: str) 
     return f"{key}: {blockchain_stats[key]:.25f} {unit}"
 
 
-def get_blockchain_statistics(blockchain, statistics_partition_interval_factor):
-    num_blocks_slice = int(len(blockchain.mining_times) / statistics_partition_interval_factor)
+def get_blockchain_statistics(blockchain, slice_factor):
+    num_blocks_slice = int(len(blockchain.mining_times) / slice_factor)
     # Slice the lists to the num_blocks_slice length
     mining_times_slice = blockchain.mining_times[:num_blocks_slice]
     bit_difficulties_slice = blockchain.bit_difficulties[:num_blocks_slice]

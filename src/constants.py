@@ -5,22 +5,22 @@
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
 # properties of the execution:
-INITIAL_BIT_DIFFICULTY = 20.0  # bit difficulty of the first block; todo is it better to use linear_difficulty?
+INITIAL_BIT_DIFFICULTY = 16.0  # bit difficulty of the first block; todo is it better to use linear_difficulty?
 
 # properties of the blockchain:
 BASE = 2  # base for the blockchain
-TARGET_BLOCK_MINING_TIME = 0.1  # what is the desirable time to mine a block
+TARGET_BLOCK_MINING_TIME = 0.01  # what is the desirable time to mine a block
 # todo why Target block time: 0.10000000000000001 ???
 # properties of the difficulty adjustment:
-ADJUSTMENT_INTERVAL = 3  # how many blocks to wait before adjusting the difficulty
-# ADJUSTMENT_INTERVAL = 10  # how many blocks to wait before adjusting the difficulty
+# ADJUSTMENT_INTERVAL = 3  # how many blocks to wait before adjusting the difficulty
+ADJUSTMENT_INTERVAL = 10  # how many blocks to wait before adjusting the difficulty
 # ADJUSTMENT_INTERVAL = 1000  # how many blocks to wait before adjusting the difficulty
 CLAMP_FACTOR = 2.0  # max adjustment factor to increase / decrease the difficulty
 SMALLEST_BIT_DIFFICULTY = 4.0  # the smallest bit difficulty that we can adjust to; todo 4 bits; bin: 0b0000, hex: 0x0,
 
 # properties of the execution:
-NUMBER_BLOCKS_TO_ADD = 20  # how many blocks do we plan to add; property of the current execution
-# NUMBER_BLOCKS_TO_ADD = 100  # how many blocks do we plan to add; property of the current execution
+# NUMBER_BLOCKS_TO_ADD = 20  # how many blocks do we plan to add; property of the current execution
+NUMBER_BLOCKS_TO_ADD = 100  # how many blocks do we plan to add; property of the current execution
 # NUMBER_BLOCKS_TO_ADD = 1_000  # how many blocks do we plan to add; property of the current execution
 # NUMBER_BLOCKS_TO_ADD = 10_000  # how many blocks do we plan to add; property of the current execution
 

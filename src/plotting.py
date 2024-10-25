@@ -7,6 +7,7 @@
 
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.axes import Axes
 from screeninfo import get_monitors
 
@@ -154,16 +155,19 @@ def plot_mining_times_bar(ax1, blockchain, mining_time_color):
 
 def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, line_width):
     ax2 = ax1.twinx()
-    bit_difficulties = [difficulty * scaling_factor for difficulty in blockchain.bit_difficulties]
+    # difficulties = [bit_difficulty * scaling_factor for bit_difficulty in blockchain.difficulties]
+    difficulties = [(2 ** bit_difficulty) * scaling_factor for bit_difficulty in
+                    blockchain.bit_difficulties]  # todo is it ok to use bit_difficulty here?
+    bit_difficulties = np.log2(difficulties)
 
-    ax2.plot(range(len(bit_difficulties)), bit_difficulties, color=difficulty_color, linewidth=line_width,
+    ax2.plot(range(len(difficulties)), difficulties, color=difficulty_color, linewidth=line_width,
              label=AX2_PLOT_LABEL)
-    ax2.scatter(range(len(bit_difficulties)), bit_difficulties, color=BIT_DIFFICULTY_SCATTER_COLOR, s=MARKER_SIZE,
+    ax2.scatter(range(len(difficulties)), difficulties, color=BIT_DIFFICULTY_SCATTER_COLOR, s=MARKER_SIZE,
                 zorder=AX2_SCATTER_Z_ORDER)  # Add dots
 
     # ax2.set_xlabel(AX2_X_LABEL_TEXT, fontsize=FONT_SIZE)
 
-    min_bit_difficulty, max_bit_difficulty = min(bit_difficulties), max(bit_difficulties)
+    min_bit_difficulty, max_bit_difficulty = min(difficulties), max(difficulties)
     margin = DEFAULT_MARGIN if min_bit_difficulty == max_bit_difficulty \
         else (max_bit_difficulty - min_bit_difficulty) * MARGIN_COEFFICIENT
 
