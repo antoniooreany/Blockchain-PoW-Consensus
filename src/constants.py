@@ -126,7 +126,10 @@ AX2_GRID_LINE_STYLE = ':'
 AX2_TICK_PARAMS_AXIS = 'y'
 AX2_Y_LABEL_TEXT = 'Bit Difficulty, bits     /     Difficulty, 1'
 AX2_PLOT_LABEL = 'Bit Difficulty'
-INFINITY_0_DIFFICULTY_LABEL = " -INFINITY  /  00_000"
+# INFINITY_0_DIFFICULTY_LABEL = " -INFINITY  /  00_000"
+# INFINITY_0_DIFFICULTY_LABEL = " - ∞  /  00_000"
+INFINITY_0_DIFFICULTY_LABEL = " -∞  /  00_000"
+# INFINITY_0_DIFFICULTY_LABEL = " <span style='font-size:20px;'>- ∞</span>  /  00_000"
 
 # properties of the plotting: scatter:
 MINING_TIMES_SCATTER_COLOR = 'lime'

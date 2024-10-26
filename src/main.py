@@ -45,8 +45,12 @@ if __name__ == "__main__":
             target_block_mining_time=TARGET_BLOCK_MINING_TIME,
         )
 
-        add_blocks(blockchain=blockchain, number_of_blocks_to_add=NUMBER_BLOCKS_TO_ADD, clamp_factor=CLAMP_FACTOR,
-                   smallest_bit_difficulty=SMALLEST_BIT_DIFFICULTY)
+        add_blocks(
+            blockchain=blockchain,
+            number_of_blocks_to_add=NUMBER_BLOCKS_TO_ADD,
+            clamp_factor=CLAMP_FACTOR,
+            smallest_bit_difficulty=SMALLEST_BIT_DIFFICULTY,
+        )
 
         # Collect filtered bit difficulties
         # filtered_difficulties = collect_filtered_bit_difficulties(blockchain, ADJUSTMENT_INTERVAL)
