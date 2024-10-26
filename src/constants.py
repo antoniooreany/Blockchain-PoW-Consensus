@@ -39,8 +39,7 @@ DEFAULT_MARGIN = 0.1  # margin for the plotting of bit_difficulties when min_bit
 
 # properties for the statistics naming:
 INITIAL_BIT_DIFFICULTY_KEY = "initial_bit_difficulty"
-NUMBER_BLOCKS_TO_ADD_KEY = "number_of_blocks_to_add"
-
+NUMBER_BLOCKS_TO_ADD_KEY = "number_blocks_to_add"
 SLICE_FACTOR_KEY = "slice_factor"
 NUMBER_BLOCKS_SLICE_KEY = "number_blocks_slice"
 TARGET_BLOCK_MINING_TIME_KEY = "target_block_mining_time"

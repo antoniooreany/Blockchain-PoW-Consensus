@@ -153,7 +153,7 @@ def log_blockchain_statistics(logger, blockchain):
     logger.info(f"")
 
     logger.info(create_log_message(NUMBER_BLOCKS_TO_ADD_KEY, blockchain_stats, "block", precision=0))
-    logger.info(f"")
+    # logger.info(f"")
 
     logger.info(create_log_message(SLICE_FACTOR_KEY, blockchain_stats, ""))
     logger.info(create_log_message(NUMBER_BLOCKS_SLICE_KEY, blockchain_stats, "block", precision=0))
