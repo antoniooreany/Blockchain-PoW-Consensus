@@ -56,6 +56,7 @@ from constants import (
     PLOT_TITLE_Y,
     BIT_DIFFICULTY_SCATTER_COLOR,
     AX2_SCATTER_Z_ORDER,
+    INFINITY_0_DIFFICULTY_LABEL,
 )
 from src.blockchain import Blockchain
 
@@ -193,5 +194,5 @@ def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, lin
     # ax2.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{float(x):.2f}' if x > 0 else "- INFINITY"))
     ax2.yaxis.set_major_formatter(
         plt.FuncFormatter(lambda x, _: f'{float(np.log2(x)):.2f} / {x:_.0f}' if x > 0
-        else " -INFINITY  /  0_000"))
+        else INFINITY_0_DIFFICULTY_LABEL))
     # ax2.yaxis.set_major_locator(plt.LogLocator(base=2, subs='auto', numticks=16))
