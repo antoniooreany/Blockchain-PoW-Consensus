@@ -16,7 +16,7 @@ from src.constants import (
     SLICE_FACTOR,
     NUMBER_BLOCKS_TO_ADD,
     INITIAL_BIT_DIFFICULTY,
-    ADJUSTMENT_INTERVAL,
+    ADJUSTMENT_BLOCK_INTERVAL,
     CLAMP_FACTOR,
     SMALLEST_BIT_DIFFICULTY,
 
@@ -26,7 +26,7 @@ from src.constants import (
     SLICE_FACTOR_KEY,
     NUMBER_BLOCKS_SLICE_KEY,
     TARGET_BLOCK_MINING_TIME_KEY,
-    ADJUSTMENT_INTERVAL_KEY,
+    ADJUSTMENT_BLOCK_INTERVAL_KEY,
     CLAMP_FACTOR_KEY,
     SMALLEST_BIT_DIFFICULTY_KEY,
 
@@ -59,6 +59,8 @@ from src.constants import (
     # ZERO_COVARIANCE_MINING_TIME_BIT_DIFFICULTY_BLOCKS_KEY,
     # ZERO_CORRELATION_MINING_TIME_BIT_DIFFICULTY_BLOCKS_KEY,
 )
+
+DEFAULT_PRECISION = 25
 
 
 class LogLevelCounterHandler(logging.Handler):
@@ -143,18 +145,18 @@ def log_blockchain_statistics(logger, blockchain):
 
     # logger.info(f"initial_bit_difficulty: {blockchain_stats["initial_bit_difficulty"]:.25f} bits")
 
-    logger.info(create_log_message(INITIAL_BIT_DIFFICULTY_KEY, blockchain_stats, "bits"))
-    logger.info(create_log_message(TARGET_BLOCK_MINING_TIME_KEY, blockchain_stats, "seconds"))
-    logger.info(create_log_message(ADJUSTMENT_INTERVAL_KEY, blockchain_stats, "seconds"))
-    logger.info(create_log_message(CLAMP_FACTOR_KEY, blockchain_stats, "bits"))
-    logger.info(create_log_message(SMALLEST_BIT_DIFFICULTY_KEY, blockchain_stats, "bits"))
+    logger.info(create_log_message(INITIAL_BIT_DIFFICULTY_KEY, blockchain_stats, "bit"))
+    logger.info(create_log_message(TARGET_BLOCK_MINING_TIME_KEY, blockchain_stats, "second"))
+    logger.info(create_log_message(ADJUSTMENT_BLOCK_INTERVAL_KEY, blockchain_stats, "block", precision=0))
+    logger.info(create_log_message(CLAMP_FACTOR_KEY, blockchain_stats, "bit"))
+    logger.info(create_log_message(SMALLEST_BIT_DIFFICULTY_KEY, blockchain_stats, "bit"))
     logger.info(f"")
 
-    logger.info(create_log_message(NUMBER_BLOCKS_TO_ADD_KEY, blockchain_stats, ""))
+    logger.info(create_log_message(NUMBER_BLOCKS_TO_ADD_KEY, blockchain_stats, "block", precision=0))
     logger.info(f"")
 
     logger.info(create_log_message(SLICE_FACTOR_KEY, blockchain_stats, ""))
-    logger.info(create_log_message(NUMBER_BLOCKS_SLICE_KEY, blockchain_stats, ""))
+    logger.info(create_log_message(NUMBER_BLOCKS_SLICE_KEY, blockchain_stats, "block", precision=0))
     logger.info(f"")
 
     # for the statistical partition
@@ -164,9 +166,9 @@ def log_blockchain_statistics(logger, blockchain):
     logger.info(create_log_message(RELATIVE_DEVIATION_MINING_TIME_AVERAGE_FROM_TARGET_SLICE_KEY, blockchain_stats, "%"))
     logger.info(f"")
 
-    logger.info(create_log_message(AVERAGE_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, "bits"))
+    logger.info(create_log_message(AVERAGE_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, "bit"))
     logger.info(
-        create_log_message(ABSOLUTE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY, blockchain_stats, "bits"))
+        create_log_message(ABSOLUTE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY, blockchain_stats, "bit"))
     logger.info(
         create_log_message(RELATIVE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY, blockchain_stats, "%"))
     logger.info(f"")
@@ -188,8 +190,9 @@ def log_blockchain_statistics(logger, blockchain):
     logger.info(f"")
 
 
-def create_log_message(key: str, blockchain_stats: dict[str, float], unit: str) -> str:
-    return f"{key}: {blockchain_stats[key]:.25f} {unit}"
+def create_log_message(key: str, blockchain_stats: dict[str, float], unit: str,
+                       precision: int = DEFAULT_PRECISION) -> str:
+    return f"{key}: {blockchain_stats[key]:.{precision}f} {unit}"
 
 
 def get_blockchain_statistics(blockchain, slice_factor):
@@ -238,7 +241,7 @@ def get_blockchain_statistics(blockchain, slice_factor):
         SLICE_FACTOR_KEY: SLICE_FACTOR,
         NUMBER_BLOCKS_SLICE_KEY: num_blocks_slice,
         TARGET_BLOCK_MINING_TIME_KEY: TARGET_BLOCK_MINING_TIME,
-        ADJUSTMENT_INTERVAL_KEY: ADJUSTMENT_INTERVAL,
+        ADJUSTMENT_BLOCK_INTERVAL_KEY: ADJUSTMENT_BLOCK_INTERVAL,
         CLAMP_FACTOR_KEY: CLAMP_FACTOR,
         SMALLEST_BIT_DIFFICULTY_KEY: SMALLEST_BIT_DIFFICULTY,
         AVERAGE_MINING_TIME_SLICE_KEY: average_mining_time_slice,

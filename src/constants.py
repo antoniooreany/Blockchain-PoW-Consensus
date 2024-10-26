@@ -14,9 +14,9 @@ BASE = 2  # base for the blockchain
 TARGET_BLOCK_MINING_TIME = 0.01  # what is the desirable time to mine a block
 # todo why Target block time: 0.10000000000000001 ???
 # properties of the difficulty adjustment:
-# ADJUSTMENT_INTERVAL = 3  # how many blocks to wait before adjusting the difficulty
-ADJUSTMENT_INTERVAL = 10  # how many blocks to wait before adjusting the difficulty
-# ADJUSTMENT_INTERVAL = 1000  # todo for static constant difficulty
+# ADJUSTMENT_BLOCK_INTERVAL = 3  # how many blocks to wait before adjusting the difficulty
+ADJUSTMENT_BLOCK_INTERVAL = 10  # how many blocks to wait before adjusting the difficulty
+# ADJUSTMENT_BLOCK_INTERVAL = 1000  # todo for static constant difficulty
 CLAMP_FACTOR = 2.0  # max adjustment factor to increase / decrease the difficulty
 SMALLEST_BIT_DIFFICULTY = 4.0  # the smallest bit difficulty that we can adjust to; todo 4 bits; bin: 0b0000, hex: 0x0,
 
@@ -44,7 +44,7 @@ NUMBER_BLOCKS_TO_ADD_KEY = "number_of_blocks_to_add"
 SLICE_FACTOR_KEY = "slice_factor"
 NUMBER_BLOCKS_SLICE_KEY = "number_blocks_slice"
 TARGET_BLOCK_MINING_TIME_KEY = "target_block_mining_time"
-ADJUSTMENT_INTERVAL_KEY = "adjustment_interval"
+ADJUSTMENT_BLOCK_INTERVAL_KEY = "adjustment_block_interval"
 CLAMP_FACTOR_KEY = "clamp_factor"
 SMALLEST_BIT_DIFFICULTY_KEY = "smallest_bit_difficulty"
 
@@ -136,3 +136,6 @@ BIT_DIFFICULTY_SCATTER_COLOR = 'red'
 AX2_SCATTER_Z_ORDER = 3
 
 FIGURE_BASE = 0.5
+
+# properties of logging:
+DEFAULT_PRECISION = 25

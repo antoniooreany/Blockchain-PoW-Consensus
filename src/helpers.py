@@ -30,8 +30,8 @@ def create_genesis_block(blockchain, initial_bit_difficulty: float) -> Block:
     return genesis_block
 
 
-def add_blocks(blockchain, number_of_blocks: int, clamp_factor, smallest_bit_difficulty):
-    for index in range(1, number_of_blocks + 1):  # add number_of_blocks blocks after the Genesis Block
+def add_blocks(blockchain, number_of_blocks_to_add: int, clamp_factor, smallest_bit_difficulty):
+    for index in range(1, number_of_blocks_to_add + 1):  # add number_of_blocks blocks after the Genesis Block
         block = Block(bit_difficulty=blockchain.bit_difficulties[-1], index=index, timestamp=time.time(),
                       data=f"Block {index} Data")
         blockchain.add_block(block, clamp_factor, smallest_bit_difficulty)
