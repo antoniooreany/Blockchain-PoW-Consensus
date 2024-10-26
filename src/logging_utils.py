@@ -35,6 +35,10 @@ from src.constants import (
     RELATIVE_DEVIATION_FROM_TARGET_MINING_TIME_SLICE_KEY,
 
     AVERAGE_BIT_DIFFICULTY_SLICE_KEY,
+    # ABSOLUTE_DEVIATION_BIT_DIFFICULTY_SLICE_FROM_INITIAL_KEY,
+    # RELATIVE_DEVIATION_BIT_DIFFICULTY_SLICE_FROM_INITIAL_KEY,
+    ABSOLUTE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY,
+    RELATIVE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY,
 
     VARIANCE_MINING_TIME_SLICE_KEY,
     VARIANCE_BIT_DIFFICULTY_SLICE_KEY,
@@ -160,8 +164,10 @@ def log_blockchain_statistics(logger, blockchain):
     logger.info(f"")
 
     logger.info(create_log_message(AVERAGE_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, "bits"))
-    # logger.info(create_log_message(ABSOLUTE_DEVIATION_BIT_DIFFICULTY_KEY, blockchain_stats, "bit"))
-    # logger.info(create_log_message(RELATIVE_DEVIATION_BIT_DIFFICULTY_KEY, blockchain_stats, "%"))
+    logger.info(
+        create_log_message(ABSOLUTE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY, blockchain_stats, "bits"))
+    logger.info(
+        create_log_message(RELATIVE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY, blockchain_stats, "%"))
     logger.info(f"")
 
     logger.info(create_log_message(VARIANCE_MINING_TIME_SLICE_KEY, blockchain_stats, "second*second"))
@@ -197,6 +203,11 @@ def get_blockchain_statistics(blockchain, slice_factor):
                                                                absolute_deviation_from_target_mining_time_slice / TARGET_BLOCK_MINING_TIME) * 100.0
 
     average_bit_difficulty_slice = sum(bit_difficulties_slice) / num_blocks_slice
+    absolute_deviation_bit_difficulty_average_from_initial_slice = abs(
+        average_bit_difficulty_slice - INITIAL_BIT_DIFFICULTY)
+    relative_deviation_bit_difficulty_average_from_initial_slice = (
+                                                                           absolute_deviation_bit_difficulty_average_from_initial_slice / INITIAL_BIT_DIFFICULTY) * 100.0
+
     # absolute_deviation_bit_difficulty_slice = abs(average_bit_difficulty_slice - blockchain.bit_difficulties[-1])
     # relative_deviation_bit_difficulty_slice = (
     #                                             absolute_deviation_bit_difficulty_slice / blockchain.bit_difficulties[
@@ -233,6 +244,9 @@ def get_blockchain_statistics(blockchain, slice_factor):
         ABSOLUTE_DEVIATION_FROM_TARGET_MINING_TIME_SLICE_KEY: absolute_deviation_from_target_mining_time_slice,
         RELATIVE_DEVIATION_FROM_TARGET_MINING_TIME_SLICE_KEY: relative_deviation_from_target_mining_time_slice,
         AVERAGE_BIT_DIFFICULTY_SLICE_KEY: average_bit_difficulty_slice,
+        ABSOLUTE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY: absolute_deviation_bit_difficulty_average_from_initial_slice,
+        RELATIVE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY: relative_deviation_bit_difficulty_average_from_initial_slice,
+
         VARIANCE_MINING_TIME_SLICE_KEY: variance_mining_time_slice,
         VARIANCE_BIT_DIFFICULTY_SLICE_KEY: variance_bit_difficulty_slice,
         STANDARD_DEVIATION_MINING_TIME_SLICE_KEY: standard_deviation_mining_time_slice,
