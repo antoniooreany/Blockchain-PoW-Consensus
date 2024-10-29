@@ -14,8 +14,9 @@ BASE = 2  # base for the blockchain
 TARGET_BLOCK_MINING_TIME = 0.01  # what is the desirable time to mine a block
 # todo why Target block time: 0.10000000000000001 ???
 # properties of the difficulty adjustment:
-# ADJUSTMENT_BLOCK_INTERVAL = 3  # how many blocks to wait before adjusting the difficulty
-ADJUSTMENT_BLOCK_INTERVAL = 10  # how many blocks to wait before adjusting the difficulty
+# ADJUSTMENT_BLOCK_INTERVAL = 1  # how many blocks to wait before adjusting the difficulty
+ADJUSTMENT_BLOCK_INTERVAL = 3  # how many blocks to wait before adjusting the difficulty
+# ADJUSTMENT_BLOCK_INTERVAL = 10  # how many blocks to wait before adjusting the difficulty
 # ADJUSTMENT_BLOCK_INTERVAL = 1000  # todo for static constant difficulty
 CLAMP_FACTOR = 2.0  # max adjustment factor to increase / decrease the difficulty
 SMALLEST_BIT_DIFFICULTY = 4.0  # the smallest bit difficulty that we can adjust to; todo 4 bits; bin: 0b0000, hex: 0x0,
@@ -114,7 +115,7 @@ AX1_GRID_BOOL = True
 AX1_GRID_WHICH = 'both'
 AX1_GRID_LINE_STYLE = ':'
 AX1_TICK_PARAMS_AXIS = 'y'
-AX1_X_LABEL_TEXT = 'Block Index'
+AX1_X_LABEL_TEXT = 'Block Index, 1'
 AX1_Y_LABEL_TEXT = 'Block Mining Time, seconds'
 AX1_SCATTER_Z_ORDER = 3
 AX1_BAR_ALPHA = 0.5

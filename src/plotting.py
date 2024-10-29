@@ -56,7 +56,8 @@ from constants import (
     PLOT_TITLE_Y,
     BIT_DIFFICULTY_SCATTER_COLOR,
     AX2_SCATTER_Z_ORDER,
-    INFINITY_0_DIFFICULTY_LABEL,
+    INFINITY_0_DIFFICULTY_LABEL, INITIAL_BIT_DIFFICULTY, TARGET_BLOCK_MINING_TIME, ADJUSTMENT_BLOCK_INTERVAL,
+    CLAMP_FACTOR, SMALLEST_BIT_DIFFICULTY, NUMBER_BLOCKS_TO_ADD, SLICE_FACTOR,
 )
 from src.blockchain import Blockchain
 
@@ -112,6 +113,29 @@ def plot_blockchain_statistics(
             line_width,
         )  # todo Type 'Axes' doesn't have expected attributes 'set_ylim', 'set_ylabel', 'tick_params', 'grid', 'relim', 'autoscale_view'
 
+    # Collect input information
+    # input_info = (
+    #     f"Initial Bit Difficulty: {INITIAL_BIT_DIFFICULTY} bits\n"
+    #     f"Target Block Mining Time: {TARGET_BLOCK_MINING_TIME} seconds\n"
+    #     f"Adjustment Block Interval: {ADJUSTMENT_BLOCK_INTERVAL} blocks\n"
+    #     f"Clamp Factor: {CLAMP_FACTOR} bits\n"
+    #     f"Smallest Bit Difficulty: {SMALLEST_BIT_DIFFICULTY} bits\n"
+    #     f"Number of Blocks to Add: {NUMBER_BLOCKS_TO_ADD} blocks\n"
+    #     f"Slice Factor: {SLICE_FACTOR} \n"
+    #     f"Number of Blocks Slice: {int(NUMBER_BLOCKS_TO_ADD * SLICE_FACTOR)} blocks"
+    # )
+
+    input_info = (
+        f"Initial Bit Difficulty, bits: {INITIAL_BIT_DIFFICULTY} \n"
+        f"Target Block Mining Time, seconds: {TARGET_BLOCK_MINING_TIME} \n"
+        f"Adjustment Block Interval, blocks: {ADJUSTMENT_BLOCK_INTERVAL} \n"
+        f"Clamp Factor, bits: {CLAMP_FACTOR} \n"
+        f"Smallest Bit Difficulty, bits: {SMALLEST_BIT_DIFFICULTY} \n"
+        f"Number of Blocks to Add, blocks: {NUMBER_BLOCKS_TO_ADD} \n"
+        f"Slice Factor, 1: {SLICE_FACTOR} \n"
+        f"Number of Blocks Slice, blocks: {int(NUMBER_BLOCKS_TO_ADD * SLICE_FACTOR)} \n"
+    )
+
     fig.tight_layout()
     fig.legend(
         loc=LEGEND_LOCATION,
@@ -120,8 +144,22 @@ def plot_blockchain_statistics(
             LEGEND_B_BOX_Y
         ),
         ncol=LEGEND_N_COL,
-        fontsize=LEGEND_FONT_SIZE
+        fontsize=LEGEND_FONT_SIZE,
+        title="Input Information",
+        title_fontsize=LEGEND_FONT_SIZE,
     )
+
+    plt.figtext(
+        x=0.90,
+        y=0.95,
+        s=input_info,
+        wrap=True,
+        # horizontalalignment='center',
+        horizontalalignment='right',
+        verticalalignment='top',
+        fontsize=LEGEND_FONT_SIZE,
+    )
+
     plt.title(
         PLOT_TITLE_LABEL,
         fontsize=PLOT_TITLE_FONT_SIZE,
