@@ -32,7 +32,9 @@ HASH_BIT_LENGTH = 256  # The length of the hash in bits
 NONCE_BIT_LENGTH = 32  # The length of the nonce in bits
 
 # properties of statistics:
-SLICE_FACTOR = 2.0  # which last part of the blockchain to consider for the statistics
+# SLICE_FACTOR = 2.0  # which last part of the blockchain to consider for the statistics
+SLICE_FACTOR = 2.1  # which last part of the blockchain to consider for the statistics
+# SLICE_FACTOR = 2.5  # which last part of the blockchain to consider for the statistics
 
 # properties of the plotting: bit_difficulties:
 MARGIN_COEFFICIENT = 0.05  # margin coefficient for the plotting of bit_difficulties
@@ -85,6 +87,8 @@ PLOT_TITLE_COLOR = 'white'
 PLOT_TITLE_LABEL = ''
 PLOT_TITLE_Y = 1.0
 MARKER_SIZE = 0.5  # size of the markers in the plot
+X_LEGEND_POSITION = 0.90  # x-coordinate of the legend position
+Y_LEGEND_POSITION = 0.96  # y-coordinate of the legend position
 
 # properties of the project: # todo correct the values
 PROJECT_NAME = "Blockchain-PoW-Simulator"

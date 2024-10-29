@@ -56,17 +56,27 @@ from constants import (
     PLOT_TITLE_Y,
     BIT_DIFFICULTY_SCATTER_COLOR,
     AX2_SCATTER_Z_ORDER,
-    INFINITY_0_DIFFICULTY_LABEL, INITIAL_BIT_DIFFICULTY, TARGET_BLOCK_MINING_TIME, ADJUSTMENT_BLOCK_INTERVAL,
-    CLAMP_FACTOR, SMALLEST_BIT_DIFFICULTY, NUMBER_BLOCKS_TO_ADD, SLICE_FACTOR,
+    INFINITY_0_DIFFICULTY_LABEL,
+    TARGET_BLOCK_MINING_TIME,
+    ADJUSTMENT_BLOCK_INTERVAL,
+    CLAMP_FACTOR,
+    SLICE_FACTOR,
+    X_LEGEND_POSITION,
+    Y_LEGEND_POSITION, INITIAL_BIT_DIFFICULTY, SMALLEST_BIT_DIFFICULTY, NUMBER_BLOCKS_TO_ADD,
 )
 from src.blockchain import Blockchain
+
+
+# Y_LEGEND_POSITION = 0.95
+#
+# X_LEGEND_POSITION = 0.90
 
 
 def plot_blockchain_statistics(
         blockchains: dict[int, Blockchain],
         scaling_factor: float = SCALING_FACTOR,
         # An optional parameter to scale the y-axis for the bit difficulties
-        line_width: int = LINE_WIDTH  # The width of the line to plot # todo remove from default
+        line_width: int = LINE_WIDTH,  # The width of the line to plot # todo remove from default
 ) -> None:
     if not blockchains:
         raise ValueError("No blockchains provided")
@@ -114,18 +124,31 @@ def plot_blockchain_statistics(
         )  # todo Type 'Axes' doesn't have expected attributes 'set_ylim', 'set_ylabel', 'tick_params', 'grid', 'relim', 'autoscale_view'
 
     # Collect input information
-    # input_info = (
-    #     f"Initial Bit Difficulty: {INITIAL_BIT_DIFFICULTY} bits\n"
-    #     f"Target Block Mining Time: {TARGET_BLOCK_MINING_TIME} seconds\n"
-    #     f"Adjustment Block Interval: {ADJUSTMENT_BLOCK_INTERVAL} blocks\n"
-    #     f"Clamp Factor: {CLAMP_FACTOR} bits\n"
-    #     f"Smallest Bit Difficulty: {SMALLEST_BIT_DIFFICULTY} bits\n"
-    #     f"Number of Blocks to Add: {NUMBER_BLOCKS_TO_ADD} blocks\n"
-    #     f"Slice Factor: {SLICE_FACTOR} \n"
-    #     f"Number of Blocks Slice: {int(NUMBER_BLOCKS_TO_ADD * SLICE_FACTOR)} blocks"
+    # legend_input_info = (
+    #     f"Initial Bit Difficulty, bits: {INITIAL_BIT_DIFFICULTY} \n"
+    #     f"Target Block Mining Time, seconds: {TARGET_BLOCK_MINING_TIME} \n"
+    #     f"Adjustment Block Interval, blocks: {ADJUSTMENT_BLOCK_INTERVAL} \n"
+    #     f"Clamp Factor, bits: {CLAMP_FACTOR} \n"
+    #     f"Smallest Bit Difficulty, bits: {SMALLEST_BIT_DIFFICULTY} \n"
+    #     f"Number of Blocks to Add, blocks: {NUMBER_BLOCKS_TO_ADD} \n"
+    #     f"Slice Factor, 1: {SLICE_FACTOR} \n"
+    #     # f"Number of Blocks Slice, blocks: {(NUMBER_BLOCKS_TO_ADD / SLICE_FACTOR).{precision=0}f \n"
+    #     f"Number of Blocks Slice, blocks: {int(NUMBER_BLOCKS_TO_ADD / SLICE_FACTOR)} \n"
     # )
 
-    input_info = (
+    # blockchain_stats: dict[str, float] = get_blockchain_statistics(blockchain, slice_factor=SLICE_FACTOR)
+    #
+    # legend_input_info: str = (
+    #         create_log_message(INITIAL_BIT_DIFFICULTY_KEY, blockchain_stats, "bit") + "\n" +
+    #         create_log_message(TARGET_BLOCK_MINING_TIME, blockchain_stats, "seconds") + "\n" +
+    #         create_log_message(ADJUSTMENT_BLOCK_INTERVAL, blockchain_stats, "blocks") + "\n" +
+    #         create_log_message(CLAMP_FACTOR, blockchain_stats, "bits") + "\n" +
+    #         create_log_message(SMALLEST_BIT_DIFFICULTY_KEY, blockchain_stats, "bits") + "\n" +
+    #         create_log_message(NUMBER_BLOCKS_TO_ADD_KEY, blockchain_stats, "blocks") + "\n" +
+    #         create_log_message(SLICE_FACTOR_KEY, blockchain_stats, "blocks") + "\n"
+    # )
+
+    legend_input_info: str = (
         f"Initial Bit Difficulty, bits: {INITIAL_BIT_DIFFICULTY} \n"
         f"Target Block Mining Time, seconds: {TARGET_BLOCK_MINING_TIME} \n"
         f"Adjustment Block Interval, blocks: {ADJUSTMENT_BLOCK_INTERVAL} \n"
@@ -133,7 +156,8 @@ def plot_blockchain_statistics(
         f"Smallest Bit Difficulty, bits: {SMALLEST_BIT_DIFFICULTY} \n"
         f"Number of Blocks to Add, blocks: {NUMBER_BLOCKS_TO_ADD} \n"
         f"Slice Factor, 1: {SLICE_FACTOR} \n"
-        f"Number of Blocks Slice, blocks: {int(NUMBER_BLOCKS_TO_ADD * SLICE_FACTOR)} \n"
+        # f"Number of Blocks Slice, blocks: {int(NUMBER_BLOCKS_TO_ADD / SLICE_FACTOR)} \n"
+        f"Number of Blocks Slice, blocks: {int(round(NUMBER_BLOCKS_TO_ADD / SLICE_FACTOR))} \n"
     )
 
     fig.tight_layout()
@@ -150,9 +174,9 @@ def plot_blockchain_statistics(
     )
 
     plt.figtext(
-        x=0.90,
-        y=0.95,
-        s=input_info,
+        x=X_LEGEND_POSITION,
+        y=Y_LEGEND_POSITION,
+        s=legend_input_info,
         wrap=True,
         # horizontalalignment='center',
         horizontalalignment='right',
