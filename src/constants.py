@@ -110,8 +110,13 @@ GENESIS_BLOCK_DATA = "Genesis Block"  # genesis block data
 # properties of the plotting: general:
 SCALING_FACTOR = 1.0  # scaling factor for the plotting
 LINE_WIDTH = 1  # width of the lines in the plot
-PLOT_BACKGROUND = 'dark_background'  # background color of the plot
-BIT_DIFFICULTY_COLORS = 'cyan'  # color of the bit difficulty plot
+
+# PLOT_BACKGROUND = 'dark_background'  # background color of the plot
+PLOT_BACKGROUND = 'default'  # background color of the plot
+
+# BIT_DIFFICULTY_COLORS = 'cyan'  # color of the bit difficulty plot
+BIT_DIFFICULTY_COLORS = 'blue'  # color of the bit difficulty plot
+
 MINING_TIME_COLORS = 'green'  # color of the mining time plot
 
 # properties of the plotting: axes:
