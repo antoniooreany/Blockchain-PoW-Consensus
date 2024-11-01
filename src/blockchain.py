@@ -24,7 +24,7 @@ class Blockchain:
         genesis_block = create_genesis_block(self, initial_bit_difficulty)
         self.blocks = [genesis_block]
         # self.chain = []
-        self.chain = [genesis_block]
+        self.chain = [genesis_block]  # todo duplicate of self.blocks. Fix it
         self.adjustment_interval = adjustment_block_interval
         self.target_block_mining_time = target_block_mining_time
         # self.mining_times = []
