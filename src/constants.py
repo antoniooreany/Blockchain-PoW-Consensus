@@ -24,8 +24,8 @@ SMALLEST_BIT_DIFFICULTY = 4.0  # the smallest bit difficulty that we can adjust 
 # properties of the execution:
 # NUMBER_BLOCKS_TO_ADD = 20  # how many blocks do we plan to add; property of the current execution
 # NUMBER_BLOCKS_TO_ADD = 100  # how many blocks do we plan to add; property of the current execution
-NUMBER_BLOCKS_TO_ADD = 1_000  # how many blocks do we plan to add; property of the current execution
-# NUMBER_BLOCKS_TO_ADD = 10_000  # how many blocks do we plan to add; property of the current execution
+# NUMBER_BLOCKS_TO_ADD = 1_000  # how many blocks do we plan to add; property of the current execution
+NUMBER_BLOCKS_TO_ADD = 10_000  # how many blocks do we plan to add; property of the current execution
 # NUMBER_BLOCKS_TO_ADD = 100_000  # how many blocks do we plan to add; property of the current execution
 #
 # properties of the proof of work:
