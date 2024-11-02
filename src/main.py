@@ -6,6 +6,7 @@
 
 
 import logging
+import time
 
 from blockchain import Blockchain
 from constants import (
@@ -23,6 +24,10 @@ from plotting import plot_blockchain_statistics
 from src.logging_utils import LogLevelCounterHandler, log_blockchain_statistics
 
 if __name__ == "__main__":
+
+    # Record the start time
+    start_time = time.time()
+
     # Set the logging level to INFO (or WARNING to reduce more output)
     logging.getLogger('matplotlib').setLevel(logging.INFO)
 
@@ -63,3 +68,10 @@ if __name__ == "__main__":
     plot_blockchain_statistics(blockchains)
 
     log_level_counter_handler.print_log_counts()
+
+    # Record the end time
+    end_time = time.time()
+
+    # Calculate and print the execution time
+    execution_time = end_time - start_time
+    logger.info(f"Program execution time: {execution_time:.2f} seconds")
