@@ -22,6 +22,9 @@ class BlockchainConfigUI:
         self.root.focus_force()
         self.root.attributes('-fullscreen', True)
 
+        # Bind the Esc key to the exit_app method
+        self.root.bind('<Escape>', lambda event: self.exit_app())
+
         self.config_params = {
             "initial_bit_difficulty": tk.DoubleVar(value=INITIAL_BIT_DIFFICULTY),
             "target_block_mining_time": tk.DoubleVar(value=TARGET_BLOCK_MINING_TIME),
