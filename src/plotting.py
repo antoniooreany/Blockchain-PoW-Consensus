@@ -121,8 +121,8 @@ def plot_blockchain_statistics(
         f"Number of Blocks to Add, blocks: {blockchain.number_blocks_to_add} \n"
         f"Clamp Factor, bits: {blockchain.clamp_factor} \n"
         f"Smallest Bit Difficulty, bits: {blockchain.smallest_bit_difficulty} \n"
-        f"Slice Factor, 1: {blockchain.slice_factor} \n"
-        f"Number of Blocks Slice, blocks: {int(blockchain.number_blocks_to_add / blockchain.slice_factor)} \n"
+        # f"Slice Factor, 1: {blockchain.slice_factor} \n"
+        f"Number of Blocks Slice, blocks: {blockchain.number_blocks_slice} \n"
     )
 
     fig.tight_layout()

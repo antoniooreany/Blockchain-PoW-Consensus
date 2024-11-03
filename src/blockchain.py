@@ -27,7 +27,7 @@ class Blockchain:
             number_blocks_to_add,
             clamp_factor,
             smallest_bit_difficulty,
-            slice_factor,
+            number_blocks_slice,
     ):
         self.logger = configure_logging()
 
@@ -37,9 +37,9 @@ class Blockchain:
         self.number_blocks_to_add = number_blocks_to_add
         self.clamp_factor = clamp_factor
         self.smallest_bit_difficulty = smallest_bit_difficulty
-        self.slice_factor = slice_factor
-
-        self.number_blocks_slice = int(number_blocks_to_add / slice_factor) if slice_factor != 0 else 0
+        # self.slice_factor = slice_factor
+        # self.number_blocks_slice = int(number_blocks_to_add / slice_factor) if slice_factor != 0 else 0
+        self.number_blocks_slice = number_blocks_slice
 
         self.bit_difficulties = [initial_bit_difficulty]
         # genesis_block = create_genesis_block(self, initial_bit_difficulty)

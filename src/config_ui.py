@@ -32,7 +32,7 @@ class BlockchainConfigUI:
             "clamp_factor": tk.DoubleVar(value=CLAMP_FACTOR),
             "smallest_bit_difficulty": tk.DoubleVar(value=SMALLEST_BIT_DIFFICULTY),
             "number_blocks_to_add": tk.IntVar(value=NUMBER_BLOCKS_TO_ADD),
-            "slice_factor": tk.DoubleVar(value=SLICE_FACTOR),
+            # "slice_factor": tk.DoubleVar(value=SLICE_FACTOR),
             "number_blocks_slice": tk.IntVar(value=NUMBER_BLOCKS_SLICE)
         }
 
@@ -40,8 +40,8 @@ class BlockchainConfigUI:
             tk.Label(root, text=label.replace('_', ' ').title()).grid(row=idx, column=0)
             tk.Entry(root, textvariable=var).grid(row=idx, column=1)
 
-        self.config_params["number_blocks_to_add"].trace_add("write", self.update_number_blocks_slice)
-        self.config_params["slice_factor"].trace_add("write", self.update_number_blocks_slice)
+        # self.config_params["number_blocks_to_add"].trace_add("write", self.update_number_blocks_slice)
+        # self.config_params["slice_factor"].trace_add("write", self.update_number_blocks_slice)
 
         self.run_button = tk.Button(root, text="Run Blockchain", command=self.run_blockchain)
         self.run_button.grid(row=len(self.config_params), column=0, columnspan=2)
@@ -50,22 +50,22 @@ class BlockchainConfigUI:
         self.exit_button = tk.Button(root, text="Exit", command=self.exit_app)
         self.exit_button.grid(row=len(self.config_params) + 1, column=0, columnspan=2)
 
-    def update_number_blocks_slice(self, *args):
-        try:
-            number_blocks_to_add = self.config_params["number_blocks_to_add"].get()
-            slice_factor = self.config_params["slice_factor"].get()
-            number_blocks_slice = int(number_blocks_to_add / slice_factor)
-            self.config_params["number_blocks_slice"].set(number_blocks_slice)
-        except (tk.TclError, ZeroDivisionError):
-            self.config_params["number_blocks_slice"].set(0)
+    # def update_number_blocks_slice(self, *args):
+    #     try:
+    #         number_blocks_to_add = self.config_params["number_blocks_to_add"].get()
+    #         slice_factor = self.config_params["slice_factor"].get()
+    #         number_blocks_slice = int(number_blocks_to_add / slice_factor)
+    #         self.config_params["number_blocks_slice"].set(number_blocks_slice)
+    #     except (tk.TclError, ZeroDivisionError):
+    #         self.config_params["number_blocks_slice"].set(0)
 
     def run_blockchain(self, event=None):
 
         self.root.attributes('-fullscreen', True)  # Allow the window to go behind others
         self.root.update()  # Update the window to apply the fullscreen attribute
 
-        # Recalculate number_of_blocks_slice before running the blockchain
-        self.update_number_blocks_slice()
+        # # Recalculate number_of_blocks_slice before running the blockchain
+        # self.update_number_blocks_slice()
 
         # Disable the button to prevent multiple clicks
         self.run_button.config(state=tk.DISABLED)
@@ -83,7 +83,7 @@ class BlockchainConfigUI:
         clamp_factor = self.config_params["clamp_factor"].get()
         smallest_bit_difficulty = self.config_params["smallest_bit_difficulty"].get()
         number_blocks_to_add = self.config_params["number_blocks_to_add"].get()
-        slice_factor = self.config_params["slice_factor"].get()
+        # slice_factor = self.config_params["slice_factor"].get()
         number_blocks_slice = self.config_params["number_blocks_slice"].get()
 
         # Log the collected values
@@ -103,7 +103,7 @@ class BlockchainConfigUI:
             number_blocks_to_add=number_blocks_to_add,
             clamp_factor=clamp_factor,
             smallest_bit_difficulty=smallest_bit_difficulty,
-            slice_factor=slice_factor,
+            number_blocks_slice=number_blocks_slice,
         )
 
         add_blocks(
