@@ -18,24 +18,40 @@ from src.logging_utils import log_mined_block
 
 
 class Blockchain:
-    def __init__(self, initial_bit_difficulty, adjustment_block_interval, target_block_mining_time):
+    def __init__(
+            self,
+            initial_bit_difficulty,
+            target_block_mining_time,
+            adjustment_block_interval,
+            number_blocks_to_add,
+            clamp_factor,
+            smallest_bit_difficulty,
+            slice_factor,
+    ):
         self.logger = configure_logging()
+
+        self.initial_bit_difficulty = initial_bit_difficulty
+        self.target_block_mining_time = target_block_mining_time
+        self.adjustment_block_interval = adjustment_block_interval
+        self.number_blocks_to_add = number_blocks_to_add
+        self.clamp_factor = clamp_factor
+        self.smallest_bit_difficulty = smallest_bit_difficulty
+        self.slice_factor = slice_factor
+
         self.bit_difficulties = [initial_bit_difficulty]
         genesis_block = create_genesis_block(self, initial_bit_difficulty)
         self.blocks = [genesis_block]
-        # self.chain = []
         self.chain = [genesis_block]  # todo duplicate of self.blocks. Fix it
+
         log_mined_block(genesis_block)
         log_validity(self)
-        self.logger.debug(f"Actual mining time for block {genesis_block.index}: {0.0:.25f} seconds")
+        self.logger.debug(f"Actual mining time for block {genesis_block.index}: {0.0:.25f} seconds") # todo ugly, fix it
         self.logger.debug(f"")
-        self.adjustment_interval = adjustment_block_interval
-        self.target_block_mining_time = target_block_mining_time
-        # self.mining_times = []
+
         self.mining_times = [0.0]
+
         logger.debug(f"Blockchain created")
         logger.debug(f"")
-
 
     def get_latest_block(self) -> Block:
         return self.blocks[-1] if self.blocks else None

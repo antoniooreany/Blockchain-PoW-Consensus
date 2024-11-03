@@ -202,20 +202,16 @@ def get_blockchain_statistics(blockchain, slice_factor):
     bit_difficulties_slice = blockchain.bit_difficulties[:num_blocks_slice]
 
     average_mining_time_slice = blockchain.get_average_mining_time(num_blocks=num_blocks_slice)
-    absolute_deviation_mining_time_average_from_target_slice = abs(average_mining_time_slice - TARGET_BLOCK_MINING_TIME)
-    relative_deviation_mining_time_average_from_target_slice = (
-                                                                       absolute_deviation_mining_time_average_from_target_slice / TARGET_BLOCK_MINING_TIME) * 100.0
+    # absolute_deviation_mining_time_average_from_target_slice = abs(average_mining_time_slice - TARGET_BLOCK_MINING_TIME)
+    # relative_deviation_mining_time_average_from_target_slice = (absolute_deviation_mining_time_average_from_target_slice / TARGET_BLOCK_MINING_TIME) * 100.0
+    absolute_deviation_mining_time_average_from_target_slice = abs(average_mining_time_slice - blockchain.target_block_mining_time)
+    relative_deviation_mining_time_average_from_target_slice = (absolute_deviation_mining_time_average_from_target_slice / blockchain.target_block_mining_time) * 100.0
 
     average_bit_difficulty_slice = sum(bit_difficulties_slice) / num_blocks_slice
-    absolute_deviation_bit_difficulty_average_from_initial_slice = abs(
-        average_bit_difficulty_slice - INITIAL_BIT_DIFFICULTY)
-    relative_deviation_bit_difficulty_average_from_initial_slice = (
-                                                                           absolute_deviation_bit_difficulty_average_from_initial_slice / INITIAL_BIT_DIFFICULTY) * 100.0
-
-    # absolute_deviation_bit_difficulty_slice = abs(average_bit_difficulty_slice - blockchain.bit_difficulties[-1])
-    # relative_deviation_bit_difficulty_slice = (
-    #                                             absolute_deviation_bit_difficulty_slice / blockchain.bit_difficulties[
-    #                                         -1]) * 100.0
+    # absolute_deviation_bit_difficulty_average_from_initial_slice = abs(average_bit_difficulty_slice - INITIAL_BIT_DIFFICULTY)
+    # relative_deviation_bit_difficulty_average_from_initial_slice = (absolute_deviation_bit_difficulty_average_from_initial_slice / INITIAL_BIT_DIFFICULTY) * 100.0
+    absolute_deviation_bit_difficulty_average_from_initial_slice = abs(average_bit_difficulty_slice - blockchain.initial_bit_difficulty)
+    relative_deviation_bit_difficulty_average_from_initial_slice = (absolute_deviation_bit_difficulty_average_from_initial_slice / blockchain.initial_bit_difficulty) * 100.0
 
     variance_mining_time_slice = variance(mining_times_slice)
     variance_bit_difficulty_slice = variance(bit_difficulties_slice)
@@ -233,35 +229,57 @@ def get_blockchain_statistics(blockchain, slice_factor):
     # Number of blocks mined with 0.0 seconds:
     zero_mining_time_blocks_number = sum(
         1 for time in blockchain.mining_times if time == 0.0) - 1  # -1 for the Genesis Block
-    relative_zero_mining_time_blocks_number = (zero_mining_time_blocks_number / NUMBER_BLOCKS_TO_ADD) * 100.0
+    # relative_zero_mining_time_blocks_number = (zero_mining_time_blocks_number / NUMBER_BLOCKS_TO_ADD) * 100.0
+    relative_zero_mining_time_blocks_number = (zero_mining_time_blocks_number / blockchain.number_blocks_to_add) * 100.0
 
     return {
-        INITIAL_BIT_DIFFICULTY_KEY: INITIAL_BIT_DIFFICULTY,
-        NUMBER_BLOCKS_TO_ADD_KEY: NUMBER_BLOCKS_TO_ADD,
-        SLICE_FACTOR_KEY: SLICE_FACTOR,
-        NUMBER_BLOCKS_SLICE_KEY: num_blocks_slice,
-        TARGET_BLOCK_MINING_TIME_KEY: TARGET_BLOCK_MINING_TIME,
-        ADJUSTMENT_BLOCK_INTERVAL_KEY: ADJUSTMENT_BLOCK_INTERVAL,
-        CLAMP_FACTOR_KEY: CLAMP_FACTOR,
-        SMALLEST_BIT_DIFFICULTY_KEY: SMALLEST_BIT_DIFFICULTY,
-        AVERAGE_MINING_TIME_SLICE_KEY: average_mining_time_slice,
+        # INITIAL_BIT_DIFFICULTY_KEY: INITIAL_BIT_DIFFICULTY,
+        # NUMBER_BLOCKS_TO_ADD_KEY: NUMBER_BLOCKS_TO_ADD, # todo it should be taken from the blockchain.num_blocks_to_add
+        # SLICE_FACTOR_KEY: SLICE_FACTOR,
+        # NUMBER_BLOCKS_SLICE_KEY: num_blocks_slice,
+        # TARGET_BLOCK_MINING_TIME_KEY: TARGET_BLOCK_MINING_TIME,
+        # ADJUSTMENT_BLOCK_INTERVAL_KEY: ADJUSTMENT_BLOCK_INTERVAL,
+        # CLAMP_FACTOR_KEY: CLAMP_FACTOR,
+        # SMALLEST_BIT_DIFFICULTY_KEY: SMALLEST_BIT_DIFFICULTY,
+
+        # AVERAGE_MINING_TIME_SLICE_KEY: average_mining_time_slice,
         # ABSOLUTE_DEVIATION_MINING_TIME_AVERAGE_FROM_TARGET_SLICE_KEY: absolute_deviation_mining_time_average_from_target_slice,
         # RELATIVE_DEVIATION_MINING_TIME_AVERAGE_FROM_TARGET_SLICE_KEY: relative_deviation_mining_time_average_from_target_slice,
-        ABSOLUTE_DEVIATION_MINING_TIME_AVERAGE_FROM_TARGET_SLICE_KEY: absolute_deviation_mining_time_average_from_target_slice,
-        RELATIVE_DEVIATION_MINING_TIME_AVERAGE_FROM_TARGET_SLICE_KEY: relative_deviation_mining_time_average_from_target_slice,
 
-        AVERAGE_BIT_DIFFICULTY_SLICE_KEY: average_bit_difficulty_slice,
-        ABSOLUTE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY: absolute_deviation_bit_difficulty_average_from_initial_slice,
-        RELATIVE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY: relative_deviation_bit_difficulty_average_from_initial_slice,
+        # AVERAGE_BIT_DIFFICULTY_SLICE_KEY: average_bit_difficulty_slice,
+        # ABSOLUTE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY: absolute_deviation_bit_difficulty_average_from_initial_slice,
+        # RELATIVE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY: relative_deviation_bit_difficulty_average_from_initial_slice,
 
-        VARIANCE_MINING_TIME_SLICE_KEY: variance_mining_time_slice,
-        VARIANCE_BIT_DIFFICULTY_SLICE_KEY: variance_bit_difficulty_slice,
-        STANDARD_DEVIATION_MINING_TIME_SLICE_KEY: standard_deviation_mining_time_slice,
-        STANDARD_DEVIATION_BIT_DIFFICULTY_SLICE_KEY: standard_deviation_bit_difficulty_slice,
-        COVARIANCE_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY: covariance_mining_time_bit_difficulty_slice,
-        CORRELATION_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY: correlation_mining_time_bit_difficulty_slice,
-        ZERO_MINING_TIME_BLOCKS_NUMBER_KEY: zero_mining_time_blocks_number,
-        RELATIVE_ZERO_MINING_TIME_BLOCKS_NUMBER_KEY: relative_zero_mining_time_blocks_number,
+
+        INITIAL_BIT_DIFFICULTY_KEY: blockchain.initial_bit_difficulty,
+        TARGET_BLOCK_MINING_TIME_KEY: blockchain.target_block_mining_time,
+        ADJUSTMENT_BLOCK_INTERVAL_KEY: blockchain.adjustment_block_interval,
+        NUMBER_BLOCKS_TO_ADD_KEY: blockchain.number_blocks_to_add,
+        CLAMP_FACTOR_KEY: blockchain.clamp_factor,
+        SMALLEST_BIT_DIFFICULTY_KEY: blockchain.smallest_bit_difficulty,
+        SLICE_FACTOR_KEY: blockchain.slice_factor,
+        NUMBER_BLOCKS_SLICE_KEY: num_blocks_slice, # todo should blockchain.num_blocks_slice be created?
+
+        AVERAGE_MINING_TIME_SLICE_KEY: average_mining_time_slice, # todo should blockchain.average_mining_time_slice be created?
+        ABSOLUTE_DEVIATION_MINING_TIME_AVERAGE_FROM_TARGET_SLICE_KEY: absolute_deviation_mining_time_average_from_target_slice, # todo should blockchain.absolute_deviation_mining_time_average_from_target_slice be created?
+        RELATIVE_DEVIATION_MINING_TIME_AVERAGE_FROM_TARGET_SLICE_KEY: relative_deviation_mining_time_average_from_target_slice, # todo should blockchain.relative_deviation_mining_time_average_from_target_slice be created?
+
+        AVERAGE_BIT_DIFFICULTY_SLICE_KEY: average_bit_difficulty_slice, # todo should blockchain.average_bit_difficulty_slice be created?
+        ABSOLUTE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY: absolute_deviation_bit_difficulty_average_from_initial_slice, # todo should blockchain.absolute_deviation_bit_difficulty_average_from_initial_slice be created?
+        RELATIVE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY: relative_deviation_bit_difficulty_average_from_initial_slice, # todo should blockchain.relative_deviation_bit_difficulty_average_from_initial_slice be created?
+
+        VARIANCE_MINING_TIME_SLICE_KEY: variance_mining_time_slice, # todo should blockchain.variance_mining_time_slice be created?
+        STANDARD_DEVIATION_MINING_TIME_SLICE_KEY: standard_deviation_mining_time_slice, # todo should blockchain.standard_deviation_mining_time_slice be created?
+
+        VARIANCE_BIT_DIFFICULTY_SLICE_KEY: variance_bit_difficulty_slice, # todo should blockchain.variance_bit_difficulty_slice be created?
+        STANDARD_DEVIATION_BIT_DIFFICULTY_SLICE_KEY: standard_deviation_bit_difficulty_slice, # todo should blockchain.standard_deviation_bit_difficulty_slice be created?
+
+        COVARIANCE_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY: covariance_mining_time_bit_difficulty_slice, # todo should blockchain.covariance_mining_time_bit_difficulty_slice be created?
+        CORRELATION_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY: correlation_mining_time_bit_difficulty_slice, # todo should blockchain.correlation_mining_time_bit_difficulty_slice be created?
+
+        ZERO_MINING_TIME_BLOCKS_NUMBER_KEY: zero_mining_time_blocks_number, # todo should blockchain.zero_mining_time_blocks_number be created?
+        RELATIVE_ZERO_MINING_TIME_BLOCKS_NUMBER_KEY: relative_zero_mining_time_blocks_number, # todo should blockchain.relative_zero_mining_time_blocks_number be created?
+
 
     }
 
