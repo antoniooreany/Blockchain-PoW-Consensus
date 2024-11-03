@@ -177,7 +177,7 @@ def plot_mining_times_bar(ax1: Axes, blockchain: Blockchain, mining_time_color: 
     )
     ax1.relim()
     ax1.autoscale_view()
-
+    ax1.set_xlim(left=-0.5)  # Ensure the x-axis starts from 0
 
 # def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, line_width):
 #     ax2 = ax1.twinx()
@@ -244,6 +244,7 @@ def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, lin
     )
     ax2.relim()
     ax2.autoscale_view()
+    ax2.set_xlim(left=-0.5)  # Ensure the x-axis starts from 0
 
     ax2.yaxis.set_major_formatter(
         plt.FuncFormatter(lambda x, _: f'{float(np.log2(x)):.2f} / {x:_.0f}' if x > 0
