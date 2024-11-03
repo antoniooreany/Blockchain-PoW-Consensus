@@ -179,28 +179,59 @@ def plot_mining_times_bar(ax1: Axes, blockchain: Blockchain, mining_time_color: 
     ax1.autoscale_view()
 
 
+# def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, line_width):
+#     ax2 = ax1.twinx()
+#     difficulties = [(2 ** bit_difficulty) * scaling_factor for bit_difficulty in
+#                     blockchain.bit_difficulties]  # todo is it ok to use bit_difficulty here?
+#     bit_difficulties = [np.log2(d) if d > 0 else "- INF" for d in
+#                         difficulties]  # Handle zero values todo do we need bit_difficulties here?
+#
+#     ax2.plot(range(len(difficulties)), difficulties, color=difficulty_color, linewidth=line_width,
+#              label=AX2_PLOT_LABEL)
+#     ax2.scatter(range(len(difficulties)), difficulties, color=BIT_DIFFICULTY_SCATTER_COLOR, s=MARKER_SIZE,
+#                 zorder=AX2_SCATTER_Z_ORDER)  # Add dots
+#
+#     # ax2.set_xlabel(AX2_X_LABEL_TEXT, fontsize=FONT_SIZE)
+#
+#     min_difficulty, max_difficulty = min(difficulties), max(difficulties)
+#     # margin = DEFAULT_MARGIN if min_difficulty == max_difficulty \
+#     # margin = (max_difficulty - 0.0) * MARGIN_COEFFICIENT \
+#     margin = max_difficulty * MARGIN_COEFFICIENT \
+#         # if min_difficulty == max_difficulty \
+#     # else (max_difficulty - min_difficulty) * MARGIN_COEFFICIENT  # todo do we need this? maybe margin = max_difficulty * MARGIN_COEFFICIENT?
+#
+#     # ax2.set_ylim(min_difficulty - margin, max_difficulty + margin)
+#     ax2.set_ylim(0, max_difficulty + margin)
+#     ax2.set_ylabel(AX2_Y_LABEL_TEXT, fontsize=FONT_SIZE, color=difficulty_color)
+#     ax2.tick_params(axis=AX2_TICK_PARAMS_AXIS, labelcolor=difficulty_color)
+#     ax2.grid(
+#         AX2_GRID_BOOL,
+#         which=AX2_GRID_WHICH,
+#         linestyle=AX2_GRID_LINE_STYLE,
+#         linewidth=GRID_LINE_WIDTH,
+#         color=difficulty_color,
+#     )
+#     ax2.relim()
+#     ax2.autoscale_view()
+#
+#     # Set the y-axis to be log scale
+#     ax2.yaxis.set_major_formatter(
+#         plt.FuncFormatter(lambda x, _: f'{float(np.log2(x)):.2f} / {x:_.0f}' if x > 0
+#         else INFINITY_0_DIFFICULTY_LABEL))
+
 def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, line_width):
     ax2 = ax1.twinx()
-    difficulties = [(2 ** bit_difficulty) * scaling_factor for bit_difficulty in
-                    blockchain.bit_difficulties]  # todo is it ok to use bit_difficulty here?
-    bit_difficulties = [np.log2(d) if d > 0 else "- INF" for d in
-                        difficulties]  # Handle zero values todo do we need bit_difficulties here?
+    difficulties = [(2 ** bit_difficulty) * scaling_factor for bit_difficulty in blockchain.bit_difficulties]
+    bit_difficulties = [np.log2(d) if d > 0 else "- INF" for d in difficulties]
 
-    ax2.plot(range(len(difficulties)), difficulties, color=difficulty_color, linewidth=line_width,
+    ax2.plot(range(1, len(difficulties) + 1), difficulties, color=difficulty_color, linewidth=line_width,
              label=AX2_PLOT_LABEL)
-    ax2.scatter(range(len(difficulties)), difficulties, color=BIT_DIFFICULTY_SCATTER_COLOR, s=MARKER_SIZE,
-                zorder=AX2_SCATTER_Z_ORDER)  # Add dots
-
-    # ax2.set_xlabel(AX2_X_LABEL_TEXT, fontsize=FONT_SIZE)
+    ax2.scatter(range(1, len(difficulties) + 1), difficulties, color=BIT_DIFFICULTY_SCATTER_COLOR, s=MARKER_SIZE,
+                zorder=AX2_SCATTER_Z_ORDER)
 
     min_difficulty, max_difficulty = min(difficulties), max(difficulties)
-    # margin = DEFAULT_MARGIN if min_difficulty == max_difficulty \
-    # margin = (max_difficulty - 0.0) * MARGIN_COEFFICIENT \
-    margin = max_difficulty * MARGIN_COEFFICIENT \
-        # if min_difficulty == max_difficulty \
-    # else (max_difficulty - min_difficulty) * MARGIN_COEFFICIENT  # todo do we need this? maybe margin = max_difficulty * MARGIN_COEFFICIENT?
+    margin = max_difficulty * MARGIN_COEFFICIENT
 
-    # ax2.set_ylim(min_difficulty - margin, max_difficulty + margin)
     ax2.set_ylim(0, max_difficulty + margin)
     ax2.set_ylabel(AX2_Y_LABEL_TEXT, fontsize=FONT_SIZE, color=difficulty_color)
     ax2.tick_params(axis=AX2_TICK_PARAMS_AXIS, labelcolor=difficulty_color)
@@ -214,7 +245,7 @@ def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, lin
     ax2.relim()
     ax2.autoscale_view()
 
-    # Set the y-axis to be log scale
     ax2.yaxis.set_major_formatter(
         plt.FuncFormatter(lambda x, _: f'{float(np.log2(x)):.2f} / {x:_.0f}' if x > 0
         else INFINITY_0_DIFFICULTY_LABEL))
+
