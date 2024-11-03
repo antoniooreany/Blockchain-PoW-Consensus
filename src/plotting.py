@@ -73,13 +73,14 @@ from src.blockchain import Blockchain
 
 
 def plot_blockchain_statistics(
-        blockchains: dict[int, Blockchain],
+        # blockchains: dict[int, Blockchain],
+        blockchain: Blockchain,
         scaling_factor: float = SCALING_FACTOR,
         # An optional parameter to scale the y-axis for the bit difficulties
         line_width: int = LINE_WIDTH,  # The width of the line to plot # todo remove from default
 ) -> None:
-    if not blockchains:
-        raise ValueError("No blockchains provided")
+    if not blockchain:
+        raise ValueError("No blockchain provided")
 
     monitor = get_monitors()[0]
     if not monitor:
@@ -99,8 +100,10 @@ def plot_blockchain_statistics(
 
     mining_time_colors = [MINING_TIME_COLORS] * COLOR_LIST_LENGTH
     bit_difficulty_colors = [BIT_DIFFICULTY_COLORS] * COLOR_LIST_LENGTH
-    all_bit_difficulties = [difficulty for blockchain in blockchains.values()
-                            for difficulty in blockchain.bit_difficulties]
+    # all_bit_difficulties = [difficulty for blockchain in blockchains.values()
+    #                         for difficulty in blockchain.bit_difficulties]
+
+    all_bit_difficulties = blockchain.bit_difficulties
 
     min_bit_difficulty, max_bit_difficulty = (
         min(all_bit_difficulties) * scaling_factor,
@@ -109,19 +112,22 @@ def plot_blockchain_statistics(
     if min_bit_difficulty == max_bit_difficulty:
         max_bit_difficulty += EPSILON
 
-    for i, (base, blockchain) in enumerate(blockchains.items()):
-        plot_mining_times_bar(
-            ax1,
-            blockchain,
-            mining_time_colors[i % len(mining_time_colors)],
-        )  # todo Type 'Axes' doesn't have expected attributes 'set_xlabel', 'set_ylabel', 'tick_params', 'grid', 'relim', 'autoscale_view'
-        plot_bit_difficulties(
-            ax1,
-            blockchain,
-            bit_difficulty_colors[i % len(bit_difficulty_colors)],
-            scaling_factor,
-            line_width,
-        )  # todo Type 'Axes' doesn't have expected attributes 'set_ylim', 'set_ylabel', 'tick_params', 'grid', 'relim', 'autoscale_view'
+    # for i, (base, blockchain) in enumerate(blockchains.items()):
+    plot_mining_times_bar(
+        ax1,
+        blockchain,
+        # mining_time_colors[i % len(mining_time_colors)],
+        # mining_time_colors[0],
+        MINING_TIME_COLORS, # todo singular?
+    )  # todo Type 'Axes' doesn't have expected attributes 'set_xlabel', 'set_ylabel', 'tick_params', 'grid', 'relim', 'autoscale_view'
+    plot_bit_difficulties(
+        ax1,
+        blockchain,
+        # bit_difficulty_colors[0],
+        BIT_DIFFICULTY_COLORS, # todo singular?
+        scaling_factor,
+        line_width,
+    )  # todo Type 'Axes' doesn't have expected attributes 'set_ylim', 'set_ylabel', 'tick_params', 'grid', 'relim', 'autoscale_view'
 
     # Collect input information
     # legend_input_info = (
@@ -193,13 +199,12 @@ def plot_blockchain_statistics(
     plt.show()
 
 
-def plot_mining_times_bar(ax1, blockchain, mining_time_color):
+def plot_mining_times_bar(ax1: Axes, blockchain: Blockchain, mining_time_color: str) -> None:
     mining_times = blockchain.mining_times
-    marker_size = MARKER_SIZE
 
     ax1.bar(range(len(mining_times)), mining_times, color=mcolors.to_rgba(mining_time_color, alpha=AX1_BAR_ALPHA),
             width=BAR_WIDTH)
-    ax1.scatter(range(len(mining_times)), mining_times, color=MINING_TIMES_SCATTER_COLOR, s=marker_size,
+    ax1.scatter(range(len(mining_times)), mining_times, color=MINING_TIMES_SCATTER_COLOR, s=MARKER_SIZE,
                 zorder=AX1_SCATTER_Z_ORDER)
     ax1.set_xlabel(AX1_X_LABEL_TEXT, fontsize=FONT_SIZE)
     ax1.set_ylabel(AX1_Y_LABEL_TEXT, fontsize=FONT_SIZE, color=mining_time_color)

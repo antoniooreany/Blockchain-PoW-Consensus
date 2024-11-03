@@ -25,17 +25,17 @@ class Blockchain:
         self.blocks = [genesis_block]
         # self.chain = []
         self.chain = [genesis_block]  # todo duplicate of self.blocks. Fix it
+        log_mined_block(genesis_block)
+        log_validity(self)
+        self.logger.debug(f"Actual mining time for block {genesis_block.index}: {0.0:.25f} seconds")
+        self.logger.debug(f"")
         self.adjustment_interval = adjustment_block_interval
         self.target_block_mining_time = target_block_mining_time
         # self.mining_times = []
         self.mining_times = [0.0]
         logger.debug(f"Blockchain created")
         logger.debug(f"")
-        log_mined_block(genesis_block)
 
-        log_validity(self)
-        self.logger.debug(f"Actual mining time for block {genesis_block.index}: {0.0:.25f} seconds")
-        self.logger.debug(f"")
 
     def get_latest_block(self) -> Block:
         return self.blocks[-1] if self.blocks else None
@@ -68,6 +68,7 @@ class Blockchain:
             return 0.0
         if len(self.blocks) < num_blocks + 1:
             return sum(self.mining_times[1:]) / (len(self.mining_times) - 1)
+            # return sum(self.mining_times[1:]) / (len(self.mining_times)+1)
         total_time = sum(self.mining_times[-num_blocks:])
         return total_time / num_blocks
 

@@ -523,6 +523,8 @@ import time
 from blockchain import Blockchain
 from helpers import add_blocks
 from logger_singleton import LoggerSingleton
+from src.constants import INITIAL_BIT_DIFFICULTY, TARGET_BLOCK_MINING_TIME, ADJUSTMENT_BLOCK_INTERVAL, CLAMP_FACTOR, \
+    SMALLEST_BIT_DIFFICULTY, NUMBER_BLOCKS_TO_ADD, SLICE_FACTOR, NUMBER_BLOCKS_SLICE
 from src.logging_utils import LogLevelCounterHandler, log_blockchain_statistics
 from plotting import plot_blockchain_statistics
 
@@ -532,7 +534,7 @@ DEFAULT_ADJUSTMENT_BLOCK_INTERVAL = 10
 DEFAULT_TARGET_BLOCK_MINING_TIME = 0.01
 DEFAULT_CLAMP_FACTOR = 2.0
 DEFAULT_SMALLEST_BIT_DIFFICULTY = 4.0
-DEFAULT_NUMBER_BLOCKS_TO_ADD = 100
+DEFAULT_NUMBER_BLOCKS_TO_ADD = 30
 
 class BlockchainConfigUI:
     def __init__(self, root):
@@ -542,46 +544,63 @@ class BlockchainConfigUI:
         self.root.focus_force()  # Make the window focused
         # self.root.attributes('-topmost', True)  # Keep the window on top of others
         self.root.attributes('-fullscreen', True)  # Allow the window to go behind others
+        # self.center_window()  # Center the window on the screen
 
         # Labels and entry fields for constants
-        tk.Label(root, text="Initial Bit Difficulty").grid(row=0, column=0)
-        self.initial_bit_difficulty = tk.DoubleVar(value=DEFAULT_INITIAL_BIT_DIFFICULTY)
+        tk.Label(root, text="Initial Bit Difficulty, bits").grid(row=0, column=0) # todo make rows, columns variables
+        # self.initial_bit_difficulty = tk.DoubleVar(value=DEFAULT_INITIAL_BIT_DIFFICULTY)
+        self.initial_bit_difficulty = tk.DoubleVar(value=INITIAL_BIT_DIFFICULTY)
         tk.Entry(root, textvariable=self.initial_bit_difficulty).grid(row=0, column=1)
 
-        tk.Label(root, text="Adjustment Block Interval").grid(row=1, column=0)
-        self.adjustment_block_interval = tk.IntVar(value=DEFAULT_ADJUSTMENT_BLOCK_INTERVAL)
-        tk.Entry(root, textvariable=self.adjustment_block_interval).grid(row=1, column=1)
+        tk.Label(root, text="Target Block Mining Time, seconds").grid(row=1, column=0)
+        self.target_block_mining_time = tk.DoubleVar(value=TARGET_BLOCK_MINING_TIME)
+        tk.Entry(root, textvariable=self.target_block_mining_time).grid(row=1, column=1)
 
-        tk.Label(root, text="Target Block Mining Time (seconds)").grid(row=2, column=0)
-        self.target_block_mining_time = tk.DoubleVar(value=DEFAULT_TARGET_BLOCK_MINING_TIME)
-        tk.Entry(root, textvariable=self.target_block_mining_time).grid(row=2, column=1)
+        tk.Label(root, text="Adjustment Block Interval, blocks").grid(row=2, column=0)
+        self.adjustment_block_interval = tk.IntVar(value=ADJUSTMENT_BLOCK_INTERVAL)
+        tk.Entry(root, textvariable=self.adjustment_block_interval).grid(row=2, column=1)
 
-        tk.Label(root, text="Clamp Factor").grid(row=3, column=0)
-        self.clamp_factor = tk.DoubleVar(value=DEFAULT_CLAMP_FACTOR)
+        tk.Label(root, text="Clamp Factor, bits").grid(row=3, column=0)
+        self.clamp_factor = tk.DoubleVar(value=CLAMP_FACTOR)
         tk.Entry(root, textvariable=self.clamp_factor).grid(row=3, column=1)
 
-        tk.Label(root, text="Smallest Bit Difficulty").grid(row=4, column=0)
-        self.smallest_bit_difficulty = tk.DoubleVar(value=DEFAULT_SMALLEST_BIT_DIFFICULTY)
+        tk.Label(root, text="Smallest Bit Difficulty, bits").grid(row=4, column=0)
+        self.smallest_bit_difficulty = tk.DoubleVar(value=SMALLEST_BIT_DIFFICULTY)
         tk.Entry(root, textvariable=self.smallest_bit_difficulty).grid(row=4, column=1)
 
-        tk.Label(root, text="Number of Blocks to Add").grid(row=5, column=0)
-        self.number_of_blocks_to_add = tk.IntVar(value=DEFAULT_NUMBER_BLOCKS_TO_ADD)
+        tk.Label(root, text="Number of Blocks to Add, blocks").grid(row=5, column=0)
+        self.number_of_blocks_to_add = tk.IntVar(value=NUMBER_BLOCKS_TO_ADD)
         tk.Entry(root, textvariable=self.number_of_blocks_to_add).grid(row=5, column=1)
+
+        tk.Label(root, text="Slice Factor, 1").grid(row=6, column=0)
+        self.slice_factor = tk.DoubleVar(value=SLICE_FACTOR)
+        tk.Entry(root, textvariable=self.slice_factor).grid(row=6, column=1)
+
+        tk.Label(root, text="Number of Block Slices, blocks").grid(row=7, column=0)
+        self.number_of_block_slices = tk.IntVar(value=NUMBER_BLOCKS_SLICE)
+        tk.Entry(root, textvariable=self.number_of_block_slices).grid(row=7, column=1)
 
         # Run Blockchain button
         self.run_button = tk.Button(root, text="Run Blockchain", command=self.run_blockchain)
-        self.run_button.grid(row=6, column=0, columnspan=2)
+        self.run_button.grid(row=8, column=0, columnspan=2)
         self.run_button.focus_set()
 
         # Exit button
         self.exit_button = tk.Button(root, text="Exit", command=self.exit_app)
-        self.exit_button.grid(row=7, column=0, columnspan=2)
+        self.exit_button.grid(row=9, column=0, columnspan=2)
 
         # Bind Enter and Space keys to the Run Blockchain button, make it pressed when the keys are pressed
-        self.run_button.bind('<Return>', lambda event: self.run_blockchain(), add='+')
-        self.run_button.bind('<space>', lambda event: self.run_blockchain(), add='+')
+        self.run_button.bind('<Return>', lambda event: self.run_blockchain(),
+                             # add='+'
+                             )
+        self.run_button.bind('<space>', lambda event: self.run_blockchain(),
+                             # add='+'
+                             )
 
     def run_blockchain(self):
+        # Record the start time
+        start_time = time.time()
+
         # Collect values from the UI
         initial_bit_difficulty = self.initial_bit_difficulty.get()
         adjustment_block_interval = self.adjustment_block_interval.get()
@@ -589,9 +608,6 @@ class BlockchainConfigUI:
         clamp_factor = self.clamp_factor.get()
         smallest_bit_difficulty = self.smallest_bit_difficulty.get()
         number_of_blocks_to_add = self.number_of_blocks_to_add.get()
-
-        # Record the start time
-        start_time = time.time()
 
         # Set the logging level to INFO (or WARNING to reduce more output)
         logging.getLogger('matplotlib').setLevel(logging.INFO)
@@ -616,7 +632,8 @@ class BlockchainConfigUI:
         )
 
         log_blockchain_statistics(logger, blockchain)
-        plot_blockchain_statistics({2: blockchain})  # Assuming base 2 for simplicity
+        # plot_blockchain_statistics({2: blockchain})  # todo make the method get a blockchain, not set of them
+        plot_blockchain_statistics(blockchain)  # todo make the method get a blockchain, not set of them
 
         log_level_counter_handler.print_log_counts()
 
@@ -624,8 +641,8 @@ class BlockchainConfigUI:
         end_time = time.time()
 
         # Calculate and print the execution time
-        execution_time = end_time - start_time
-        logger.info(f"Program execution time: {execution_time:.2f} seconds")
+        blockchain_running_time = end_time - start_time
+        logger.info(f"Blockchain running time: {blockchain_running_time:.2f} seconds")
 
         # # Display a confirmation dialog
         # messagebox.showinfo("Blockchain Run", "The blockchain has been successfully run.")
@@ -633,10 +650,9 @@ class BlockchainConfigUI:
     def exit_app(self):
         self.root.quit()
 
-def open_config_ui():
+def config_ui():
     """Function to initialize and run the configuration UI."""
     root = tk.Tk()
     app = BlockchainConfigUI(root)
     root.mainloop()
-    # exit(0)
 
