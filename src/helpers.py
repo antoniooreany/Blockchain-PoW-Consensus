@@ -12,8 +12,8 @@ from constants import GENESIS_BLOCK_DATA, GENESIS_BLOCK_PREVIOUS_HASH
 
 def create_genesis_block(blockchain, initial_bit_difficulty: float) -> Block:
     genesis_block = Block(
-        bit_difficulty=initial_bit_difficulty,
-        # bit_difficulty=0, #  todo implement it in the generic case, having bit_difficulty=0
+        # bit_difficulty=initial_bit_difficulty,
+        bit_difficulty=0, #  todo implement it in the generic case, having bit_difficulty=0
         index=0,
         timestamp=time.time(),
         data=GENESIS_BLOCK_DATA,

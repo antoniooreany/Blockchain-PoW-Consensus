@@ -30,7 +30,7 @@ class BlockchainConfigUI:
             "smallest_bit_difficulty": tk.DoubleVar(value=SMALLEST_BIT_DIFFICULTY),
             "number_blocks_to_add": tk.IntVar(value=NUMBER_BLOCKS_TO_ADD),
             "slice_factor": tk.DoubleVar(value=SLICE_FACTOR),
-            "number_of_blocks_slice": tk.IntVar(value=NUMBER_BLOCKS_SLICE)
+            "number_blocks_slice": tk.IntVar(value=NUMBER_BLOCKS_SLICE)
         }
 
         for idx, (label, var) in enumerate(self.config_params.items()):
@@ -51,10 +51,10 @@ class BlockchainConfigUI:
         try:
             number_blocks_to_add = self.config_params["number_blocks_to_add"].get()
             slice_factor = self.config_params["slice_factor"].get()
-            number_of_blocks_slice = int(number_blocks_to_add / slice_factor)
-            self.config_params["number_of_blocks_slice"].set(number_of_blocks_slice)
+            number_blocks_slice = int(number_blocks_to_add / slice_factor)
+            self.config_params["number_blocks_slice"].set(number_blocks_slice)
         except (tk.TclError, ZeroDivisionError):
-            self.config_params["number_of_blocks_slice"].set(0)
+            self.config_params["number_blocks_slice"].set(0)
 
     def run_blockchain(self, event=None):
 
@@ -81,17 +81,17 @@ class BlockchainConfigUI:
         smallest_bit_difficulty = self.config_params["smallest_bit_difficulty"].get()
         number_blocks_to_add = self.config_params["number_blocks_to_add"].get()
         slice_factor = self.config_params["slice_factor"].get()
-        number_of_blocks_slice = self.config_params["number_of_blocks_slice"].get()
+        number_blocks_slice = self.config_params["number_blocks_slice"].get()
 
         # Log the collected values
-        logger.info(f"Initial Bit Difficulty: {initial_bit_difficulty}")
-        logger.info(f"Target Block Mining Time: {target_block_mining_time}")
-        logger.info(f"Adjustment Block Interval: {adjustment_block_interval}")
-        logger.info(f"Clamp Factor: {clamp_factor}")
-        logger.info(f"Smallest Bit Difficulty: {smallest_bit_difficulty}")
-        logger.info(f"Number of Blocks to Add: {number_blocks_to_add}")
-        logger.info(f"Slice Factor: {slice_factor}")
-        logger.info(f"Number of Blocks Slice: {number_of_blocks_slice}")
+        # logger.info(f"Initial Bit Difficulty: {initial_bit_difficulty}")
+        # logger.info(f"Target Block Mining Time: {target_block_mining_time}")
+        # logger.info(f"Adjustment Block Interval: {adjustment_block_interval}")
+        # logger.info(f"Clamp Factor: {clamp_factor}")
+        # logger.info(f"Smallest Bit Difficulty: {smallest_bit_difficulty}")
+        # logger.info(f"Number of Blocks to Add: {number_blocks_to_add}")
+        # logger.info(f"Slice Factor: {slice_factor}")
+        # logger.info(f"Number of Blocks Slice: {number_of_blocks_slice}")
 
         blockchain = Blockchain(
             initial_bit_difficulty=initial_bit_difficulty,
@@ -101,7 +101,6 @@ class BlockchainConfigUI:
             clamp_factor=clamp_factor,
             smallest_bit_difficulty=smallest_bit_difficulty,
             slice_factor=slice_factor,
-
         )
 
         add_blocks(

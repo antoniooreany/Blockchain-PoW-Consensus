@@ -13,6 +13,7 @@ from helpers import create_genesis_block
 from logging_utils import configure_logging
 from logging_utils import log_validity
 from proof_of_work import ProofOfWork
+from src.constants import GENESIS_BLOCK_PREVIOUS_HASH, GENESIS_BLOCK_DATA
 from src.helpers import adjust_difficulty
 from src.logging_utils import log_mined_block
 
@@ -38,8 +39,12 @@ class Blockchain:
         self.smallest_bit_difficulty = smallest_bit_difficulty
         self.slice_factor = slice_factor
 
+        self.number_blocks_slice = int(number_blocks_to_add / slice_factor) if slice_factor != 0 else 0
+
         self.bit_difficulties = [initial_bit_difficulty]
-        genesis_block = create_genesis_block(self, initial_bit_difficulty)
+        # genesis_block = create_genesis_block(self, initial_bit_difficulty)
+        genesis_block = Block(0, 0, time.time(), GENESIS_BLOCK_DATA, GENESIS_BLOCK_PREVIOUS_HASH)
+
         self.blocks = [genesis_block]
         self.chain = [genesis_block]  # todo duplicate of self.blocks. Fix it
 
