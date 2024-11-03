@@ -14,7 +14,7 @@ from src.logging_utils import LogLevelCounterHandler, log_blockchain_statistics
 from plotting import plot_blockchain_statistics
 
 
-class BlockchainConfigUI:
+class UI:
 
     def __init__(self, root):
         self.root = root
@@ -131,5 +131,5 @@ class BlockchainConfigUI:
 def config_ui():
     """Function to initialize and run the configuration UI."""
     root = tk.Tk()
-    app = BlockchainConfigUI(root)
+    app = UI(root)
     root.mainloop()

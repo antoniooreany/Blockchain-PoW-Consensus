@@ -65,6 +65,7 @@ from constants import (
     Y_LEGEND_POSITION, INITIAL_BIT_DIFFICULTY, SMALLEST_BIT_DIFFICULTY, NUMBER_BLOCKS_TO_ADD,
 )
 from src.blockchain import Blockchain
+from src.plot_gpt_suggestion import plot_gpt_suggestion
 
 
 def plot_blockchain_statistics(
@@ -250,3 +251,10 @@ def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, lin
         plt.FuncFormatter(lambda x, _: f'{float(np.log2(x)):.2f} / {x:_.0f}' if x > 0
         else INFINITY_0_DIFFICULTY_LABEL))
 
+
+
+    block_index: list = blockchain.block_indexes
+    mining_time: list = blockchain.mining_times
+    bit_difficulty: list = blockchain.bit_difficulties
+
+    plot_gpt_suggestion(block_index=block_index, mining_time=mining_time, bit_difficulty=bit_difficulty)

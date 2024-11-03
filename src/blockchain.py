@@ -41,6 +41,8 @@ class Blockchain:
         # self.number_blocks_slice = int(number_blocks_to_add / slice_factor) if slice_factor != 0 else 0
         self.number_blocks_slice = number_blocks_slice
 
+        self.block_indexes = list(range(number_blocks_to_add + 1))
+
         self.bit_difficulties = [initial_bit_difficulty]
         # genesis_block = create_genesis_block(self, initial_bit_difficulty)
         genesis_block = Block(0, 0, time.time(), GENESIS_BLOCK_DATA, GENESIS_BLOCK_PREVIOUS_HASH)
