@@ -10,7 +10,7 @@ from block import Block
 from constants import GENESIS_BLOCK_DATA, GENESIS_BLOCK_PREVIOUS_HASH
 
 
-def create_genesis_block(blockchain, initial_bit_difficulty: float) -> Block:
+def create_genesis_block(blockchain, initial_bit_difficulty: float) -> Block: # todo redundant method, substituted by the Block constructor
     genesis_block = Block(
         # bit_difficulty=initial_bit_difficulty,
         bit_difficulty=0, #  todo implement it in the generic case, having bit_difficulty=0
