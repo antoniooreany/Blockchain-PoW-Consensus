@@ -153,7 +153,7 @@ def log_blockchain_statistics(logger, blockchain):
 
     logger.info(create_log_message(NUMBER_BLOCKS_TO_ADD_KEY, blockchain_stats, "block", precision=0))
 
-    logger.info(create_log_message(SLICE_FACTOR_KEY, blockchain_stats, ""))
+    # logger.info(create_log_message(SLICE_FACTOR_KEY, blockchain_stats, ""))
     logger.info(create_log_message(NUMBER_BLOCKS_SLICE_KEY, blockchain_stats, "block", precision=0))
     logger.info(f"")
 
@@ -232,7 +232,7 @@ def get_blockchain_statistics(blockchain, slice_factor):
         NUMBER_BLOCKS_TO_ADD_KEY: blockchain.number_blocks_to_add,
         CLAMP_FACTOR_KEY: blockchain.clamp_factor,
         SMALLEST_BIT_DIFFICULTY_KEY: blockchain.smallest_bit_difficulty,
-        SLICE_FACTOR_KEY: blockchain.slice_factor,
+        # SLICE_FACTOR_KEY: blockchain.slice_factor,
         NUMBER_BLOCKS_SLICE_KEY: num_blocks_slice,  # todo should blockchain.num_blocks_slice be created?
 
         AVERAGE_MINING_TIME_SLICE_KEY: average_mining_time_slice,
