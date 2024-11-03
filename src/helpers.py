@@ -1,6 +1,5 @@
 #   Copyright (c) 2024, Anton Gorshkov
 #   All rights reserved.
-#
 #   This code is for a helpers.py and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
@@ -9,7 +8,6 @@ import time
 
 from block import Block
 from constants import GENESIS_BLOCK_DATA, GENESIS_BLOCK_PREVIOUS_HASH
-from src.blockchain import Blockchain
 
 
 def create_genesis_block(blockchain, initial_bit_difficulty: float) -> Block:
@@ -31,7 +29,7 @@ def create_genesis_block(blockchain, initial_bit_difficulty: float) -> Block:
     return genesis_block
 
 
-def add_blocks(blockchain: Blockchain, number_of_blocks_to_add: int, ):
+def add_blocks(blockchain, number_of_blocks_to_add: int, ):
     for index in range(1, number_of_blocks_to_add + 1):  # add number_of_blocks blocks after the Genesis Block
         block = Block(bit_difficulty=blockchain.bit_difficulties[-1], index=index, timestamp=time.time(),
                       data=f"Block {index} Data")
@@ -58,12 +56,6 @@ def collect_filtered_bit_difficulties(blockchain, adjustment_interval):  # todo 
 
 def adjust_difficulty(blockchain, clamp_factor, smallest_bit_difficulty):
     if len(blockchain.blocks) % blockchain.adjustment_block_interval == 0:
-        # if len(blockchain.blocks) % blockchain.adjustment_interval == 1:
-        # if len(blockchain.blocks) % (blockchain.adjustment_interval - 1) == 2:
-        # if len(blockchain.blocks) % (blockchain.adjustment_interval - 1) == 1:
-        # if len(blockchain.blocks) % blockchain.adjustment_interval == 1:
-        # if len(blockchain.blocks) % (blockchain.adjustment_interval - 1) == 0:
-        # if (len(blockchain.blocks) - 1) % blockchain.adjustment_interval == 0:
         average_mining_time = blockchain.get_average_mining_time(blockchain.adjustment_block_interval)
         adjustment_factor = average_mining_time / blockchain.target_block_mining_time
 

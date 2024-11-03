@@ -22,14 +22,10 @@ from helpers import add_blocks
 from logger_singleton import LoggerSingleton
 from plotting import plot_blockchain_statistics
 from src.logging_utils import LogLevelCounterHandler, log_blockchain_statistics
-
-# main.py
 from config_ui import config_ui  # Assuming the code is saved in config_ui.py
 
 # Call the function to open the UI when needed
 if __name__ == "__main__":
-    # # Record the start time
-    # start_time = time.time()
 
     # Set the logging level to INFO (or WARNING to reduce more output)
     logging.getLogger('matplotlib').setLevel(logging.INFO)
@@ -41,12 +37,3 @@ if __name__ == "__main__":
     logger.addHandler(log_level_counter_handler)  # todo rename
 
     config_ui()
-
-    # # Record the end time
-    # end_time = time.time()
-    #
-    # # Calculate and print the execution time
-    # execution_time = end_time - start_time
-    # logger.info(f"main Program execution time: {execution_time:.2f} seconds")
-
-    # exit(0) # todo is it necessary to exit the program?

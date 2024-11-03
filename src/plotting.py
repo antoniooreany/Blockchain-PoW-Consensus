@@ -1,10 +1,10 @@
 #   Copyright (c) 2024, Anton Gorshkov
 #   All rights reserved.
-#
 #   This code is for a plotting and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
 
+from matplotlib.axes import Axes
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
@@ -15,8 +15,8 @@ from constants import (
     SCALING_FACTOR,
     LINE_WIDTH,
     PLOT_BACKGROUND,
-    MINING_TIME_COLORS,
-    BIT_DIFFICULTY_COLORS,
+    MINING_TIME_COLOR,
+    BIT_DIFFICULTY_COLOR,
     FONT_SIZE,
     MARGIN_COEFFICIENT,
     FIGURE_HEIGHT_SCALING_FACTOR,
@@ -67,13 +67,7 @@ from constants import (
 from src.blockchain import Blockchain
 
 
-# Y_LEGEND_POSITION = 0.95
-#
-# X_LEGEND_POSITION = 0.90
-
-
 def plot_blockchain_statistics(
-        # blockchains: dict[int, Blockchain],
         blockchain: Blockchain,
         scaling_factor: float = SCALING_FACTOR,
         # An optional parameter to scale the y-axis for the bit difficulties
@@ -98,11 +92,6 @@ def plot_blockchain_statistics(
     ax1: Axes
     fig, ax1 = plt.subplots(figsize=(fig_width, fig_height))
 
-    # mining_time_colors = [MINING_TIME_COLORS] * COLOR_LIST_LENGTH
-    # bit_difficulty_colors = [BIT_DIFFICULTY_COLORS] * COLOR_LIST_LENGTH
-    # all_bit_difficulties = [difficulty for blockchain in blockchains.values()
-    #                         for difficulty in blockchain.bit_difficulties]
-
     all_bit_difficulties = blockchain.bit_difficulties
 
     min_bit_difficulty, max_bit_difficulty = (
@@ -112,23 +101,18 @@ def plot_blockchain_statistics(
     if min_bit_difficulty == max_bit_difficulty:
         max_bit_difficulty += EPSILON
 
-    # for i, (base, blockchain) in enumerate(blockchains.items()):
     plot_mining_times_bar(
         ax1,
         blockchain,
-        # mining_time_colors[i % len(mining_time_colors)],
-        # mining_time_colors[0],
-        MINING_TIME_COLORS,  # todo singular?
+        MINING_TIME_COLOR,  # todo singular?
     )  # todo Type 'Axes' doesn't have expected attributes 'set_xlabel', 'set_ylabel', 'tick_params', 'grid', 'relim', 'autoscale_view'
     plot_bit_difficulties(
         ax1,
         blockchain,
-        # bit_difficulty_colors[0],
-        BIT_DIFFICULTY_COLORS,  # todo singular?
+        BIT_DIFFICULTY_COLOR,  # todo singular?
         scaling_factor,
         line_width,
     )  # todo Type 'Axes' doesn't have expected attributes 'set_ylim', 'set_ylabel', 'tick_params', 'grid', 'relim', 'autoscale_view'
-
 
     legend_input_info: str = (
         f"Initial Bit Difficulty, bits: {blockchain.initial_bit_difficulty} \n"
@@ -195,12 +179,8 @@ def plot_mining_times_bar(ax1: Axes, blockchain: Blockchain, mining_time_color: 
     ax1.autoscale_view()
 
 
-from matplotlib.axes import Axes
-
-
 def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, line_width):
     ax2 = ax1.twinx()
-    # difficulties = [bit_difficulty * scaling_factor for bit_difficulty in blockchain.bit_difficulties]
     difficulties = [(2 ** bit_difficulty) * scaling_factor for bit_difficulty in
                     blockchain.bit_difficulties]  # todo is it ok to use bit_difficulty here?
     bit_difficulties = [np.log2(d) if d > 0 else "- INF" for d in
@@ -235,9 +215,6 @@ def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, lin
     ax2.autoscale_view()
 
     # Set the y-axis to be log scale
-    # ax2.set_yscale('log', base=2)
-    # ax2.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{float(x):.2f}' if x > 0 else "- INFINITY"))
     ax2.yaxis.set_major_formatter(
         plt.FuncFormatter(lambda x, _: f'{float(np.log2(x)):.2f} / {x:_.0f}' if x > 0
         else INFINITY_0_DIFFICULTY_LABEL))
-    # ax2.yaxis.set_major_locator(plt.LogLocator(base=2, subs='auto', numticks=16))
