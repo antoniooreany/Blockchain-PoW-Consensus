@@ -1268,8 +1268,8 @@ class BlockchainConfigUI:
         add_blocks(
             blockchain=blockchain,
             number_of_blocks_to_add=number_blocks_to_add,
-            clamp_factor=clamp_factor,
-            smallest_bit_difficulty=smallest_bit_difficulty,
+            # clamp_factor=clamp_factor,
+            # smallest_bit_difficulty=smallest_bit_difficulty,
         )
 
         log_blockchain_statistics(logger, blockchain)

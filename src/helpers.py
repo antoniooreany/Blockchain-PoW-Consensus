@@ -9,6 +9,7 @@ import time
 
 from block import Block
 from constants import GENESIS_BLOCK_DATA, GENESIS_BLOCK_PREVIOUS_HASH
+from src.blockchain import Blockchain
 
 
 def create_genesis_block(blockchain, initial_bit_difficulty: float) -> Block:
@@ -30,11 +31,11 @@ def create_genesis_block(blockchain, initial_bit_difficulty: float) -> Block:
     return genesis_block
 
 
-def add_blocks(blockchain, number_of_blocks_to_add: int, clamp_factor, smallest_bit_difficulty):
+def add_blocks(blockchain: Blockchain, number_of_blocks_to_add: int, ):
     for index in range(1, number_of_blocks_to_add + 1):  # add number_of_blocks blocks after the Genesis Block
         block = Block(bit_difficulty=blockchain.bit_difficulties[-1], index=index, timestamp=time.time(),
                       data=f"Block {index} Data")
-        blockchain.add_block(block, clamp_factor, smallest_bit_difficulty)
+        blockchain.add_block(block, blockchain.clamp_factor, blockchain.smallest_bit_difficulty)
 
 
 def clamp(log_adjustment_factor: float, clamp_factor: float) -> float:
