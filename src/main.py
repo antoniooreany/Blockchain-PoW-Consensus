@@ -83,4 +83,4 @@ if __name__ == "__main__":
     execution_time = end_time - start_time
     logger.info(f"Program execution time: {execution_time:.2f} seconds")
 
-    exit(0) # todo is it necessary to exit the program?
+    # exit(0) # todo is it necessary to exit the program?
