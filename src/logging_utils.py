@@ -196,7 +196,7 @@ def get_blockchain_statistics(blockchain, slice_factor):
     mining_times_slice = blockchain.mining_times[:num_blocks_slice]
     bit_difficulties_slice = blockchain.bit_difficulties[:num_blocks_slice]
 
-    average_mining_time_slice = blockchain.get_average_mining_time(num_blocks=num_blocks_slice)
+    average_mining_time_slice = blockchain.get_average_mining_time(num_last_blocks=num_blocks_slice)
     absolute_deviation_mining_time_average_from_target_slice = abs(
         average_mining_time_slice - blockchain.target_block_mining_time)
     relative_deviation_mining_time_average_from_target_slice = (

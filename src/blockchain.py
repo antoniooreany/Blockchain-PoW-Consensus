@@ -58,7 +58,7 @@ class Blockchain:
             f"Actual mining time for block {genesis_block.index}: {0.0:.25f} seconds")  # todo ugly, generalize it
         self.logger.debug(f"")
 
-        self.mining_times = [0.0]
+        self.mining_times = [0.0]  # todo generalize it, applying check mining time for the Genesis Block
 
         logger.debug(f"Blockchain created")
         logger.debug(f"")
@@ -89,14 +89,26 @@ class Blockchain:
         self.logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.25f} seconds")
         self.logger.debug(f"")
 
-    def get_average_mining_time(self, num_blocks: int) -> float:
-        if len(self.blocks) <= 1:
+    def get_average_mining_time(self, num_last_blocks: int) -> float:
+        """
+        Calculate the average mining time for the last `num_blocks` blocks.
+
+        Args:
+        num_blocks: The number of blocks to calculate the average mining time for.
+
+        Returns:
+        The average mining time for the last `num_blocks` blocks.
+        If the number of blocks in the blockchain is less than or equal to 1,
+        or if the blockchain has less than `num_blocks+1` blocks, then
+        the average mining time for all blocks (except the Genesis Block) is returned.
+        """
+        if len(self.blocks) <= 1: # in the case of the Genesis Block
             return 0.0
-        if len(self.blocks) < num_blocks + 1:
+        if len(self.blocks) < num_last_blocks + 1: # (+1) to exclude the Genesis Block from the calculation
             return sum(self.mining_times[1:]) / (len(self.mining_times) - 1)
             # return sum(self.mining_times[1:]) / (len(self.mining_times)+1)
-        total_time = sum(self.mining_times[-num_blocks:])
-        return total_time / num_blocks
+        total_time = sum(self.mining_times[-num_last_blocks:])
+        return total_time / num_last_blocks
 
     def is_chain_valid(self) -> bool:
         for i in range(1, len(self.chain)):  # todo why doesn't work with self.blocks ?
