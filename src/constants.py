@@ -121,9 +121,14 @@ LINE_WIDTH = 1  # width of the lines in the plot
 PLOT_BACKGROUND = 'default'  # background color of the plot
 
 # BIT_DIFFICULTY_COLORS = 'cyan'  # color of the bit difficulty plot
-BIT_DIFFICULTY_COLOR = 'blue'  # color of the bit difficulty plot
+# BIT_DIFFICULTY_COLOR = 'blue'  # color of the bit difficulty plot
+# Light blue: #ADD8E6
+# BIT_DIFFICULTY_COLOR = '#ADD8E6'  # color of the bit difficulty plot
 
-MINING_TIME_COLOR = 'green'  # color of the mining time plot
+BIT_DIFFICULTY_COLOR = (173/255, 216/255, 230/255, 0.5)  # Light blue with 50% transparency
+
+# MINING_TIME_COLOR = 'green'  # color of the mining time plot
+MINING_TIME_COLOR = 'red'  # color of the mining time plot
 
 # properties of the plotting: axes:
 AX1_GRID_BOOL = True
@@ -157,3 +162,29 @@ FIGURE_BASE = 0.5
 
 # properties of logging:
 DEFAULT_PRECISION = 25
+
+
+
+# constants.py
+
+# Colors for different plot elements
+MINING_TIME_COLOR = 'blue'  # Bar color for mining times
+DIFFICULTY_COLOR = (173/255, 216/255, 230/255, 0.7)  # Light blue for difficulty with 70% transparency
+MINING_TIMES_SCATTER_COLOR = 'red'  # Color for scatter plot of mining times
+
+# Font sizes and styles
+FONT_SIZE = 14  # General font size for labels
+LEGEND_FONT_SIZE = 12  # Slightly increased for readability
+PLOT_TITLE_FONT_SIZE = 16  # Increased for prominence
+
+# Line widths and marker sizes
+LINE_WIDTH = 2  # Thickness for difficulty lines
+GRID_LINE_WIDTH = 0.3  # Reduced grid line width for subtlety
+MARKER_SIZE = 10  # Marker size for scatter plot points
+
+# Title and legend positions
+PLOT_TITLE_Y = 1.05  # Adjusted title position for better visibility
+X_LEGEND_POSITION = 1.0  # Move legend slightly to the right to avoid overlap
+Y_LEGEND_POSITION = 0.95  # Position legend slightly below the title
+LEGEND_B_BOX_Y = -0.15  # Position legend below the plot
+LEGEND_LOCATION = 'upper right'  # Adjusted legend location
