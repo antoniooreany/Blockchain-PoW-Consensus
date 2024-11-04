@@ -157,13 +157,46 @@ def plot_blockchain_statistics(
     plt.show()
 
 
+# def plot_mining_times_bar(ax1: Axes, blockchain: Blockchain, mining_time_color: str) -> None:
+#     mining_times = blockchain.mining_times
+#
+#     ax1.bar(range(len(mining_times)), mining_times, color=mcolors.to_rgba(mining_time_color, alpha=AX1_BAR_ALPHA),
+#             width=BAR_WIDTH)
+#     ax1.scatter(range(len(mining_times)), mining_times, color=MINING_TIMES_SCATTER_COLOR, s=MARKER_SIZE,
+#                 zorder=AX1_SCATTER_Z_ORDER)
+#     ax1.set_xlabel(AX1_X_LABEL_TEXT, fontsize=FONT_SIZE)
+#     ax1.set_ylabel(AX1_Y_LABEL_TEXT, fontsize=FONT_SIZE, color=mining_time_color)
+#     ax1.tick_params(axis=AX1_TICK_PARAMS_AXIS, labelcolor=mining_time_color)
+#     ax1.grid(
+#         AX1_GRID_BOOL,
+#         which=AX1_GRID_WHICH,
+#         linestyle=AX1_GRID_LINE_STYLE,
+#         linewidth=GRID_LINE_WIDTH,
+#         color=mining_time_color,
+#     )
+#     ax1.relim()
+#     ax1.autoscale_view()
+#     ax1.set_xlim(left=-0.5)  # Ensure the x-axis starts from 0
+
+
+
+import matplotlib.colors as mcolors
+
 def plot_mining_times_bar(ax1: Axes, blockchain: Blockchain, mining_time_color: str) -> None:
     mining_times = blockchain.mining_times
+    adjustment_interval = blockchain.adjustment_block_interval
 
     ax1.bar(range(len(mining_times)), mining_times, color=mcolors.to_rgba(mining_time_color, alpha=AX1_BAR_ALPHA),
             width=BAR_WIDTH)
     ax1.scatter(range(len(mining_times)), mining_times, color=MINING_TIMES_SCATTER_COLOR, s=MARKER_SIZE,
                 zorder=AX1_SCATTER_Z_ORDER)
+
+    # Add light green, transparent bars for each adjustment interval
+    for i in range(0, len(mining_times), adjustment_interval):
+        interval_times = mining_times[i:i + adjustment_interval]
+        avg_time = sum(interval_times) / len(interval_times)
+        ax1.bar(i + adjustment_interval / 2, avg_time, color='lightgreen', alpha=0.5, width=adjustment_interval, align='center')
+
     ax1.set_xlabel(AX1_X_LABEL_TEXT, fontsize=FONT_SIZE)
     ax1.set_ylabel(AX1_Y_LABEL_TEXT, fontsize=FONT_SIZE, color=mining_time_color)
     ax1.tick_params(axis=AX1_TICK_PARAMS_AXIS, labelcolor=mining_time_color)
@@ -177,6 +210,7 @@ def plot_mining_times_bar(ax1: Axes, blockchain: Blockchain, mining_time_color: 
     ax1.relim()
     ax1.autoscale_view()
     ax1.set_xlim(left=-0.5)  # Ensure the x-axis starts from 0
+
 
 
 # def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, line_width):
