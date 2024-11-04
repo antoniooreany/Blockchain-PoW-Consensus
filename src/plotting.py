@@ -508,22 +508,21 @@ import matplotlib.colors as mcolors
 from constants import (
     FONT_SIZE, LINE_WIDTH, GRID_LINE_WIDTH, MARKER_SIZE, BAR_WIDTH,
     LEGEND_LOCATION, LEGEND_FONT_SIZE, PLOT_TITLE_FONT_SIZE, PLOT_TITLE_Y,
-    X_LEGEND_POSITION, Y_LEGEND_POSITION, MINING_TIMES_SCATTER_COLOR
+    X_LEGEND_POSITION, Y_LEGEND_POSITION, MINING_TIMES_SCATTER_COLOR, DIFFICULTY_COLOR
 )
 
 def plot_mining_times_bar(ax1, blockchain):
     mining_times = blockchain.mining_times
-    cmap = plt.get_cmap('RdYlBu')
-    colors = [cmap(i / len(mining_times)) for i in range(len(mining_times))]
+    bright_red = 'red'  # Bright red color
 
     for i in range(len(mining_times)):
-        ax1.plot([i, i], [0, mining_times[i]], color=colors[i], linewidth=LINE_WIDTH)
+        ax1.plot([i, i], [0, mining_times[i]], color=bright_red, linewidth=LINE_WIDTH)
     ax1.scatter(range(len(mining_times)), mining_times, color=MINING_TIMES_SCATTER_COLOR, s=MARKER_SIZE, zorder=3)
 
     ax1.set_xlabel('Block Index', fontsize=FONT_SIZE)
-    ax1.set_ylabel('Block Mining Time (seconds)', fontsize=FONT_SIZE, color='blue')
-    ax1.tick_params(axis='y', labelcolor='blue')
-    ax1.grid(True, which='both', linestyle=':', linewidth=GRID_LINE_WIDTH, color='blue')
+    ax1.set_ylabel('Block Mining Time (seconds)', fontsize=FONT_SIZE, color='red')
+    ax1.tick_params(axis='y', labelcolor='red')
+    ax1.grid(True, which='both', linestyle=':', linewidth=GRID_LINE_WIDTH, color='red')
     ax1.relim()
     ax1.autoscale_view()
     ax1.set_xlim(left=-0.5)
@@ -533,10 +532,8 @@ def plot_bit_difficulties(ax1, blockchain, scaling_factor):
     ax2 = ax1.twinx()
     difficulties = [(2 ** bit_difficulty) * scaling_factor for bit_difficulty in blockchain.bit_difficulties]
     difficulties[0] = 0
-    cmap = plt.get_cmap('RdYlBu')
-    colors = [cmap(i / len(difficulties)) for i in range(len(difficulties))]
 
-    ax2.bar(range(len(difficulties)), difficulties, color=colors, width=BAR_WIDTH)
+    ax2.bar(range(len(difficulties)), difficulties, color=DIFFICULTY_COLOR, width=BAR_WIDTH)
 
     ax2.set_ylabel('Difficulty / Bit Difficulty', fontsize=FONT_SIZE, color='blue')
     ax2.tick_params(axis='y', labelcolor='blue')
@@ -573,4 +570,3 @@ def plot_blockchain_statistics(blockchain, scaling_factor=1.0):
 
     plt.title('Blockchain Mining Statistics', fontsize=PLOT_TITLE_FONT_SIZE, y=PLOT_TITLE_Y)
     plt.show()
-
