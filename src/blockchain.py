@@ -59,6 +59,7 @@ class Blockchain:
         self.logger.debug(f"")
 
         self.mining_times = [0.0]  # todo generalize it, applying check mining time for the Genesis Block
+        # self.mining_times: list[float] = []  # todo generalize it, applying check mining time for the Genesis Block
 
         logger.debug(f"Blockchain created")
         logger.debug(f"")
