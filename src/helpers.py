@@ -10,23 +10,23 @@ from block import Block
 from constants import GENESIS_BLOCK_DATA, GENESIS_BLOCK_PREVIOUS_HASH
 
 
-def create_genesis_block(blockchain, initial_bit_difficulty: float) -> Block: # todo redundant method, substituted by the Block constructor
-    genesis_block = Block(
-        # bit_difficulty=initial_bit_difficulty,
-        bit_difficulty=0, #  todo implement it in the generic case, having bit_difficulty=0
-        index=0,
-        timestamp=time.time(),
-        data=GENESIS_BLOCK_DATA,
-        previous_hash=GENESIS_BLOCK_PREVIOUS_HASH,
-    )
-    genesis_block.hash = genesis_block.calculate_hash()
-
-    blockchain.bit_difficulties.append(initial_bit_difficulty)  # todo if 0 is added, the 1st element is 0,
-    # todo but the 0th element is initial_bit_difficulty. Add 0 to the 0th element
-    blockchain.bit_difficulties.append(
-        initial_bit_difficulty)  # todo is it correct to append it twice? find a better approach
-
-    return genesis_block
+# def create_genesis_block(blockchain, initial_bit_difficulty: float) -> Block: # todo redundant method, substituted by the Block constructor
+#     genesis_block = Block(
+#         # bit_difficulty=initial_bit_difficulty,
+#         bit_difficulty=0, #  todo implement it in the generic case, having bit_difficulty=0
+#         index=0,
+#         timestamp=time.time(),
+#         data=GENESIS_BLOCK_DATA,
+#         previous_hash=GENESIS_BLOCK_PREVIOUS_HASH,
+#     )
+#     genesis_block.hash = genesis_block.calculate_hash()
+#
+#     blockchain.bit_difficulties.append(initial_bit_difficulty)  # todo if 0 is added, the 1st element is 0,
+#     # todo but the 0th element is initial_bit_difficulty. Add 0 to the 0th element
+#     blockchain.bit_difficulties.append(
+#         initial_bit_difficulty)  # todo is it correct to append it twice? find a better approach
+#
+#     return genesis_block
 
 
 def add_blocks(blockchain, number_of_blocks_to_add: int, ):

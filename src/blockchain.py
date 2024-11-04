@@ -9,7 +9,7 @@ from venv import logger
 
 from block import Block
 from constants import HASH_BIT_LENGTH, GENESIS_BLOCK_HASH, BASE
-from helpers import create_genesis_block
+# from helpers import create_genesis_block
 from logging_utils import configure_logging
 from logging_utils import log_validity
 from proof_of_work import ProofOfWork
