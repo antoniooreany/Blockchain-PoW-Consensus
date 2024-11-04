@@ -51,6 +51,7 @@ class ProofOfWork:
             block.nonce += 1  # Increment the nonce to try a different hash
         log_mined_block(block)  # todo move to blockchain.py or proof_of_work.py
 
+
     @staticmethod
     def validate_proof(block: Block, bit_difficulty: float) -> bool:  # todo move to Block class, where to use it?
         target_value = math.pow(2, HASH_BIT_LENGTH - bit_difficulty) - 1

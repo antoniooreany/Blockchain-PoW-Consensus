@@ -138,7 +138,8 @@ def log_mined_block(block: Block) -> None:
 def log_blockchain_statistics(logger, blockchain):
     blockchain_stats = get_blockchain_statistics(
         blockchain=blockchain,
-        slice_factor=SLICE_FACTOR,
+        slice_factor=SLICE_FACTOR,  # todo remove it
+        # number_blocks_slice=NUMBER_BLOCKS_SLICE, # todo use it
     )
 
     logger.info(f"Blockchain statistics:")

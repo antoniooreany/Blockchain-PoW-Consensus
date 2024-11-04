@@ -1,20 +1,17 @@
 #   Copyright (c) 2024, Anton Gorshkov
 #   All rights reserved.
-#
 #   This code is for a constants.py and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
 # properties of the execution:
 INITIAL_BIT_DIFFICULTY = 16.0  # bit difficulty of the first block; todo is it better to use linear_difficulty?
-# INITIAL_BIT_DIFFICULTY = 20.0  # bit difficulty of the first block; todo is it better to use linear_difficulty?
-# INITIAL_BIT_DIFFICULTY = 24.0  # bit difficulty of the first block; todo is it better to use linear_difficulty?
+
 
 # properties of the blockchain:
 BASE = 2  # base for the blockchain
 TARGET_BLOCK_MINING_TIME = 0.01  # what is the desirable time to mine a block
 # todo why Target block time: 0.10000000000000001 ???
 # properties of the difficulty adjustment:
-# ADJUSTMENT_BLOCK_INTERVAL = 1  # how many blocks to wait before adjusting the difficulty
 ADJUSTMENT_BLOCK_INTERVAL = 3  # how many blocks to wait before adjusting the difficulty
 # ADJUSTMENT_BLOCK_INTERVAL = 10  # how many blocks to wait before adjusting the difficulty
 # ADJUSTMENT_BLOCK_INTERVAL = 1000  # todo for static constant difficulty
@@ -90,7 +87,8 @@ PLOT_TITLE_COLOR = 'white'
 # PLOT_TITLE_LABEL = 'Blockchain Mining Statistics'
 PLOT_TITLE_LABEL = ''
 PLOT_TITLE_Y = 1.0
-MARKER_SIZE = 0.5  # size of the markers in the plot
+# MARKER_SIZE = 0.5  # size of the markers in the plot
+MARKER_SIZE = 20  # size of the markers in the plot
 X_LEGEND_POSITION = 0.90  # x-coordinate of the legend position
 Y_LEGEND_POSITION = 0.96  # y-coordinate of the legend position
 

@@ -44,15 +44,18 @@ class Blockchain:
         self.block_indexes = list(range(number_blocks_to_add + 1))
 
         self.bit_difficulties = [initial_bit_difficulty]
-        # genesis_block = create_genesis_block(self, initial_bit_difficulty)
-        genesis_block = Block(0, 0, time.time(), GENESIS_BLOCK_DATA, GENESIS_BLOCK_PREVIOUS_HASH)
 
-        self.blocks = [genesis_block]
+        # genesis_block = create_genesis_block(self, initial_bit_difficulty)  # todo not introducing the create_genesis_block method
+        genesis_block = Block(0, 0, time.time(), GENESIS_BLOCK_DATA, GENESIS_BLOCK_PREVIOUS_HASH) # todo intentionally generalized, I can see more pros than cons.
+        # todo Shouldn't be done in the generic case?
+
+        self.blocks = [genesis_block]  # todo duplicate of self.chain. Fix it
         self.chain = [genesis_block]  # todo duplicate of self.blocks. Fix it
 
         log_mined_block(genesis_block)
         log_validity(self)
-        self.logger.debug(f"Actual mining time for block {genesis_block.index}: {0.0:.25f} seconds") # todo ugly, fix it
+        self.logger.debug(
+            f"Actual mining time for block {genesis_block.index}: {0.0:.25f} seconds")  # todo ugly, generalize it
         self.logger.debug(f"")
 
         self.mining_times = [0.0]

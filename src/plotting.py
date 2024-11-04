@@ -4,7 +4,6 @@
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
 
-from matplotlib.axes import Axes
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
@@ -65,7 +64,6 @@ from constants import (
     Y_LEGEND_POSITION, INITIAL_BIT_DIFFICULTY, SMALLEST_BIT_DIFFICULTY, NUMBER_BLOCKS_TO_ADD,
 )
 from src.blockchain import Blockchain
-from src.plot_gpt_suggestion import plot_gpt_suggestion
 
 
 def plot_blockchain_statistics(
@@ -105,12 +103,12 @@ def plot_blockchain_statistics(
     plot_mining_times_bar(
         ax1,
         blockchain,
-        MINING_TIME_COLOR,  # todo singular?
-    )  # todo Type 'Axes' doesn't have expected attributes 'set_xlabel', 'set_ylabel', 'tick_params', 'grid', 'relim', 'autoscale_view'
+        MINING_TIME_COLOR,
+    )
     plot_bit_difficulties(
         ax1,
         blockchain,
-        BIT_DIFFICULTY_COLOR,  # todo singular?
+        BIT_DIFFICULTY_COLOR,
         scaling_factor,
         line_width,
     )  # todo Type 'Axes' doesn't have expected attributes 'set_ylim', 'set_ylabel', 'tick_params', 'grid', 'relim', 'autoscale_view'
@@ -180,28 +178,20 @@ def plot_mining_times_bar(ax1: Axes, blockchain: Blockchain, mining_time_color: 
     ax1.autoscale_view()
     ax1.set_xlim(left=-0.5)  # Ensure the x-axis starts from 0
 
+
 # def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, line_width):
 #     ax2 = ax1.twinx()
-#     difficulties = [(2 ** bit_difficulty) * scaling_factor for bit_difficulty in
-#                     blockchain.bit_difficulties]  # todo is it ok to use bit_difficulty here?
-#     bit_difficulties = [np.log2(d) if d > 0 else "- INF" for d in
-#                         difficulties]  # Handle zero values todo do we need bit_difficulties here?
+#     difficulties = [(2 ** bit_difficulty) * scaling_factor for bit_difficulty in blockchain.bit_difficulties]
+#     bit_difficulties = [np.log2(d) if d > 0 else "- INF" for d in difficulties]
 #
-#     ax2.plot(range(len(difficulties)), difficulties, color=difficulty_color, linewidth=line_width,
+#     ax2.plot(range(1, len(difficulties) + 1), difficulties, color=difficulty_color, linewidth=line_width,
 #              label=AX2_PLOT_LABEL)
-#     ax2.scatter(range(len(difficulties)), difficulties, color=BIT_DIFFICULTY_SCATTER_COLOR, s=MARKER_SIZE,
-#                 zorder=AX2_SCATTER_Z_ORDER)  # Add dots
-#
-#     # ax2.set_xlabel(AX2_X_LABEL_TEXT, fontsize=FONT_SIZE)
+#     ax2.scatter(range(1, len(difficulties) + 1), difficulties, color=BIT_DIFFICULTY_SCATTER_COLOR, s=MARKER_SIZE,
+#                 zorder=AX2_SCATTER_Z_ORDER)
 #
 #     min_difficulty, max_difficulty = min(difficulties), max(difficulties)
-#     # margin = DEFAULT_MARGIN if min_difficulty == max_difficulty \
-#     # margin = (max_difficulty - 0.0) * MARGIN_COEFFICIENT \
-#     margin = max_difficulty * MARGIN_COEFFICIENT \
-#         # if min_difficulty == max_difficulty \
-#     # else (max_difficulty - min_difficulty) * MARGIN_COEFFICIENT  # todo do we need this? maybe margin = max_difficulty * MARGIN_COEFFICIENT?
+#     margin = max_difficulty * MARGIN_COEFFICIENT
 #
-#     # ax2.set_ylim(min_difficulty - margin, max_difficulty + margin)
 #     ax2.set_ylim(0, max_difficulty + margin)
 #     ax2.set_ylabel(AX2_Y_LABEL_TEXT, fontsize=FONT_SIZE, color=difficulty_color)
 #     ax2.tick_params(axis=AX2_TICK_PARAMS_AXIS, labelcolor=difficulty_color)
@@ -214,28 +204,143 @@ def plot_mining_times_bar(ax1: Axes, blockchain: Blockchain, mining_time_color: 
 #     )
 #     ax2.relim()
 #     ax2.autoscale_view()
+#     ax2.set_xlim(left=-0.5)  # Ensure the x-axis starts from 0
 #
-#     # Set the y-axis to be log scale
 #     ax2.yaxis.set_major_formatter(
 #         plt.FuncFormatter(lambda x, _: f'{float(np.log2(x)):.2f} / {x:_.0f}' if x > 0
 #         else INFINITY_0_DIFFICULTY_LABEL))
+#
+#     block_index: list = blockchain.block_indexes
+#     mining_time: list = blockchain.mining_times
+#     bit_difficulty: list = blockchain.bit_difficulties
+#
+#     # plot_gpt_suggestion(block_index=block_index, mining_time=mining_time, bit_difficulty=bit_difficulty)
+
+
+# def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, line_width):
+#     ax2 = ax1.twinx()
+#     difficulties = [(2 ** bit_difficulty) * scaling_factor for bit_difficulty in blockchain.bit_difficulties]
+#
+#     # Plot horizontal lines with markers
+#     for i in range(1, len(difficulties)):
+#         ax2.plot([i - 1, i], [difficulties[i - 1], difficulties[i - 1]], color=difficulty_color, linewidth=line_width)
+#         ax2.plot([i, i], [difficulties[i - 1], difficulties[i]], color=difficulty_color, linestyle="--", linewidth=line_width / 2)
+#
+#     # Add markers at each difficulty point
+#     ax2.scatter(range(1, len(difficulties) + 1), difficulties, color=difficulty_color, marker='o', s=MARKER_SIZE,
+#                 zorder=AX2_SCATTER_Z_ORDER)
+#
+#     # Set labels and formatting
+#     ax2.set_ylabel("Difficulty  /  Bit Difficulty, bits", fontsize=FONT_SIZE, color=difficulty_color)
+#     ax2.tick_params(axis='y', labelcolor=difficulty_color)
+#     ax2.grid(
+#         AX2_GRID_BOOL,
+#         which=AX2_GRID_WHICH,
+#         linestyle=AX2_GRID_LINE_STYLE,
+#         linewidth=GRID_LINE_WIDTH,
+#         color=difficulty_color,
+#     )
+#     ax2.relim()
+#     ax2.autoscale_view()
+#     ax2.set_xlim(left=-0.5)  # Ensure the x-axis starts from 0
+#
+#     # Format y-axis to show both log2 and raw values
+#     ax2.yaxis.set_major_formatter(
+#         plt.FuncFormatter(lambda x, _: f'{float(np.log2(x)):.2f} / {x:_.0f}' if x > 0 else INFINITY_0_DIFFICULTY_LABEL))
+
+
+
+# def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, line_width):
+#     ax2 = ax1.twinx()
+#     difficulties = [(2 ** bit_difficulty) * scaling_factor for bit_difficulty in blockchain.bit_difficulties]
+#
+#     # Set line width to be five times thicker
+#     thicker_line_width = line_width * 5
+#
+#     # Plot horizontal lines with thicker blue lines
+#     for i in range(1, len(difficulties)):
+#         ax2.plot([i - 1, i], [difficulties[i - 1], difficulties[i - 1]], color=difficulty_color, linewidth=thicker_line_width)
+#         ax2.plot([i, i], [difficulties[i - 1], difficulties[i]], color=difficulty_color, linestyle="--", linewidth=thicker_line_width)
+#
+#     # Add bright red markers at each difficulty point
+#     ax2.scatter(range(1, len(difficulties) + 1), difficulties, color='red', marker='o', s=MARKER_SIZE, zorder=AX2_SCATTER_Z_ORDER)
+#
+#     # Set labels and formatting
+#     ax2.set_ylabel("Difficulty / Bit Difficulty", fontsize=FONT_SIZE, color=difficulty_color)
+#     ax2.tick_params(axis='y', labelcolor=difficulty_color)
+#     ax2.grid(
+#         AX2_GRID_BOOL,
+#         which=AX2_GRID_WHICH,
+#         linestyle=AX2_GRID_LINE_STYLE,
+#         linewidth=GRID_LINE_WIDTH,
+#         color=difficulty_color,
+#     )
+#     ax2.relim()
+#     ax2.autoscale_view()
+#     ax2.set_xlim(left=-0.5)  # Ensure the x-axis starts from 0
+#
+#     # Format y-axis to show both log2 and raw values
+#     ax2.yaxis.set_major_formatter(
+#         plt.FuncFormatter(lambda x, _: f'{float(np.log2(x)):.2f} / {x:_.0f}' if x > 0 else INFINITY_0_DIFFICULTY_LABEL))
+
+
+
+
+# def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, line_width):
+#     ax2 = ax1.twinx()
+#     difficulties = [(2 ** bit_difficulty) * scaling_factor for bit_difficulty in blockchain.bit_difficulties]
+#
+#     # Set line width to be five times thicker
+#     thicker_line_width = line_width * 5
+#
+#     # Plot only horizontal lines with thicker blue lines
+#     for i in range(1, len(difficulties)):
+#         ax2.plot([i - 1, i], [difficulties[i - 1], difficulties[i - 1]], color=difficulty_color, linewidth=thicker_line_width)
+#
+#     # Add bright red markers at each difficulty point
+#     ax2.scatter(range(1, len(difficulties) + 1), difficulties, color='red', marker='o', s=MARKER_SIZE, zorder=AX2_SCATTER_Z_ORDER)
+#
+#     # Set labels and formatting
+#     ax2.set_ylabel("Difficulty / Bit Difficulty", fontsize=FONT_SIZE, color=difficulty_color)
+#     ax2.tick_params(axis='y', labelcolor=difficulty_color)
+#     ax2.grid(
+#         AX2_GRID_BOOL,
+#         which=AX2_GRID_WHICH,
+#         linestyle=AX2_GRID_LINE_STYLE,
+#         linewidth=GRID_LINE_WIDTH,
+#         color=difficulty_color,
+#     )
+#     ax2.relim()
+#     ax2.autoscale_view()
+#     ax2.set_xlim(left=-0.5)  # Ensure the x-axis starts from 0
+#
+#     # Format y-axis to show both log2 and raw values
+#     ax2.yaxis.set_major_formatter(
+#         plt.FuncFormatter(lambda x, _: f'{float(np.log2(x)):.2f} / {x:_.0f}' if x > 0 else INFINITY_0_DIFFICULTY_LABEL))
+
+
 
 def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, line_width):
     ax2 = ax1.twinx()
     difficulties = [(2 ** bit_difficulty) * scaling_factor for bit_difficulty in blockchain.bit_difficulties]
-    bit_difficulties = [np.log2(d) if d > 0 else "- INF" for d in difficulties]
 
-    ax2.plot(range(1, len(difficulties) + 1), difficulties, color=difficulty_color, linewidth=line_width,
-             label=AX2_PLOT_LABEL)
-    ax2.scatter(range(1, len(difficulties) + 1), difficulties, color=BIT_DIFFICULTY_SCATTER_COLOR, s=MARKER_SIZE,
-                zorder=AX2_SCATTER_Z_ORDER)
+    # Set line width for horizontal and vertical lines
+    thicker_line_width = line_width * 5
+    thinner_line_width = line_width  # One-fifth thickness for vertical lines
 
-    min_difficulty, max_difficulty = min(difficulties), max(difficulties)
-    margin = max_difficulty * MARGIN_COEFFICIENT
+    # Plot horizontal lines with thicker blue lines and vertical connectors with thinner lines
+    for i in range(1, len(difficulties)):
+        # Horizontal line for each segment
+        ax2.plot([i - 1, i], [difficulties[i - 1], difficulties[i - 1]], color=difficulty_color, linewidth=thicker_line_width)
+        # Vertical line connecting to the next point
+        ax2.plot([i, i], [difficulties[i - 1], difficulties[i]], color=difficulty_color, linewidth=thinner_line_width)
 
-    ax2.set_ylim(0, max_difficulty + margin)
-    ax2.set_ylabel(AX2_Y_LABEL_TEXT, fontsize=FONT_SIZE, color=difficulty_color)
-    ax2.tick_params(axis=AX2_TICK_PARAMS_AXIS, labelcolor=difficulty_color)
+    # Add bright red markers at each difficulty point
+    ax2.scatter(range(1, len(difficulties) + 1), difficulties, color='red', marker='o', s=MARKER_SIZE, zorder=AX2_SCATTER_Z_ORDER)
+
+    # Set labels and formatting
+    ax2.set_ylabel("Difficulty / Bit Difficulty", fontsize=FONT_SIZE, color=difficulty_color)
+    ax2.tick_params(axis='y', labelcolor=difficulty_color)
     ax2.grid(
         AX2_GRID_BOOL,
         which=AX2_GRID_WHICH,
@@ -247,14 +352,36 @@ def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor, lin
     ax2.autoscale_view()
     ax2.set_xlim(left=-0.5)  # Ensure the x-axis starts from 0
 
+    # Format y-axis to show both log2 and raw values
     ax2.yaxis.set_major_formatter(
-        plt.FuncFormatter(lambda x, _: f'{float(np.log2(x)):.2f} / {x:_.0f}' if x > 0
-        else INFINITY_0_DIFFICULTY_LABEL))
+        plt.FuncFormatter(lambda x, _: f'{float(np.log2(x)):.2f} / {x:_.0f}' if x > 0 else INFINITY_0_DIFFICULTY_LABEL))
 
 
 
-    block_index: list = blockchain.block_indexes
-    mining_time: list = blockchain.mining_times
-    bit_difficulty: list = blockchain.bit_difficulties
 
-    plot_gpt_suggestion(block_index=block_index, mining_time=mining_time, bit_difficulty=bit_difficulty)
+
+# def plot_gpt_suggestion(block_index: list, mining_time: list, bit_difficulty: list) -> None:
+#     fig, ax1 = plt.subplots(figsize=(14, 7))
+#
+#     # Bar plot for Mining Time
+#     ax1.bar(block_index, mining_time, color='green', alpha=0.6, label='Block Mining Time (seconds)')
+#     ax1.set_xlabel('Block Index')
+#     ax1.set_ylabel('Block Mining Time (seconds)', color='green')
+#     ax1.tick_params(axis='y', labelcolor='green')
+#
+#     # Line plot for Difficulty
+#     ax2 = ax1.twinx()
+#     ax2.plot(block_index, bit_difficulty, color='blue', linestyle='-', linewidth=1.5, label='Difficulty')
+#     ax2.set_ylabel('Difficulty / Bit Difficulty', color='blue')
+#     ax2.tick_params(axis='y', labelcolor='blue')
+#
+#     # Add grid and title
+#     ax1.grid(visible=True, which='major', color='grey', linestyle='--', linewidth=0.5)
+#     plt.title("Blockchain Mining Analysis\nKey Parameters: Initial Difficulty, Target Time, Adjustment Interval")
+#
+#     # Customize legend
+#     fig.legend(loc="upper right", bbox_to_anchor=(1, 1), bbox_transform=ax1.transAxes)
+#
+#     # Show plot
+#     plt.tight_layout()
+#     plt.show()
