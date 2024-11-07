@@ -11,7 +11,7 @@ from constants import (
     MINING_TIME_COLOR, DIFFICULTY_COLOR, LINE_WIDTH, GRID_LINE_WIDTH,
     FONT_SIZE, MARKER_SIZE, BAR_WIDTH, PLOT_TITLE_Y, PLOT_TITLE_FONT_SIZE,
     X_LEGEND_POSITION, Y_LEGEND_POSITION, LEGEND_LOCATION, LEGEND_FONT_SIZE, MINING_TIMES_SCATTER_COLOR,
-    TARGET_BLOCK_MINING_TIME
+    TARGET_BLOCK_MINING_TIME, LABEL_DIFFICULTY_COLOR
 )
 
 
@@ -47,9 +47,9 @@ def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor):
     # Create bar plot for bit difficulties
     ax2.bar(range(len(difficulties)), difficulties, color=difficulty_color, width=BAR_WIDTH)
 
-    ax2.set_ylabel('Difficulty / Bit Difficulty', fontsize=FONT_SIZE, color=difficulty_color)
-    ax2.tick_params(axis='y', labelcolor=difficulty_color)
-    ax2.grid(True, which='both', linestyle=':', linewidth=GRID_LINE_WIDTH, color=difficulty_color)
+    ax2.set_ylabel('Difficulty / Bit Difficulty', fontsize=FONT_SIZE, color=LABEL_DIFFICULTY_COLOR)
+    ax2.tick_params(axis='y', labelcolor=LABEL_DIFFICULTY_COLOR)
+    ax2.grid(True, which='both', linestyle=':', linewidth=GRID_LINE_WIDTH, color=LABEL_DIFFICULTY_COLOR)
     ax2.relim()
     ax2.autoscale_view()
     ax2.set_xlim(left=-0.5)  # Ensure the x-axis starts from 0
