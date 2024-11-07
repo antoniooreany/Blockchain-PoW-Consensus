@@ -19,15 +19,29 @@ class ProofOfWork:
 
     @staticmethod
     def find_nonce(
-            block,
+            block: Block,
             bit_difficulty: float,
     ) -> None:
-        max_nonce: int = 2 ** NONCE_BIT_LENGTH - 1  # maximum value for nonce
-        block.nonce = random.randint(0, max_nonce)  # Start from a random nonce (int)
+        """
+        Perform the proof of work algorithm to find a valid nonce for the block.
+
+        This method attempts to find a nonce such that the block's hash is less than the target
+        value derived from the given bit difficulty.
+
+        Args:
+            block (Block): The block for which the nonce is to be found.
+            bit_difficulty (float): The difficulty level which determines the target value.
+
+        Returns:
+            None
+        """
+        max_nonce: int = 2 ** NONCE_BIT_LENGTH - 1  # Maximum possible nonce value
+        block.nonce = random.randint(0, max_nonce)  # Start with a random nonce
 
         # Calculate the target value based on difficulty
-        target_value: float = math.pow(2, HASH_BIT_LENGTH - bit_difficulty) - 1  # todo move to blockchain.py
+        target_value: float = math.pow(2, HASH_BIT_LENGTH - bit_difficulty) - 1
 
+        # Concatenate block attributes to create base data for hashing
         base_hash_data: bytes = (
             (str(block.index) +
              str(block.timestamp) +
@@ -37,22 +51,33 @@ class ProofOfWork:
         )
 
         while True:
-            sha: hashlib.sha256 = hashlib.sha256()
-            sha.update(base_hash_data + str(block.nonce).encode('utf-8'))
-            block.hash = sha.hexdigest()  # Get the hash as a hexadecimal string
+            sha: hashlib.sha256 = hashlib.sha256()  # Create a new SHA256 hash object
+            sha.update(base_hash_data + str(block.nonce).encode('utf-8'))  # Hash the nonce combined with base data
+            block.hash = sha.hexdigest()  # Store the hash as a hexadecimal string
 
-            # Convert the hash to an integer
-            hash_value: int = int(block.hash, 16)
+            hash_value: int = int(block.hash, 16)  # Convert the hash to an integer
 
-            # Check if the hash value is less than the target value: if so, the block is mined
-            if hash_value < target_value:  # If the hash meets the target value, the block is mined
-                break
+            # Check if the hash value meets the target; if so, the block is mined
+            if hash_value < target_value:
+                break  # Exit loop when a valid nonce is found
 
-            block.nonce += 1  # Increment the nonce to try a different hash
-        log_mined_block(block)  # todo move to blockchain.py or proof_of_work.py
+            block.nonce += 1  # Increment nonce to try different hash
+
+        log_mined_block(block)  # Log the mined block information
 
 
     @staticmethod
-    def validate_proof(block: Block, bit_difficulty: float) -> bool:  # todo move to Block class, where to use it?
-        target_value = math.pow(2, HASH_BIT_LENGTH - bit_difficulty) - 1
-        return int(block.hash, 16) < target_value
+    def validate_proof(block: Block, bit_difficulty: float) -> bool:
+        """
+        Check if the hash of the block meets the target value derived from the given bit difficulty.
+
+        Args:
+            block (Block): The block for which the nonce is to be validated.
+            bit_difficulty (float): The difficulty level which determines the target value.
+
+        Returns:
+            bool: True if the hash value meets the target; False otherwise.
+        """
+        target_value: float = math.pow(2, HASH_BIT_LENGTH - bit_difficulty) - 1
+        hash_value: int = int(block.hash, 16)
+        return hash_value < target_value

@@ -35,8 +35,8 @@ HASH_BIT_LENGTH = 256  # The length of the hash in bits
 NONCE_BIT_LENGTH = 32  # The length of the nonce in bits
 
 # properties of statistics:
-# SLICE_FACTOR = 2.0  # which last part of the blockchain to consider for the statistics
-SLICE_FACTOR = 2.3  # which last part of the blockchain to consider for the statistics
+SLICE_FACTOR = 2.0  # which last part of the blockchain to consider for the statistics
+# SLICE_FACTOR = 2.3  # which last part of the blockchain to consider for the statistics
 # SLICE_FACTOR = 2.5  # which last part of the blockchain to consider for the statistics
 
 # NUMBER_BLOCKS_SLICE = round(NUMBER_BLOCKS_TO_ADD / SLICE_FACTOR)  # todo how was rounded in logging_utils.py? how many blocks to consider for the statistics

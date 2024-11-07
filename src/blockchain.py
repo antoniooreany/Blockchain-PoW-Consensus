@@ -46,7 +46,8 @@ class Blockchain:
         self.bit_difficulties = [initial_bit_difficulty]
 
         # genesis_block = create_genesis_block(self, initial_bit_difficulty)  # todo not introducing the create_genesis_block method
-        genesis_block = Block(0, 0, time.time(), GENESIS_BLOCK_DATA, GENESIS_BLOCK_PREVIOUS_HASH) # todo intentionally generalized, I can see more pros than cons.
+        genesis_block = Block(0, 0, time.time(), GENESIS_BLOCK_DATA,
+                              GENESIS_BLOCK_PREVIOUS_HASH)  # todo intentionally generalized, I can see more pros than cons.
         # todo Shouldn't be done in the generic case?
 
         self.blocks = [genesis_block]  # todo duplicate of self.chain. Fix it
@@ -103,9 +104,9 @@ class Blockchain:
         or if the blockchain has less than `num_blocks+1` blocks, then
         the average mining time for all blocks (except the Genesis Block) is returned.
         """
-        if len(self.blocks) <= 1: # in the case of the Genesis Block
+        if len(self.blocks) <= 1:  # in the case of the Genesis Block
             return 0.0
-        if len(self.blocks) < num_last_blocks + 1: # (+1) to exclude the Genesis Block from the calculation
+        if len(self.blocks) < num_last_blocks + 1:  # (+1) to exclude the Genesis Block from the calculation
             return sum(self.mining_times[1:]) / (len(self.mining_times) - 1)
             # return sum(self.mining_times[1:]) / (len(self.mining_times)+1)
         total_time = sum(self.mining_times[-num_last_blocks:])
