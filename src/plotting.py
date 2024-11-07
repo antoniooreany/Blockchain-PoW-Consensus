@@ -8,7 +8,8 @@
 from constants import (
     MINING_TIME_COLOR, DIFFICULTY_COLOR, LINE_WIDTH, GRID_LINE_WIDTH,
     FONT_SIZE, MARKER_SIZE, BAR_WIDTH, PLOT_TITLE_Y, PLOT_TITLE_FONT_SIZE,
-    X_LEGEND_POSITION, Y_LEGEND_POSITION, LEGEND_LOCATION, LEGEND_FONT_SIZE, MINING_TIMES_SCATTER_COLOR
+    X_LEGEND_POSITION, Y_LEGEND_POSITION, LEGEND_LOCATION, LEGEND_FONT_SIZE, MINING_TIMES_SCATTER_COLOR,
+    TARGET_BLOCK_MINING_TIME
 )
 
 def plot_mining_times(ax1, blockchain):
@@ -18,6 +19,10 @@ def plot_mining_times(ax1, blockchain):
     for i in range(len(mining_times)):
         ax1.plot([i, i], [0, mining_times[i]], color=MINING_TIME_COLOR, linewidth=LINE_WIDTH)
     ax1.scatter(range(len(mining_times)), mining_times, color=MINING_TIMES_SCATTER_COLOR, s=MARKER_SIZE, zorder=3)
+
+    # Add a horizontal line at the height of the target mining time
+    ax1.axhline(y=TARGET_BLOCK_MINING_TIME, color='blue', linestyle='--', linewidth=LINE_WIDTH,
+                label='Target Mining Time')
 
     ax1.set_xlabel('Block Index', fontsize=FONT_SIZE)
     ax1.set_ylabel('Block Mining Time (seconds)', fontsize=FONT_SIZE, color=MINING_TIME_COLOR)
