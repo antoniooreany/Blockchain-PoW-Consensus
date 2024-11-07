@@ -59,14 +59,15 @@ def adjust_difficulty(blockchain, clamp_factor, smallest_bit_difficulty):
     if len(blockchain.blocks) % blockchain.adjustment_block_interval == 0:
         average_mining_time = blockchain.get_average_mining_time(blockchain.adjustment_block_interval)
         logging.debug(f"Average mining time: {average_mining_time:.25f} seconds")
-        adjustment_factor = average_mining_time / blockchain.target_block_mining_time # todo adjustment_factor = target_block_mining_time / average_mining_time
+        reversed_adjustment_factor = average_mining_time / blockchain.target_block_mining_time # todo adjustment_factor = target_block_mining_time / average_mining_time
         # todo how to call adjustment_factor ** (-1) in the generic case?
 
-        logging.debug(f"Adjustment factor: {adjustment_factor:.25f}")
+        # logging.debug(f"Adjustment factor: {reversed_adjustment_factor:.25f}")
+        logging.debug(f"Reversed adjustment factor: {reversed_adjustment_factor:.25f}")
         last_bit_difficulty = blockchain.bit_difficulties[-1]
 
-        if adjustment_factor > 0:
-            log_adjustment_factor = math.log2(adjustment_factor)
+        if reversed_adjustment_factor > 0:
+            log_adjustment_factor = math.log2(reversed_adjustment_factor)
             clamped_log_adjustment_factor = clamp(log_adjustment_factor, clamp_factor)
             new_difficulty = max(smallest_bit_difficulty, last_bit_difficulty - clamped_log_adjustment_factor)
         else:
