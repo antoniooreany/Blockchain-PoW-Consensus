@@ -11,10 +11,8 @@ from constants import (
     MINING_TIME_COLOR, DIFFICULTY_COLOR, LINE_WIDTH, GRID_LINE_WIDTH,
     FONT_SIZE, MARKER_SIZE, BAR_WIDTH, PLOT_TITLE_Y, PLOT_TITLE_FONT_SIZE,
     X_LEGEND_POSITION, Y_LEGEND_POSITION, LEGEND_LOCATION, LEGEND_FONT_SIZE, MINING_TIMES_SCATTER_COLOR,
-    TARGET_BLOCK_MINING_TIME, LABEL_DIFFICULTY_COLOR, AVERAGE_MINING_TIME_COLOR,
+    TARGET_BLOCK_MINING_TIME, LABEL_DIFFICULTY_COLOR, AVERAGE_MINING_TIME_COLOR, AX2_Y_LABEL_TEXT,
 )
-
-# AVERAGE_MINING_TIME_COLOR = 'lightcoral'
 
 
 def plot_mining_times(ax1, blockchain):
@@ -45,6 +43,7 @@ def plot_mining_times(ax1, blockchain):
     ax1.relim()
     ax1.autoscale_view()
     ax1.set_xlim(left=-0.5)
+    # ax1.set_xlim(left=-5)
     ax1.set_ylim(bottom=0)  # Ensure the y-axis starts from 0
 
 
@@ -58,7 +57,7 @@ def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor):
     # Create bar plot for bit difficulties
     ax2.bar(range(len(difficulties)), difficulties, color=difficulty_color, width=BAR_WIDTH)
 
-    ax2.set_ylabel('Difficulty / Bit Difficulty', fontsize=FONT_SIZE, color=LABEL_DIFFICULTY_COLOR)
+    ax2.set_ylabel(AX2_Y_LABEL_TEXT, fontsize=FONT_SIZE, color=LABEL_DIFFICULTY_COLOR)
     ax2.tick_params(axis='y', labelcolor=LABEL_DIFFICULTY_COLOR)
     ax2.grid(True, which='both', linestyle=':', linewidth=GRID_LINE_WIDTH, color=LABEL_DIFFICULTY_COLOR)
     ax2.relim()
@@ -76,7 +75,8 @@ def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor):
 
 
 def plot_blockchain_statistics(blockchain, scaling_factor=1.0):
-    fig, ax1 = plt.subplots(figsize=(12, 8))
+    # fig, ax1 = plt.subplots(figsize=(12, 8))
+    fig, ax1 = plt.subplots(figsize=(14, 8))
 
     # Plot mining times and bit difficulties with updated functions
     plot_mining_times(ax1, blockchain)
