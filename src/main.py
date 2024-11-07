@@ -10,7 +10,7 @@ from helpers import add_blocks
 from logger_singleton import LoggerSingleton
 from plotting import plot_blockchain_statistics
 from src.logging_utils import LogLevelCounterHandler, log_blockchain_statistics
-from ui import config_ui  # Assuming the code is saved in ui.py
+from gui import config_gui  # Assuming the code is saved in ui.py
 
 # Call the function to open the UI when needed
 if __name__ == "__main__":
@@ -23,4 +23,4 @@ if __name__ == "__main__":
     log_level_counter_handler = LogLevelCounterHandler()  # todo rename
     logger.addHandler(log_level_counter_handler)  # todo rename
 
-    config_ui()
+    config_gui()

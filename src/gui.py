@@ -14,16 +14,23 @@ from src.logging_utils import LogLevelCounterHandler, log_blockchain_statistics
 from plotting import plot_blockchain_statistics
 
 
-class UI:
-
+class GUI:
     def __init__(self, root):
         self.root = root
         self.root.title("Blockchain Configuration")
-        self.root.focus_force()
-        self.root.attributes('-fullscreen', True)
+        self.root.geometry("600x400")  # Set window size for a more compact look
 
         # Bind the Esc key to the exit_app method
         self.root.bind('<Escape>', lambda event: self.exit_app())
+
+        # Define main frame with padding
+        main_frame = tk.Frame(self.root, padx=10, pady=10)
+        main_frame.pack(fill="both", expand=True)
+
+        # Create configuration frame with a label
+        config_frame = tk.LabelFrame(main_frame, text="Configuration Parameters", padx=10, pady=10)
+        config_frame.pack(fill="x", pady=10)
+
 
         self.config_params = {
             "initial_bit_difficulty": tk.DoubleVar(value=INITIAL_BIT_DIFFICULTY),
@@ -36,32 +43,28 @@ class UI:
             "number_blocks_slice": tk.IntVar(value=NUMBER_BLOCKS_SLICE)
         }
 
+
+        # Place each parameter in the frame
         for idx, (label, var) in enumerate(self.config_params.items()):
-            tk.Label(root, text=label.replace('_', ' ').title()).grid(row=idx, column=0)
-            tk.Entry(root, textvariable=var).grid(row=idx, column=1)
+            tk.Label(config_frame, text=label).grid(row=idx, column=0, sticky="w", pady=5, padx=5)
+            tk.Entry(config_frame, textvariable=var, width=25).grid(row=idx, column=1, pady=5, padx=5)
 
-        # self.config_params["number_blocks_to_add"].trace_add("write", self.update_number_blocks_slice)
-        # self.config_params["slice_factor"].trace_add("write", self.update_number_blocks_slice)
+        # Run and Exit buttons in a separate frame
+        button_frame = tk.Frame(main_frame, pady=10)
+        button_frame.pack()
 
-        self.run_button = tk.Button(root, text="Run Blockchain", command=self.run_blockchain)
-        self.run_button.grid(row=len(self.config_params), column=0, columnspan=2)
+        self.run_button = tk.Button(button_frame, text="Run Blockchain", command=self.run_blockchain, width=15)
+        self.run_button.grid(row=0, column=0, padx=10)
         self.run_button.focus_set()
 
-        self.exit_button = tk.Button(root, text="Exit", command=self.exit_app)
-        self.exit_button.grid(row=len(self.config_params) + 1, column=0, columnspan=2)
+        self.exit_button = tk.Button(button_frame, text="Exit", command=self.exit_app, width=15)
+        self.exit_button.grid(row=0, column=1, padx=10)
 
-    # def update_number_blocks_slice(self, *args):
-    #     try:
-    #         number_blocks_to_add = self.config_params["number_blocks_to_add"].get()
-    #         slice_factor = self.config_params["slice_factor"].get()
-    #         number_blocks_slice = int(number_blocks_to_add / slice_factor)
-    #         self.config_params["number_blocks_slice"].set(number_blocks_slice)
-    #     except (tk.TclError, ZeroDivisionError):
-    #         self.config_params["number_blocks_slice"].set(0)
+
 
     def run_blockchain(self, event=None):
 
-        self.root.attributes('-fullscreen', True)  # Allow the window to go behind others
+        # self.root.attributes('-fullscreen', True)  # Allow the window to go behind others
         self.root.update()  # Update the window to apply the fullscreen attribute
 
         # # Recalculate number_of_blocks_slice before running the blockchain
@@ -86,15 +89,6 @@ class UI:
         # slice_factor = self.config_params["slice_factor"].get()
         number_blocks_slice = self.config_params["number_blocks_slice"].get()
 
-        # Log the collected values
-        # logger.info(f"Initial Bit Difficulty: {initial_bit_difficulty}")
-        # logger.info(f"Target Block Mining Time: {target_block_mining_time}")
-        # logger.info(f"Adjustment Block Interval: {adjustment_block_interval}")
-        # logger.info(f"Clamp Factor: {clamp_factor}")
-        # logger.info(f"Smallest Bit Difficulty: {smallest_bit_difficulty}")
-        # logger.info(f"Number of Blocks to Add: {number_blocks_to_add}")
-        # logger.info(f"Slice Factor: {slice_factor}")
-        # logger.info(f"Number of Blocks Slice: {number_of_blocks_slice}")
 
         blockchain = Blockchain(
             initial_bit_difficulty=initial_bit_difficulty,
@@ -128,8 +122,8 @@ class UI:
         self.root.quit()
 
 
-def config_ui():
+def config_gui():
     """Function to initialize and run the configuration UI."""
     root = tk.Tk()
-    app = UI(root)
+    app = GUI(root)
     root.mainloop()
