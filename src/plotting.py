@@ -14,6 +14,8 @@ from constants import (
     TARGET_BLOCK_MINING_TIME, LABEL_DIFFICULTY_COLOR
 )
 
+AVERAGE_MINING_TIME_COLOR = 'lightcoral'
+
 
 def plot_mining_times(ax1, blockchain):
     mining_times = blockchain.mining_times
@@ -33,7 +35,7 @@ def plot_mining_times(ax1, blockchain):
         interval_mining_times = mining_times[i:i + adjustment_interval]
         if interval_mining_times:
             average_mining_time = np.mean(interval_mining_times)  # todo get the average mining time from the blockchain
-            ax1.bar(i - 0.5, average_mining_time, width=adjustment_interval, color='lightcoral', alpha=0.5, align='edge',
+            ax1.bar(i - 0.5, average_mining_time, width=adjustment_interval, color=AVERAGE_MINING_TIME_COLOR, alpha=0.5, align='edge',
                     label='Average Mining Time' if i == 0 else "")
 
     ax1.set_xlabel('Block Index', fontsize=FONT_SIZE)
