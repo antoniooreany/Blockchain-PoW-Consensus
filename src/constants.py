@@ -188,4 +188,5 @@ PLOT_TITLE_Y = 1.05  # Adjusted title position for better visibility
 X_LEGEND_POSITION = 1.0  # Move legend slightly to the right to avoid overlap
 Y_LEGEND_POSITION = 0.95  # Position legend slightly below the title
 LEGEND_B_BOX_Y = -0.15  # Position legend below the plot
+# LEGEND_B_BOX_Y = -0.00  # Position legend below the plot
 LEGEND_LOCATION = 'upper right'  # Adjusted legend location

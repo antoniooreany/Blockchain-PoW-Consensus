@@ -4,6 +4,8 @@
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
 
+import matplotlib.pyplot as plt
+import numpy as np
 
 from constants import (
     MINING_TIME_COLOR, DIFFICULTY_COLOR, LINE_WIDTH, GRID_LINE_WIDTH,
@@ -11,6 +13,7 @@ from constants import (
     X_LEGEND_POSITION, Y_LEGEND_POSITION, LEGEND_LOCATION, LEGEND_FONT_SIZE, MINING_TIMES_SCATTER_COLOR,
     TARGET_BLOCK_MINING_TIME
 )
+
 
 def plot_mining_times(ax1, blockchain):
     mining_times = blockchain.mining_times
@@ -21,7 +24,7 @@ def plot_mining_times(ax1, blockchain):
     ax1.scatter(range(len(mining_times)), mining_times, color=MINING_TIMES_SCATTER_COLOR, s=MARKER_SIZE, zorder=3)
 
     # Add a horizontal line at the height of the target mining time
-    ax1.axhline(y=TARGET_BLOCK_MINING_TIME, color='blue', linestyle='--', linewidth=LINE_WIDTH,
+    ax1.axhline(y=TARGET_BLOCK_MINING_TIME, color='blue', linestyle='--', linewidth=LINE_WIDTH / 2,
                 label='Target Mining Time')
 
     ax1.set_xlabel('Block Index', fontsize=FONT_SIZE)
@@ -34,16 +37,12 @@ def plot_mining_times(ax1, blockchain):
     ax1.set_ylim(bottom=0)  # Ensure the y-axis starts from 0
 
 
-
-import matplotlib.pyplot as plt
-import numpy as np
-
 def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor):
     ax2 = ax1.twinx()
     difficulties = [(2 ** bit_difficulty) * scaling_factor for bit_difficulty in blockchain.bit_difficulties]
 
-    # Set the difficulty of the Genesis Block to 0
-    difficulties[0] = 0
+    # Set the difficulty of the Genesis Block to 0. It was not rewritten, but added
+    difficulties = [0] + difficulties
 
     # Create bar plot for bit difficulties
     ax2.bar(range(len(difficulties)), difficulties, color=difficulty_color, width=BAR_WIDTH)
@@ -55,15 +54,14 @@ def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor):
     ax2.autoscale_view()
     ax2.set_xlim(left=-0.5)  # Ensure the x-axis starts from 0
 
-    # Ensure that 0 is labeled as "00_000"
+    # Ensure that 0 is labeled as "-INF / 00_000"
     def custom_y_formatter(x, _):
         if x == 0:
-            return "00_000"
+            return "-INF / 00_000"
         else:
             return f'{float(np.log2(x)):.2f} / {x:_.0f}'
 
     ax2.yaxis.set_major_formatter(plt.FuncFormatter(custom_y_formatter))
-
 
 
 def plot_blockchain_statistics(blockchain, scaling_factor=1.0):
@@ -84,15 +82,11 @@ def plot_blockchain_statistics(blockchain, scaling_factor=1.0):
         f"Min Bit Difficulty: {blockchain.smallest_bit_difficulty}\n"
         f"Blocks Slice: {blockchain.number_blocks_slice}\n"
     )
-    # fig.legend(loc=LEGEND_LOCATION, bbox_to_anchor=(X_LEGEND_POSITION, Y_LEGEND_POSITION),
-    #            fontsize=LEGEND_FONT_SIZE, title="Input Information", title_fontsize=LEGEND_FONT_SIZE)
 
+    # Legend with adjusted position
     fig.legend([legend_info], loc=LEGEND_LOCATION, bbox_to_anchor=(X_LEGEND_POSITION, Y_LEGEND_POSITION),
                fontsize=LEGEND_FONT_SIZE, title="Input Information", title_fontsize=LEGEND_FONT_SIZE)
-
 
     # Title with adjusted position
     plt.title('Blockchain Mining Statistics', fontsize=PLOT_TITLE_FONT_SIZE, y=PLOT_TITLE_Y)
     plt.show()
-
-
