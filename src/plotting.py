@@ -103,10 +103,13 @@ def plot_blockchain_statistics(blockchain, scaling_factor=1.0):
     # Create a custom legend patch
     legend_patch = mpatches.Patch(color='none', label=legend_info)
 
-    # Add the custom legend to the figure
+    # # Add the custom legend to the figure
     fig.legend(handles=[legend_patch], loc=LEGEND_LOCATION, bbox_to_anchor=(X_LEGEND_POSITION, Y_LEGEND_POSITION),
                fontsize=LEGEND_FONT_SIZE, title="Input Information", title_fontsize=LEGEND_FONT_SIZE)
 
+    # # Add the custom legend to the figure
+    # fig.legend(handles=[legend_patch], loc='upper right', bbox_to_anchor=(0.9, 0.88),
+    #            fontsize=LEGEND_FONT_SIZE, title="Input Information", title_fontsize=LEGEND_FONT_SIZE)
 
     # Title with adjusted position
     plt.title('Blockchain Mining Statistics', fontsize=PLOT_TITLE_FONT_SIZE, y=PLOT_TITLE_Y)
