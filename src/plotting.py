@@ -5,6 +5,7 @@
 
 
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 import numpy as np
 
 from constants import (
@@ -33,7 +34,8 @@ def plot_mining_times(ax1, blockchain):
         interval_mining_times = mining_times[i:i + adjustment_interval]
         if interval_mining_times:
             average_mining_time = np.mean(interval_mining_times)  # todo get the average mining time from the blockchain
-            ax1.bar(i - 0.5, average_mining_time, width=adjustment_interval, color=AVERAGE_MINING_TIME_COLOR, alpha=0.5, align='edge',
+            ax1.bar(i - 0.5, average_mining_time, width=adjustment_interval, color=AVERAGE_MINING_TIME_COLOR, alpha=0.5,
+                    align='edge',
                     label='Average Mining Time' if i == 0 else "")
 
     ax1.set_xlabel('Block Index', fontsize=FONT_SIZE)
@@ -95,8 +97,16 @@ def plot_blockchain_statistics(blockchain, scaling_factor=1.0):
     )
 
     # Legend with adjusted position
-    fig.legend([legend_info], loc=LEGEND_LOCATION, bbox_to_anchor=(X_LEGEND_POSITION, Y_LEGEND_POSITION),
+    # fig.legend([legend_info], loc=LEGEND_LOCATION, bbox_to_anchor=(X_LEGEND_POSITION, Y_LEGEND_POSITION),
+    #            fontsize=LEGEND_FONT_SIZE, title="Input Information", title_fontsize=LEGEND_FONT_SIZE)
+
+    # Create a custom legend patch
+    legend_patch = mpatches.Patch(color='none', label=legend_info)
+
+    # Add the custom legend to the figure
+    fig.legend(handles=[legend_patch], loc=LEGEND_LOCATION, bbox_to_anchor=(X_LEGEND_POSITION, Y_LEGEND_POSITION),
                fontsize=LEGEND_FONT_SIZE, title="Input Information", title_fontsize=LEGEND_FONT_SIZE)
+
 
     # Title with adjusted position
     plt.title('Blockchain Mining Statistics', fontsize=PLOT_TITLE_FONT_SIZE, y=PLOT_TITLE_Y)
