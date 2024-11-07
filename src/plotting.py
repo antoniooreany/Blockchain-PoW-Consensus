@@ -24,7 +24,7 @@ def plot_mining_times(ax1, blockchain):
     ax1.scatter(range(len(mining_times)), mining_times, color=MINING_TIMES_SCATTER_COLOR, s=MARKER_SIZE, zorder=3)
 
     # Add a horizontal line at the height of the target mining time
-    ax1.axhline(y=TARGET_BLOCK_MINING_TIME, color='blue', linestyle='--', linewidth=LINE_WIDTH / 2,
+    ax1.axhline(y=TARGET_BLOCK_MINING_TIME, color=MINING_TIME_COLOR, linestyle='--', linewidth=LINE_WIDTH / 2,
                 label='Target Mining Time')
 
     ax1.set_xlabel('Block Index', fontsize=FONT_SIZE)

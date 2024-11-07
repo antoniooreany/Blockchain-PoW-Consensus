@@ -169,8 +169,9 @@ DEFAULT_PRECISION = 25
 # constants.py
 
 # Colors for different plot elements
-MINING_TIME_COLOR = 'blue'  # Bar color for mining times
+MINING_TIME_COLOR = 'red'  # Bar color for mining times
 DIFFICULTY_COLOR = (173/255, 216/255, 230/255, 0.7)  # Light blue for difficulty with 70% transparency
+# DIFFICULTY_COLOR = ('blue', 0.7)  # Color for difficulty bars
 MINING_TIMES_SCATTER_COLOR = 'red'  # Color for scatter plot of mining times
 
 # Font sizes and styles
