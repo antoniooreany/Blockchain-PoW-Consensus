@@ -315,3 +315,33 @@ This project is licensed under the GNU GENERAL PUBLIC LICENSE. See the `LICENSE`
     venv\Scripts\activate
     ```
 
+- If you encounter the following issue while installing `numpy` on Windows:
+    ```plaintext
+    error: subprocess-exited-with-error
+
+    × Preparing metadata (pyproject.toml) did not run successfully.
+    │ exit code: 1
+    ╰─> [21 lines of output]
+        ...
+        ERROR: Unknown compiler(s): [['icl'], ['cl'], ['cc'], ['gcc'], ['clang'], ['clang-cl'], ['pgcc']]
+        ...
+    ```
+    This indicates that the necessary build tools are not installed. To resolve this, follow these steps:
+    1. Install Microsoft Visual C++ Build Tools:
+       - Download and install the [Microsoft Visual C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/).
+       - During installation, ensure you select the "Desktop development with C++" workload.
+
+    2. Upgrade `pip` to the latest version:
+       ```powershell
+       python -m pip install --upgrade pip
+       ```
+
+    3. Install `numpy`:
+       ```powershell
+       pip install numpy
+       ```
+
+    4. Install the dependencies from `requirements.txt`:
+       ```powershell
+       pip install -r requirements.txt
+       ```
