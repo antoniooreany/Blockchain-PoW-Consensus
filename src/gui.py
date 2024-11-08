@@ -774,7 +774,7 @@ class GUI:
 
         self.run_button = tk.Button(button_frame, text="Run Blockchain", command=self.run_blockchain, width=15)
         self.run_button.grid(row=0, column=0, padx=10)
-        self.run_button.focus_set()
+        self.run_button.focus_set() # todo why doesn't work?
 
         self.exit_button = tk.Button(button_frame, text="Exit", command=self.exit_app, width=15)
         self.exit_button.grid(row=0, column=1, padx=10)
