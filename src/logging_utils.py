@@ -77,6 +77,8 @@ class LogLevelCounterHandler(logging.Handler):
         self.warning_count = 0
         self.error_count = 0
         self.critical_count = 0
+        self.log_contents = []  # Add this attribute to store log entries
+
 
     def emit(self, record):
         if record.levelno == logging.NOTSET:
@@ -92,6 +94,14 @@ class LogLevelCounterHandler(logging.Handler):
         elif record.levelno == logging.CRITICAL:
             self.critical_count += 1
 
+        log_entry = self.format(record)
+        self.log_contents.append(log_entry)  # Store the log entry
+
+
+    def get_log_contents(self):
+        return "\n".join(self.log_contents)
+
+
     def print_log_counts(self):
         logger = logging.getLogger()
         logger.info(f"Log log-levels:")
@@ -102,6 +112,7 @@ class LogLevelCounterHandler(logging.Handler):
         logger.warning(f"Warning messages: {self.warning_count}")
         logger.error(f"Error messages: {self.error_count}")
         logger.critical(f"Critical messages: {self.critical_count}")
+
 
 
 class ColorFormatter(logging.Formatter):
