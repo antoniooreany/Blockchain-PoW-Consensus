@@ -8,7 +8,11 @@
 
 
 import logging
-from statistics import variance, covariance
+# from statistics import variance, covariance
+
+from statistics import variance
+import numpy as np
+
 
 from src.block import Block
 from src.constants import (
@@ -212,7 +216,8 @@ def get_blockchain_statistics(blockchain, slice_factor):
     variance_bit_difficulty_slice = variance(bit_difficulties_slice)
     standard_deviation_mining_time_slice = variance_mining_time_slice ** 0.5
     standard_deviation_bit_difficulty_slice = variance_bit_difficulty_slice ** 0.5
-    covariance_mining_time_bit_difficulty_slice = covariance(mining_times_slice, bit_difficulties_slice)
+    # covariance_mining_time_bit_difficulty_slice = covariance(mining_times_slice, bit_difficulties_slice)
+    covariance_mining_time_bit_difficulty_slice = np.cov(mining_times_slice, bit_difficulties_slice)[0, 1]
 
     if standard_deviation_mining_time_slice == 0 or standard_deviation_bit_difficulty_slice == 0:
         correlation_mining_time_bit_difficulty_slice = 0
