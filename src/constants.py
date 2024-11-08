@@ -195,5 +195,9 @@ LEGEND_B_BOX_Y = -0.15  # Position legend below the plot
 # LEGEND_B_BOX_Y = -0.00  # Position legend below the plot
 LEGEND_LOCATION = 'upper right'  # Adjusted legend location
 
-
-
+GUI_TITLE = "Blockchain Configuration"
+EXIT_BUTTON_TEXT = "Exit (Esc)"
+CLEAR_LOG_BUTTON_TEXT = "Clear Log"
+RUN_BLOCKCHAIN_BUTTON_TEXT = "Run Blockchain (Space)"
+CLOSE_TYPE = "WM_DELETE_WINDOW"
+CONFIGURATION_PARAMETERS_BUTTON_TEXT = "Configuration Parameters"
