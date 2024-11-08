@@ -194,3 +194,6 @@ Y_LEGEND_POSITION = 0.88  # Position legend slightly below the title
 LEGEND_B_BOX_Y = -0.15  # Position legend below the plot
 # LEGEND_B_BOX_Y = -0.00  # Position legend below the plot
 LEGEND_LOCATION = 'upper right'  # Adjusted legend location
+
+
+
