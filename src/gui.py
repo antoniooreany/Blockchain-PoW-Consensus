@@ -400,14 +400,14 @@ class GUI:
         button_frame = tk.Frame(main_frame, pady=10)
         button_frame.pack()
 
-        self.run_button = tk.Button(button_frame, text="Run Blockchain", command=self.run_blockchain, width=15)
+        self.run_button = tk.Button(button_frame, text="Run Blockchain (Space)", command=self.run_blockchain, width=25)
         self.run_button.grid(row=0, column=0, padx=10)
         self.root.after(100, self.run_button.focus_set)
 
         self.clear_log_button = tk.Button(button_frame, text="Clear Log", command=self.clear_log, width=15)
         self.clear_log_button.grid(row=0, column=1, padx=10)
 
-        self.exit_button = tk.Button(button_frame, text="Exit", command=self.exit_app, width=15)
+        self.exit_button = tk.Button(button_frame, text="Exit (Esc)", command=self.exit_app, width=15)
         self.exit_button.grid(row=0, column=2, padx=10)
 
         # Create a frame for the logging Text widget
