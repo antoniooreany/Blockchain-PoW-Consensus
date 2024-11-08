@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protected Blockchain Code</title>
+    <script>
+        // Basic password protection
+        function checkPassword() {
+            const password = prompt("Enter the password to view this page:");
+            if (password !== "Block2024") {
+                alert("Incorrect password.");
+                window.location.href = "https://github.com"; // Redirect if wrong password
+            } else {
+                document.getElementById("content").style.display = "block";
+            }
+        }
+        window.onload = checkPassword;
+    </script>
+</head>
+<body>
+    <div id="content" style="display: none;">
+        <h1>Blockchain Project Repository</h1>
+        <p>Welcome to the restricted access page for my blockchain project. You can view the code repository <a href="https://github.com/antoniooreany/Blockchain-PoW-Consensus" target="_blank">here</a>.</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500">
+  <!-- Title -->
+  <text x="300" y="50" text-anchor="middle" font-family="Arial" font-size="24" font-weight="bold">The Blockchain Trilemma</text>
+  
+  <!-- Triangle -->
+  <path d="M300 150 L100 400 L500 400 Z" fill="none" stroke="#333" stroke-width="3"/>
+  
+  <!-- Vertices (circles) -->
+  <circle cx="300" cy="150" r="60" fill="#e6f3ff" stroke="#2980b9" stroke-width="3"/>
+  <circle cx="100" cy="400" r="60" fill="#e6f3ff" stroke="#2980b9" stroke-width="3"/>
+  <circle cx="500" cy="400" r="60" fill="#e6f3ff" stroke="#2980b9" stroke-width="3"/>
+  
+  <!-- Labels for vertices -->
+  <text x="300" y="160" text-anchor="middle" font-family="Arial" font-size="18" font-weight="bold">Scalability</text>
+  <text x="100" y="410" text-anchor="middle" font-family="Arial" font-size="18" font-weight="bold">Security</text>
+  <text x="500" y="410" text-anchor="middle" font-family="Arial" font-size="18" font-weight="bold">Decentralization</text>
+  
+  <!-- Edge labels -->
+  <text x="200" y="290" text-anchor="middle" font-family="Arial" font-size="14" fill="#666">
+    <tspan x="200" dy="0">Trade-off:</tspan>
+    <tspan x="200" dy="20">Security vs</tspan>
+    <tspan x="200" dy="20">Scalability</tspan>
+  </text>
+  
+  <text x="400" y="290" text-anchor="middle" font-family="Arial" font-size="14" fill="#666">
+    <tspan x="400" dy="0">Trade-off:</tspan>
+    <tspan x="400" dy="20">Scalability vs</tspan>
+    <tspan x="400" dy="20">Decentralization</tspan>
+  </text>
+  
+  <text x="300" y="440" text-anchor="middle" font-family="Arial" font-size="14" fill="#666">
+    <tspan x="300" dy="0">Trade-off:</tspan>
+    <tspan x="300" dy="20">Security vs</tspan>
+    <tspan x="300" dy="20">Decentralization</tspan>
+  </text>
+  
+  <!-- Connecting lines with arrows -->
+  <path d="M300 210 L300 340" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <path d="M160 400 L440 400" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <path d="M250 220 L150 350" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <path d="M350 220 L450 350" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+  </defs>
+</svg>
