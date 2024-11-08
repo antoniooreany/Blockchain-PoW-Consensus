@@ -1,4 +1,4 @@
-numpy~=2.1.2
+numpy~=2.0.2
 matplotlib~=3.9.2
 screeninfo~=0.8.1
 tkinter~=8.6.9
