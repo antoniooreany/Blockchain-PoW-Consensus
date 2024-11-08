@@ -76,7 +76,7 @@ def plot_bit_difficulties(ax1, blockchain, difficulty_color, scaling_factor):
     ax2.yaxis.set_major_formatter(plt.FuncFormatter(custom_y_formatter))
 
 
-def plot_blockchain_statistics(blockchain, scaling_factor=1.0):
+def plot_blockchain_statistics(blockchain, ax1=None, scaling_factor=1.0):
     # fig, ax1 = plt.subplots(figsize=(12, 8))
     fig, ax1 = plt.subplots(figsize=(14, 8))
 
