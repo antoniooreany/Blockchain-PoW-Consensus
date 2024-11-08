@@ -345,7 +345,9 @@ from blockchain import Blockchain
 from helpers import add_blocks
 from logger_singleton import LoggerSingleton
 from src.constants import INITIAL_BIT_DIFFICULTY, TARGET_BLOCK_MINING_TIME, ADJUSTMENT_BLOCK_INTERVAL, CLAMP_FACTOR, \
-    SMALLEST_BIT_DIFFICULTY, NUMBER_BLOCKS_TO_ADD, SLICE_FACTOR, NUMBER_BLOCKS_SLICE
+    SMALLEST_BIT_DIFFICULTY, NUMBER_BLOCKS_TO_ADD, SLICE_FACTOR, NUMBER_BLOCKS_SLICE, INITIAL_BIT_DIFFICULTY_KEY, \
+    TARGET_BLOCK_MINING_TIME_KEY, ADJUSTMENT_BLOCK_INTERVAL_KEY, CLAMP_FACTOR_KEY, SMALLEST_BIT_DIFFICULTY_KEY, \
+    NUMBER_BLOCKS_TO_ADD_KEY, NUMBER_BLOCKS_SLICE_KEY
 from src.logging_utils import LogLevelCounterHandler, log_blockchain_statistics
 from plotting import plot_blockchain_statistics
 
@@ -452,14 +454,24 @@ class GUI:
         log_level_counter_handler = LogLevelCounterHandler()
         logger.addHandler(log_level_counter_handler)
 
-        # Collect values from the UI
-        initial_bit_difficulty = self.config_params["initial_bit_difficulty"].get()
-        target_block_mining_time = self.config_params["target_block_mining_time"].get()
-        adjustment_block_interval = self.config_params["adjustment_block_interval"].get()
-        clamp_factor = self.config_params["clamp_factor"].get()
-        smallest_bit_difficulty = self.config_params["smallest_bit_difficulty"].get()
-        number_blocks_to_add = self.config_params["number_blocks_to_add"].get()
-        number_blocks_slice = self.config_params["number_blocks_slice"].get()
+        # # Collect values from the UI
+        # initial_bit_difficulty = self.config_params["initial_bit_difficulty"].get()
+        # target_block_mining_time = self.config_params["target_block_mining_time"].get()
+        # adjustment_block_interval = self.config_params["adjustment_block_interval"].get()
+        # clamp_factor = self.config_params["clamp_factor"].get()
+        # smallest_bit_difficulty = self.config_params["smallest_bit_difficulty"].get()
+        # number_blocks_to_add = self.config_params["number_blocks_to_add"].get()
+        # number_blocks_slice = self.config_params["number_blocks_slice"].get()
+
+        initial_bit_difficulty = self.config_params[INITIAL_BIT_DIFFICULTY_KEY].get()
+        target_block_mining_time = self.config_params[TARGET_BLOCK_MINING_TIME_KEY].get()
+        adjustment_block_interval = self.config_params[ADJUSTMENT_BLOCK_INTERVAL_KEY].get()
+        clamp_factor = self.config_params[CLAMP_FACTOR_KEY].get()
+        smallest_bit_difficulty = self.config_params[SMALLEST_BIT_DIFFICULTY_KEY].get()
+        number_blocks_to_add = self.config_params[NUMBER_BLOCKS_TO_ADD_KEY].get()
+        number_blocks_slice = self.config_params[NUMBER_BLOCKS_SLICE_KEY].get()
+
+
 
         blockchain = Blockchain(
             initial_bit_difficulty=initial_bit_difficulty,
