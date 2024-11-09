@@ -14,20 +14,12 @@ from statistics import variance
 import numpy as np
 
 
-from src.block import Block
+from src.model.block import Block
 from src.constants import (
-    TARGET_BLOCK_MINING_TIME,
     SLICE_FACTOR,
-    NUMBER_BLOCKS_TO_ADD,
-    INITIAL_BIT_DIFFICULTY,
-    ADJUSTMENT_BLOCK_INTERVAL,
-    CLAMP_FACTOR,
-    SMALLEST_BIT_DIFFICULTY,
-
     INITIAL_BIT_DIFFICULTY_KEY,
     NUMBER_BLOCKS_TO_ADD_KEY,
 
-    SLICE_FACTOR_KEY,
     NUMBER_BLOCKS_SLICE_KEY,
     TARGET_BLOCK_MINING_TIME_KEY,
     ADJUSTMENT_BLOCK_INTERVAL_KEY,

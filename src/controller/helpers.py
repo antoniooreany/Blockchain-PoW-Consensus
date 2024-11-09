@@ -7,8 +7,7 @@ import logging
 import math
 import time
 
-from block import Block
-from constants import GENESIS_BLOCK_DATA, GENESIS_BLOCK_PREVIOUS_HASH
+from src.model.block import Block
 
 
 # def create_genesis_block(blockchain, initial_bit_difficulty: float) -> Block: # todo redundant method, substituted by the Block constructor

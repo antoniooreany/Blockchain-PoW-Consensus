@@ -7,14 +7,14 @@
 import time
 from venv import logger
 
-from block import Block
-from constants import HASH_BIT_LENGTH, GENESIS_BLOCK_HASH, BASE
+from src.model.block import Block
+from ..constants import HASH_BIT_LENGTH, GENESIS_BLOCK_HASH, BASE
 # from helpers import create_genesis_block
-from logging_utils import configure_logging
-from logging_utils import log_validity
-from proof_of_work import ProofOfWork
+from src.logging_utils import configure_logging
+from src.logging_utils import log_validity
+from src.controller.proof_of_work import ProofOfWork
 from src.constants import GENESIS_BLOCK_PREVIOUS_HASH, GENESIS_BLOCK_DATA
-from src.helpers import adjust_difficulty
+from src.controller.helpers import adjust_difficulty
 from src.logging_utils import log_mined_block
 
 
