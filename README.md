@@ -345,3 +345,18 @@ This project is licensed under the GNU GENERAL PUBLIC LICENSE. See the `LICENSE`
        ```powershell
        pip install -r requirements.txt
        ```
+
+- If you encounter the following issue on Windows:
+    ```plaintext
+    export : The term 'export' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+    ```
+    This indicates that the `export` command is not recognized in PowerShell. Use the following command instead:
+    ```powershell
+    $env:PYTHONPATH = "${env:PYTHONPATH};$(pwd)"
+    ```
+
+- If you encounter the following issue:
+    ```plaintext
+    _tkinter.TclError: Can't find a usable init.tcl in the following directories:
+    ```
+    This indicates that the `init.tcl` file, which is part of the Tcl/Tk library used by `tkinter`, is missing or not found in the expected directories. This usually happens when the Tcl/Tk installation is incomplete or not properly configured. To resolve this, ensure that Tcl/Tk is properly installed and configured.
