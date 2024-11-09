@@ -1,10 +1,9 @@
-# # # #   Copyright (c) 2024, Anton Gorshkov
-# # # #   All rights reserved.
-# # # #   This code is for a block and its unit tests.
-# # # #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
+#   Copyright (c) 2024, Anton Gorshkov
+#   All rights reserved.
+#   This code is for a block and its unit tests.
+#   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
 
-import re
 import logging
 import tkinter as tk
 import time
@@ -20,16 +19,12 @@ from src.constants import INITIAL_BIT_DIFFICULTY, TARGET_BLOCK_MINING_TIME, ADJU
     SMALLEST_BIT_DIFFICULTY, NUMBER_BLOCKS_TO_ADD, NUMBER_BLOCKS_SLICE, INITIAL_BIT_DIFFICULTY_KEY, \
     TARGET_BLOCK_MINING_TIME_KEY, ADJUSTMENT_BLOCK_INTERVAL_KEY, CLAMP_FACTOR_KEY, SMALLEST_BIT_DIFFICULTY_KEY, \
     NUMBER_BLOCKS_TO_ADD_KEY, NUMBER_BLOCKS_SLICE_KEY, GUI_TITLE, EXIT_BUTTON_TEXT, CLEAR_LOG_BUTTON_TEXT, \
-    RUN_BLOCKCHAIN_BUTTON_TEXT, CLOSE_TYPE, CONFIGURATION_PARAMETERS_BUTTON_TEXT
+    RUN_BLOCKCHAIN_BUTTON_TEXT, CLOSE_TYPE, CONFIGURATION_PARAMETERS_BUTTON_TEXT, HIGHT, WIDTH
 from src.logging_utils import LogLevelCounterHandler, log_blockchain_statistics
 from plotting import plot_blockchain_statistics
 
 
 import re
-
-HIGHN = "600"
-
-S = "1200"
 
 
 class TextHandler(logging.Handler):
@@ -54,7 +49,7 @@ class GUI:
     def __init__(self, root):
         self.root = root
         self.root.title(GUI_TITLE)
-        self.root.geometry(f"{WIDTH}x{HIGHN}")  # Adjust window size
+        self.root.geometry(f"{WIDTH}x{HIGHT}")  # Adjust window size
 
         # Bind the Esc key to the exit_app method
         self.root.bind('<Escape>', lambda event: self.exit_app())
