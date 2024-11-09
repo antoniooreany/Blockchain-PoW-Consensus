@@ -8,7 +8,7 @@ import time
 from venv import logger
 
 from src.model.block import Block
-from ..constants import HASH_BIT_LENGTH, GENESIS_BLOCK_HASH, BASE
+from ..constants import HASH_BIT_LENGTH, GENESIS_BLOCK_HASH, BASE, DEFAULT_PRECISION
 # from helpers import create_genesis_block
 from src.logging_utils import configure_logging
 from src.logging_utils import log_validity
@@ -56,7 +56,7 @@ class Blockchain:
         log_mined_block(genesis_block)
         log_validity(self)
         self.logger.debug(
-            f"Actual mining time for block {genesis_block.index}: {0.0:.25f} seconds")  # todo ugly, generalize it
+            f"Actual mining time for block {genesis_block.index}: {0.0:{DEFAULT_PRECISION}f} seconds")  # todo ugly, generalize it
         self.logger.debug(f"")
 
         self.mining_times = [0.0]  # todo generalize it, applying check mining time for the Genesis Block
