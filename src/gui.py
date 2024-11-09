@@ -23,18 +23,25 @@ from src.logging_utils import LogLevelCounterHandler, log_blockchain_statistics
 from plotting import plot_blockchain_statistics
 
 
+import re
+
 class TextHandler(logging.Handler):
+    """This class allows you to log to a Tkinter Text or ScrolledText widget"""
+
     def __init__(self, text_widget):
         logging.Handler.__init__(self)
         self.text_widget = text_widget
 
     def emit(self, record):
         msg = self.format(record)
-        msg = re.sub(r'\x1b\[[0-9;]*m', '', msg)  # Remove ANSI escape codes
-        self.text_widget.configure(state='normal')
+        # Remove ANSI escape codes
+        msg = re.sub(r'\x1b\[[0-9;]*m', '', msg)
+        self.text_widget.config(state=tk.NORMAL)
         self.text_widget.insert(tk.END, msg + '\n')
-        self.text_widget.configure(state='disabled')
+        self.text_widget.config(state=tk.DISABLED)
         self.text_widget.yview(tk.END)
+
+
 
 class GUI:
     def __init__(self, root):
