@@ -207,3 +207,6 @@ WIDTH = "1200"
 HEXADECIMAL_BASE = 16
 SHA256_ENCODING = 'utf-8'
 AVERAGE_MINING_TIME_ADJUSTMENT_INTERVAL_KEY = "average_mining_time_adjustment_interval"
+LEGEND_TITLE = "Input Information"
+
+REVERSED_ADJUSTMENT_FACTOR_KEY = "reversed_adjustment_factor"
