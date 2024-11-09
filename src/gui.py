@@ -9,6 +9,8 @@ import logging
 import tkinter as tk
 import time
 from tkinter import messagebox
+
+from PIL.FontFile import WIDTH
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from blockchain import Blockchain
@@ -24,6 +26,11 @@ from plotting import plot_blockchain_statistics
 
 
 import re
+
+HIGHN = "600"
+
+S = "1200"
+
 
 class TextHandler(logging.Handler):
     """This class allows you to log to a Tkinter Text or ScrolledText widget"""
@@ -47,7 +54,7 @@ class GUI:
     def __init__(self, root):
         self.root = root
         self.root.title(GUI_TITLE)
-        self.root.geometry("1200x600")  # Adjust window size
+        self.root.geometry(f"{WIDTH}x{HIGHN}")  # Adjust window size
 
         # Bind the Esc key to the exit_app method
         self.root.bind('<Escape>', lambda event: self.exit_app())
@@ -166,7 +173,7 @@ class GUI:
 
         # Plot the blockchain statistics on the canvas
         ax1 = self.figure.add_subplot(111)
-        plot_blockchain_statistics(blockchain, ax1=ax1)
+        plot_blockchain_statistics(blockchain)
 
         self.canvas.draw()
 
