@@ -88,7 +88,7 @@ class Blockchain:
         adjust_difficulty(self, clamp_factor, smallest_bit_difficulty)
 
         log_validity(self)
-        self.logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.25f} seconds")
+        self.logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.{DEFAULT_PRECISION}f} seconds")
         self.logger.debug(f"")
 
     def get_average_mining_time(self, num_last_blocks: int) -> float:

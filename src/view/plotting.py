@@ -25,7 +25,7 @@ def plot_blockchain_statistics(blockchain):
     plot_difficulties(ax1, blockchain)
 
     legend_info = (
-        f"{INITIAL_BIT_DIFFICULTY_KEY}: {blockchain.initial_bit_difficulty}\n"
+        f"{INITIAL_BIT_DIFFICULTY_KEY}: {blockchain.initial_bit_difficulty}\n"  # todo init once, generalize in the loop
         f"{TARGET_BLOCK_MINING_TIME_KEY}: {blockchain.target_block_mining_time}\n"
         f"{ADJUSTMENT_BLOCK_INTERVAL_KEY}: {blockchain.adjustment_block_interval}\n"
         f"{CLAMP_FACTOR_KEY}: {blockchain.clamp_factor}\n"

@@ -9,7 +9,7 @@ import math
 import time
 
 from src.constants import AVERAGE_MINING_TIME_COLOR, AVERAGE_MINING_TIME_SLICE_KEY, \
-    AVERAGE_MINING_TIME_ADJUSTMENT_INTERVAL_KEY, REVERSED_ADJUSTMENT_FACTOR_KEY
+    AVERAGE_MINING_TIME_ADJUSTMENT_INTERVAL_KEY, REVERSED_ADJUSTMENT_FACTOR_KEY, DEFAULT_PRECISION
 from src.model.block import Block
 
 
@@ -41,10 +41,10 @@ def adjust_difficulty(blockchain, clamp_factor, smallest_bit_difficulty,):
         average_mining_time_adjustment_interval = blockchain.get_average_mining_time(
             blockchain.adjustment_block_interval)
         logging.debug(
-            f"{AVERAGE_MINING_TIME_ADJUSTMENT_INTERVAL_KEY}: {average_mining_time_adjustment_interval:.25f} seconds")
+            f"{AVERAGE_MINING_TIME_ADJUSTMENT_INTERVAL_KEY}: {average_mining_time_adjustment_interval:.{DEFAULT_PRECISION}f} seconds")
         reversed_adjustment_factor = average_mining_time_adjustment_interval / blockchain.target_block_mining_time
 
-        logging.debug(f"{REVERSED_ADJUSTMENT_FACTOR_KEY}: {reversed_adjustment_factor:.25f}")
+        logging.debug(f"{REVERSED_ADJUSTMENT_FACTOR_KEY}: {reversed_adjustment_factor:.{DEFAULT_PRECISION}f}")
         last_bit_difficulty = blockchain.bit_difficulties[-1]
 
         if reversed_adjustment_factor > 0:

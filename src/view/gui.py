@@ -138,7 +138,7 @@ class GUI:
         log_level_counter_handler = LogLevelCounterHandler()
         logger.addHandler(log_level_counter_handler)
 
-        initial_bit_difficulty = self.config_params[INITIAL_BIT_DIFFICULTY_KEY].get()
+        initial_bit_difficulty = self.config_params[INITIAL_BIT_DIFFICULTY_KEY].get()  # todo init once, generalize in the loop
         target_block_mining_time = self.config_params[TARGET_BLOCK_MINING_TIME_KEY].get()
         adjustment_block_interval = self.config_params[ADJUSTMENT_BLOCK_INTERVAL_KEY].get()
         clamp_factor = self.config_params[CLAMP_FACTOR_KEY].get()
