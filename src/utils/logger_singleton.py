@@ -6,7 +6,7 @@
 
 import logging
 
-from src.logging_utils import ColorFormatter
+from src.utils.logging_utils import ColorFormatter
 
 
 class LoggerSingleton(object):

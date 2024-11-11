@@ -10,7 +10,7 @@ import logging
 
 from src.model.block import Block
 from src.constants import HASH_BIT_LENGTH, NONCE_BIT_LENGTH, BASE, HEXADECIMAL_BASE, SHA256_ENCODING
-from src.logging_utils import log_mined_block
+from src.utils.logging_utils import log_mined_block
 
 class ProofOfWork:
     @staticmethod

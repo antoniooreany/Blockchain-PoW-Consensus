@@ -14,13 +14,13 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from src.model.blockchain import Blockchain
 from src.controller.helpers import add_blocks
-from src.view.logger_singleton import LoggerSingleton
+from src.utils.logger_singleton import LoggerSingleton
 from src.constants import INITIAL_BIT_DIFFICULTY, TARGET_BLOCK_MINING_TIME, ADJUSTMENT_BLOCK_INTERVAL, CLAMP_FACTOR, \
     SMALLEST_BIT_DIFFICULTY, NUMBER_BLOCKS_TO_ADD, NUMBER_BLOCKS_SLICE, INITIAL_BIT_DIFFICULTY_KEY, \
     TARGET_BLOCK_MINING_TIME_KEY, ADJUSTMENT_BLOCK_INTERVAL_KEY, CLAMP_FACTOR_KEY, SMALLEST_BIT_DIFFICULTY_KEY, \
     NUMBER_BLOCKS_TO_ADD_KEY, NUMBER_BLOCKS_SLICE_KEY, GUI_TITLE, EXIT_BUTTON_TEXT, CLEAR_LOG_BUTTON_TEXT, \
     RUN_BLOCKCHAIN_BUTTON_TEXT, CLOSE_TYPE, CONFIGURATION_PARAMETERS_BUTTON_TEXT, HIGHT, WIDTH
-from src.logging_utils import LogLevelCounterHandler, log_blockchain_statistics
+from src.utils.logging_utils import LogLevelCounterHandler, log_blockchain_statistics
 from src.view.plotting import plot_blockchain_statistics
 
 

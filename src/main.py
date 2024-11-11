@@ -4,8 +4,8 @@
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
 import logging
-from src.view.logger_singleton import LoggerSingleton
-from src.logging_utils import LogLevelCounterHandler
+from src.utils.logger_singleton import LoggerSingleton
+from src.utils.logging_utils import LogLevelCounterHandler
 from src.view.gui import config_gui
 
 if __name__ == "__main__":
