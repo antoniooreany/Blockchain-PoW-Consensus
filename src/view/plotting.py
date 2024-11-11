@@ -6,12 +6,17 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
-from .plotting_utils import plot_mining_times, plot_difficulties
+from .plot_difficulties import plot_difficulties
+from .plotting_utils import (
+    plot_mining_times,
+    # plot_difficulties,
+)
 from ..constants import (
     PLOT_TITLE_Y, PLOT_TITLE_FONT_SIZE,
     X_LEGEND_POSITION, Y_LEGEND_POSITION, LEGEND_LOCATION, LEGEND_FONT_SIZE, INITIAL_BIT_DIFFICULTY_KEY,
     TARGET_BLOCK_MINING_TIME_KEY, ADJUSTMENT_BLOCK_INTERVAL_KEY, CLAMP_FACTOR_KEY,
-    SMALLEST_BIT_DIFFICULTY_KEY, NUMBER_BLOCKS_TO_ADD_KEY, NUMBER_BLOCKS_SLICE_KEY, FIGSIZE, LEGEND_TITLE, PLOT_TITLE_LABEL
+    SMALLEST_BIT_DIFFICULTY_KEY, NUMBER_BLOCKS_TO_ADD_KEY, NUMBER_BLOCKS_SLICE_KEY, FIGSIZE, LEGEND_TITLE,
+    PLOT_TITLE_LABEL
 )
 
 
