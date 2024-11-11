@@ -4,8 +4,6 @@
 #   This code is for a logging_utils.py and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
-# info: 0, debug: 10, warning: 20, error: 30, critical: 40
-
 
 import logging
 # from statistics import variance, covariance
