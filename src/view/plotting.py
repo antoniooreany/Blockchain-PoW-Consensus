@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
 from .plot_difficulties import plot_difficulties
-from .plotting_utils import (
+from .plot_mining_times import (
     plot_mining_times,
     # plot_difficulties,
 )
