@@ -13,9 +13,9 @@ TARGET_BLOCK_MINING_TIME = 0.01  # what is the desirable time to mine a block
 # todo why Target block time: 0.10000000000000001 ???
 # properties of the difficulty adjustment:
 # ADJUSTMENT_BLOCK_INTERVAL = 1  # how many blocks to wait before adjusting the difficulty
-# ADJUSTMENT_BLOCK_INTERVAL = 2  # how many blocks to wait before adjusting the difficulty
+ADJUSTMENT_BLOCK_INTERVAL = 2  # how many blocks to wait before adjusting the difficulty
 # ADJUSTMENT_BLOCK_INTERVAL = 3  # how many blocks to wait before adjusting the difficulty
-ADJUSTMENT_BLOCK_INTERVAL = 5  # how many blocks to wait before adjusting the difficulty
+# ADJUSTMENT_BLOCK_INTERVAL = 5  # how many blocks to wait before adjusting the difficulty
 # ADJUSTMENT_BLOCK_INTERVAL = 10  # how many blocks to wait before adjusting the difficulty
 # ADJUSTMENT_BLOCK_INTERVAL = 1000  # todo for static constant difficulty
 CLAMP_FACTOR = 2.0  # max adjustment factor to increase / decrease the difficulty

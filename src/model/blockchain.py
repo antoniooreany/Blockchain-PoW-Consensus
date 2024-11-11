@@ -74,9 +74,13 @@ class Blockchain:
     def add_block(self, new_block: Block, clamp_factor, smallest_bit_difficulty) -> None:
         new_block.previous_hash = self.get_latest_block().hash if self.blocks else GENESIS_BLOCK_HASH
         start_time = time.time()
+        # logger.debug(f"Start time for block {new_block.index}: {start_time}")
         ProofOfWork.find_nonce(new_block, self.bit_difficulties[-1])
+        # todo why it is started to be 0.02 even with bit_difficulty=0?
+
         end_time = time.time()
-        actual_mining_time = end_time - start_time
+        # logger.debug(f"End time for block {new_block.index}: {end_time}")
+        actual_mining_time = end_time - start_time  # todo calculate it as a difference between the previous block timestamp and the current block timestamp
 
         if not ProofOfWork.validate_proof(new_block, self.bit_difficulties[-1]):
             self.logger.error(f"Block {new_block.index} was mined with a hash that does not meet the difficulty")
