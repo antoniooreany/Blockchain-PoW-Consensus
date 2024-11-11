@@ -11,7 +11,7 @@ from .plot_mining_times import (
     plot_mining_times,
     # plot_difficulties,
 )
-from ..constants import (
+from src.utils.constants import (
     PLOT_TITLE_Y, PLOT_TITLE_FONT_SIZE,
     X_LEGEND_POSITION, Y_LEGEND_POSITION, LEGEND_LOCATION, LEGEND_FONT_SIZE, INITIAL_BIT_DIFFICULTY_KEY,
     TARGET_BLOCK_MINING_TIME_KEY, ADJUSTMENT_BLOCK_INTERVAL_KEY, CLAMP_FACTOR_KEY,

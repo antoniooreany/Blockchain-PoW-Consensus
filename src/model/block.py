@@ -6,7 +6,7 @@
 
 import hashlib
 
-from ..constants import ENCODING
+from src.utils.constants import ENCODING
 
 
 class Block:

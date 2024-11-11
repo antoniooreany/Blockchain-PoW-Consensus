@@ -13,9 +13,9 @@ from PIL.FontFile import WIDTH
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from src.model.blockchain import Blockchain
-from src.controller.helpers import add_blocks
+from src.controller.blockchain_controller import add_blocks
 from src.utils.logger_singleton import LoggerSingleton
-from src.constants import INITIAL_BIT_DIFFICULTY, TARGET_BLOCK_MINING_TIME, ADJUSTMENT_BLOCK_INTERVAL, CLAMP_FACTOR, \
+from src.utils.constants import INITIAL_BIT_DIFFICULTY, TARGET_BLOCK_MINING_TIME, ADJUSTMENT_BLOCK_INTERVAL, CLAMP_FACTOR, \
     SMALLEST_BIT_DIFFICULTY, NUMBER_BLOCKS_TO_ADD, NUMBER_BLOCKS_SLICE, INITIAL_BIT_DIFFICULTY_KEY, \
     TARGET_BLOCK_MINING_TIME_KEY, ADJUSTMENT_BLOCK_INTERVAL_KEY, CLAMP_FACTOR_KEY, SMALLEST_BIT_DIFFICULTY_KEY, \
     NUMBER_BLOCKS_TO_ADD_KEY, NUMBER_BLOCKS_SLICE_KEY, GUI_TITLE, EXIT_BUTTON_TEXT, CLEAR_LOG_BUTTON_TEXT, \
@@ -134,9 +134,14 @@ class GUI:
 
         start_time = time.time()
 
+        # logger = LoggerSingleton.get_instance().logger
+        # log_level_counter_handler = LogLevelCounterHandler()
+        # logger.addHandler(log_level_counter_handler)
+
         logger = LoggerSingleton.get_instance().logger
-        log_level_counter_handler = LogLevelCounterHandler()
-        logger.addHandler(log_level_counter_handler)
+        logger.handlers = [h for h in logger.handlers if not isinstance(h, TextHandler)]
+        logger.addHandler(self.text_handler)
+
 
         initial_bit_difficulty = self.config_params[INITIAL_BIT_DIFFICULTY_KEY].get()  # todo init once, generalize in the loop
         target_block_mining_time = self.config_params[TARGET_BLOCK_MINING_TIME_KEY].get()
@@ -176,9 +181,12 @@ class GUI:
         self.log_text.delete(1.0, tk.END)
         for handler in logger.handlers:
             if isinstance(handler, LogLevelCounterHandler):
-                self.log_text.insert(tk.END, handler.get_log_contents())
+                # self.log_text.insert(tk.END, handler.get_log_contents())
+                handler.print_log_counts()
 
-        log_level_counter_handler.print_log_counts()
+        # log_level_counter_handler.print_log_counts()
+        # LogLevelCounterHandler.print_log_counts()
+        # LogLevelCounterHandler.print_log_counts()
 
         end_time = time.time()
         execution_time = end_time - start_time

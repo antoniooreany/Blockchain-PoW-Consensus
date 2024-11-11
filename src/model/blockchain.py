@@ -3,18 +3,21 @@
 # # #   This code is for a blockchain.py and its unit tests.
 # # #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
+import logging
+import math
 
 import time
 from venv import logger
 
+from src.controller.blockchain_controller import clamp
 from src.model.block import Block
-from ..constants import HASH_BIT_LENGTH, GENESIS_BLOCK_HASH, BASE, DEFAULT_PRECISION
+from src.utils.constants import HASH_BIT_LENGTH, GENESIS_BLOCK_HASH, BASE, DEFAULT_PRECISION, \
+    AVERAGE_MINING_TIME_ADJUSTMENT_INTERVAL_KEY, REVERSED_ADJUSTMENT_FACTOR_KEY
 # from helpers import create_genesis_block
 from src.utils.logging_utils import configure_logging
 from src.utils.logging_utils import log_validity
 from src.controller.proof_of_work import ProofOfWork
-from src.constants import GENESIS_BLOCK_PREVIOUS_HASH, GENESIS_BLOCK_DATA
-from src.controller.helpers import adjust_difficulty
+from src.utils.constants import GENESIS_BLOCK_PREVIOUS_HASH, GENESIS_BLOCK_DATA
 from src.utils.logging_utils import log_mined_block
 
 
@@ -85,7 +88,7 @@ class Blockchain:
         self.mining_times.append(actual_mining_time)
         self.bit_difficulties.append(self.bit_difficulties[-1])
 
-        adjust_difficulty(self, clamp_factor, smallest_bit_difficulty)
+        self.adjust_difficulty(clamp_factor, smallest_bit_difficulty)
 
         log_validity(self)
         self.logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.{DEFAULT_PRECISION}f} seconds")
@@ -127,3 +130,24 @@ class Blockchain:
                 return False
 
         return True
+
+
+    def adjust_difficulty(self, clamp_factor, smallest_bit_difficulty, ):
+        if (len(self.blocks) - 1) % self.adjustment_block_interval == 0:
+            average_mining_time_adjustment_interval = self.get_average_mining_time(
+                self.adjustment_block_interval)
+            logging.debug(
+                f"{AVERAGE_MINING_TIME_ADJUSTMENT_INTERVAL_KEY}: {average_mining_time_adjustment_interval:.{DEFAULT_PRECISION}f} seconds")
+            reversed_adjustment_factor = average_mining_time_adjustment_interval / self.target_block_mining_time
+
+            logging.debug(f"{REVERSED_ADJUSTMENT_FACTOR_KEY}: {reversed_adjustment_factor:.{DEFAULT_PRECISION}f}")
+            last_bit_difficulty = self.bit_difficulties[-1]
+
+            if reversed_adjustment_factor > 0:
+                log_adjustment_factor = math.log2(reversed_adjustment_factor)
+                clamped_log_adjustment_factor = clamp(log_adjustment_factor, clamp_factor)
+                new_difficulty = max(smallest_bit_difficulty, last_bit_difficulty - clamped_log_adjustment_factor)
+            else:
+                new_difficulty = smallest_bit_difficulty
+
+            self.bit_difficulties[-1] = new_difficulty

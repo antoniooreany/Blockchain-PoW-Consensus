@@ -4,14 +4,10 @@
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
 
-import math
-
 import numpy as np
-from matplotlib import pyplot as plt
 
-from src.constants import MINING_TIME_COLOR, FONT_SIZE, GRID_LINE_WIDTH, AVERAGE_MINING_TIME_COLOR, \
-    TARGET_BLOCK_MINING_TIME, LINE_WIDTH, MINING_TIMES_SCATTER_COLOR, MARKER_SIZE, DIFFICULTY_COLOR, SCALING_FACTOR, \
-    BASE, BAR_WIDTH, AX2_Y_LABEL_TEXT, LABEL_DIFFICULTY_COLOR
+from src.utils.constants import MINING_TIME_COLOR, FONT_SIZE, GRID_LINE_WIDTH, AVERAGE_MINING_TIME_COLOR, \
+    TARGET_BLOCK_MINING_TIME, LINE_WIDTH, MINING_TIMES_SCATTER_COLOR, MARKER_SIZE
 
 
 def plot_mining_times(ax1, blockchain, color=MINING_TIME_COLOR):

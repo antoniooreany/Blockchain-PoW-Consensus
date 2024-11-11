@@ -6,7 +6,7 @@ import math
 
 from matplotlib import pyplot as plt
 
-from src.constants import DIFFICULTY_COLOR, SCALING_FACTOR, BASE, BAR_WIDTH, LABEL_DIFFICULTY_COLOR, AX2_Y_LABEL_TEXT, \
+from src.utils.constants import DIFFICULTY_COLOR, SCALING_FACTOR, BASE, BAR_WIDTH, LABEL_DIFFICULTY_COLOR, AX2_Y_LABEL_TEXT, \
     FONT_SIZE, GRID_LINE_WIDTH
 
 
