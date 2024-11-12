@@ -1,7 +1,7 @@
-# #   Copyright (c) 2024, Anton Gorshkov
-# #   All rights reserved.
-# #   This code is for a helpers.py and its unit tests.
-# #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
+#   Copyright (c) 2024, Anton Gorshkov
+#   All rights reserved.
+#   This code is for a helpers.py and its unit tests.
+#   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
 
 import logging

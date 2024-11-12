@@ -61,29 +61,3 @@ def plot_mining_times_bars(ax1, block_indices, color, mining_times):
     ax1.scatter(block_indices, mining_times, color=MINING_TIMES_SCATTER_COLOR, s=MARKER_SIZE, zorder=3)
 
 
-
-# def plot_difficulties(ax1, blockchain, color=DIFFICULTY_COLOR, scaling_factor=SCALING_FACTOR):
-#     ax2 = ax1.twinx()  # Create a second y-axis
-#     difficulty_values = [(BASE ** difficulty) * scaling_factor for difficulty in blockchain.bit_difficulties]
-#
-#     # Prepend 0 for Genesis Block difficulty
-#     difficulty_values.insert(0, 0)
-#
-#     # Plot bar chart for difficulties
-#     ax2.bar(range(len(difficulty_values)), difficulty_values, color=color, width=BAR_WIDTH)
-#
-#     # Set labels and grid
-#     ax2.set_ylabel(AX2_Y_LABEL_TEXT, fontsize=FONT_SIZE, color=LABEL_DIFFICULTY_COLOR)
-#     ax2.tick_params(axis='y', labelcolor=LABEL_DIFFICULTY_COLOR)
-#     ax2.grid(True, which='both', linestyle=':', linewidth=GRID_LINE_WIDTH, color=LABEL_DIFFICULTY_COLOR)
-#     ax2.relim()
-#     ax2.autoscale_view()
-#     ax2.set_xlim(left=-0.5)
-#
-#     # Custom y-axis formatter for difficulties
-#     def custom_y_formatter(value, _):
-#         if value == 0:
-#             return "-INF / 00_000"
-#         return f'{float(math.log(value, BASE)):.2f} / {value:_.0f}'
-#
-#     ax2.yaxis.set_major_formatter(plt.FuncFormatter(custom_y_formatter))
