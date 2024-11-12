@@ -88,8 +88,8 @@ class GUI:
         self.run_button.grid(row=0, column=0, padx=10)
         self.root.after(100, self.run_button.focus_set)
 
-        self.clear_log_button = tk.Button(button_frame, text=CLEAR_LOG_BUTTON_TEXT, command=self.clear_log, width=15)
-        self.clear_log_button.grid(row=0, column=1, padx=10)
+        # self.clear_log_button = tk.Button(button_frame, text=CLEAR_LOG_BUTTON_TEXT, command=self.clear_log, width=15)
+        # self.clear_log_button.grid(row=0, column=1, padx=10)
 
         self.exit_button = tk.Button(button_frame, text=EXIT_BUTTON_TEXT, command=self.exit_app, width=15)
         self.exit_button.grid(row=0, column=2, padx=10)
@@ -188,15 +188,15 @@ class GUI:
         # Re-enable the button after the blockchain has been run
         self.run_button.config(state=tk.NORMAL)
 
-    def clear_log(self):
-        self.log_text.config(state=tk.NORMAL)
-        self.log_text.delete(1.0, tk.END)
-        self.log_text.config(state=tk.DISABLED)
-
-        # Re-attach the text handler to the logger
-        logger = LoggerSingleton.get_instance().logger
-        logger.handlers = [h for h in logger.handlers if not isinstance(h, TextHandler)]
-        logger.addHandler(self.text_handler)
+    # def clear_log(self):
+    #     self.log_text.config(state=tk.NORMAL)
+    #     self.log_text.delete(1.0, tk.END)
+    #     self.log_text.config(state=tk.DISABLED)
+    #
+    #     # Re-attach the text handler to the logger
+    #     logger = LoggerSingleton.get_instance().logger
+    #     logger.handlers = [h for h in logger.handlers if not isinstance(h, TextHandler)]
+    #     logger.addHandler(self.text_handler)
 
     def exit_app(self):
         self.root.quit()
