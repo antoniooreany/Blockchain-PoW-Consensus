@@ -9,7 +9,7 @@ import tkinter as tk
 import time
 from tkinter import messagebox
 
-from PIL.FontFile import WIDTH
+# from PIL.FontFile import WIDTH
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from src.model.blockchain import Blockchain
