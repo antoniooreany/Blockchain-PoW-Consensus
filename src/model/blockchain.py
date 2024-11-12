@@ -73,7 +73,9 @@ class Blockchain:
         start_time = time.time()
         ProofOfWork.find_nonce(new_block, self.bit_difficulties[-1])
         end_time = time.time()
-        actual_mining_time = end_time - start_time
+        # actual_mining_time = end_time - start_time
+        actual_mining_time = new_block.timestamp - self.get_latest_block().timestamp
+
 
         if not ProofOfWork.validate_proof(new_block, self.bit_difficulties[-1]):
             self.logger.error(f"Block {new_block.index} was mined with a hash that does not meet the difficulty")
