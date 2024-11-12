@@ -14,7 +14,7 @@ import numpy as np
 
 from src.model.block import Block
 from src.constants import (
-    SLICE_FACTOR,
+    # SLICE_FACTOR,
     INITIAL_BIT_DIFFICULTY_KEY,
     NUMBER_BLOCKS_TO_ADD_KEY,
 
