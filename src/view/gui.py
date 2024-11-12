@@ -166,11 +166,11 @@ class GUI:
         # Clear the previous plot
         self.figure.clear()
 
-        # Plot the blockchain statistics on the canvas
-        ax1 = self.figure.add_subplot(111)
-        plot_blockchain_statistics(blockchain)
-
-        self.canvas.draw()
+        # # Plot the blockchain statistics on the canvas
+        # ax1 = self.figure.add_subplot(111)
+        # plot_blockchain_statistics(blockchain)
+        #
+        # self.canvas.draw()
 
         # Display log information in the Text widget
         self.log_text.delete(1.0, tk.END)
