@@ -64,6 +64,7 @@ class GUI:
         config_frame = tk.LabelFrame(main_frame, text=CONFIGURATION_PARAMETERS_BUTTON_TEXT, padx=10, pady=10)
         config_frame.pack(fill="x", pady=10)
 
+        # Create a dictionary to store the configuration parameters
         self.config_params = {
             INITIAL_BIT_DIFFICULTY_KEY: tk.DoubleVar(value=INITIAL_BIT_DIFFICULTY),
             TARGET_BLOCK_MINING_TIME_KEY: tk.DoubleVar(value=TARGET_BLOCK_MINING_TIME),
@@ -126,6 +127,8 @@ class GUI:
             self.root.destroy()
 
     def run_blockchain(self, event=None):
+        logging.info("New blockchain is running...")
+
         self.root.update()  # Update the window to apply the fullscreen attribute
 
         # Disable the button to prevent multiple clicks
@@ -143,7 +146,7 @@ class GUI:
         clamp_factor = self.config_params[CLAMP_FACTOR_KEY].get()
         smallest_bit_difficulty = self.config_params[SMALLEST_BIT_DIFFICULTY_KEY].get()
         number_blocks_to_add = self.config_params[NUMBER_BLOCKS_TO_ADD_KEY].get()
-        number_blocks_slice = self.config_params[NUMBER_BLOCKS_SLICE_KEY].get()
+        number_blocks_slice = self.config_params[NUMBER_BLOCKS_SLICE_KEY].get() # todo if changed in the GUI, it should be changed for the next run, but not changed.
 
         blockchain = Blockchain(
             initial_bit_difficulty=initial_bit_difficulty,
