@@ -21,7 +21,7 @@ from src.constants import INITIAL_BIT_DIFFICULTY, TARGET_BLOCK_MINING_TIME, ADJU
     NUMBER_BLOCKS_TO_ADD_KEY, NUMBER_BLOCKS_SLICE_KEY, GUI_TITLE, EXIT_BUTTON_TEXT, CLEAR_LOG_BUTTON_TEXT, \
     RUN_BLOCKCHAIN_BUTTON_TEXT, CLOSE_TYPE, CONFIGURATION_PARAMETERS_BUTTON_TEXT, HIGHT, WIDTH
 from src.utils.logging_utils import LogLevelCounterHandler, log_blockchain_statistics
-from src.view.plotting import plot_blockchain_statistics
+from src.view.plotting import plot_blockchain_statistics # todo why isn't used?
 
 
 import re
@@ -168,16 +168,16 @@ class GUI:
 
         # # Plot the blockchain statistics on the canvas
         # ax1 = self.figure.add_subplot(111)
-        # plot_blockchain_statistics(blockchain)
+        plot_blockchain_statistics(blockchain)
         #
         # self.canvas.draw()
 
-        # Display log information in the Text widget
-        self.log_text.delete(1.0, tk.END)
-        for handler in logger.handlers:
-            if isinstance(handler, LogLevelCounterHandler):
-                self.log_text.insert(tk.END, handler.get_log_contents())
-
+        # # Display log information in the Text widget
+        # self.log_text.delete(1.0, tk.END)
+        # for handler in logger.handlers:
+        #     if isinstance(handler, LogLevelCounterHandler):
+        #         self.log_text.insert(tk.END, handler.get_log_contents())
+        #
         log_level_counter_handler.print_log_counts()
 
         end_time = time.time()
