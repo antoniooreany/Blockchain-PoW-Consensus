@@ -121,7 +121,7 @@ class Blockchain:
 
         self.bit_difficulties = [initial_bit_difficulty]
 
-        genesis_block = Block(0, 0, time.time(), GENESIS_BLOCK_DATA, GENESIS_BLOCK_PREVIOUS_HASH)
+        genesis_block = Block(0, 0, GENESIS_BLOCK_DATA, time.time(), GENESIS_BLOCK_PREVIOUS_HASH)
 
         self.blocks = [genesis_block]
         self.chain = [genesis_block]
@@ -129,15 +129,16 @@ class Blockchain:
         log_mined_block(genesis_block)
         log_validity(self)
 
-        self.mining_times = []
+        # self.mining_times = [] # todo make it [0.0] to avoid the check for the Genesis Block
+        self.mining_times = [0.0] # todo make it [0.0] to avoid the check for the Genesis Block
 
         logger.debug(f"Blockchain created")
         logger.debug(f"")
 
     def add_block(self, new_block: Block, clamp_factor, smallest_bit_difficulty) -> None:
         new_block.previous_hash = self.get_latest_block().hash if self.blocks else GENESIS_BLOCK_HASH
-        new_block.timestamp = time.time()  # Set the timestamp at the time of block creation
         ProofOfWork.find_nonce(new_block, self.bit_difficulties[-1])
+        new_block.timestamp = time.time()  # Set the timestamp at the time of block creation
         actual_mining_time = new_block.timestamp - self.get_latest_block().timestamp
 
         if not ProofOfWork.validate_proof(new_block, self.bit_difficulties[-1]):

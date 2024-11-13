@@ -5,6 +5,7 @@
 
 
 import hashlib
+import time
 
 from ..constants import ENCODING
 
@@ -14,9 +15,9 @@ class Block:
             self,
             bit_difficulty: float,
             index: int,
-            timestamp: float,
             data: str,
-            previous_hash: str = '',
+            timestamp: float,
+            previous_hash: str = ''
     ) -> None:
         """Initialize a new block with its attributes.
 
@@ -29,7 +30,7 @@ class Block:
         """
         self.index: int = index
         self.bit_difficulty: float = bit_difficulty
-        self.timestamp: float = timestamp
+        self.timestamp: float = time.time()
         self.data: str = data
         self.previous_hash: str = previous_hash
         self.nonce: int = 0  # The nonce used in the proof of work algorithm

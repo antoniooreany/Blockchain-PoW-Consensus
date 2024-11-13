@@ -46,7 +46,7 @@ from src.constants import (
     ZERO_MINING_TIME_BLOCKS_NUMBER_KEY,
     RELATIVE_ZERO_MINING_TIME_BLOCKS_NUMBER_KEY,
 
-    DEFAULT_PRECISION, NUMBER_BLOCKS_SLICE,
+    DEFAULT_PRECISION, NUMBER_BLOCKS_SLICE, BASE,
 
 )
 
@@ -125,8 +125,9 @@ def log_mined_block(block: Block) -> None:
     logger: logging.Logger = logging.getLogger()
     logger.info(f"Block mined:")
     logger.info(f"Bit Difficulty: {block.bit_difficulty}")
+    logger.info(f"Difficulty: {BASE ** block.bit_difficulty}")
     logger.info(f"Index: {block.index}")
-    logger.info(f"Timestamp: {block.timestamp}")
+    logger.info(f"Timestamp at the beginning of the block {block.index}: {block.timestamp}")
     logger.info(f"Data: {block.data}")
     # logger.info(f"Previous hash: {block.previous_hash}")
     logger.info(f"Nonce: {block.nonce}")

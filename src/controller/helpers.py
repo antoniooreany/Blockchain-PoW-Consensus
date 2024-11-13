@@ -15,8 +15,8 @@ from src.model.block import Block
 
 def add_blocks(blockchain, number_of_blocks_to_add: int):
     for index in range(1, number_of_blocks_to_add + 1):
-        block = Block(bit_difficulty=blockchain.bit_difficulties[-1], index=index, timestamp=time.time(),
-                      data=f"Block {index} Data")
+        block = Block(bit_difficulty=blockchain.bit_difficulties[-1], index=index, data=f"Block {index} Data",
+                      timestamp=time.time())
         blockchain.add_block(block, blockchain.clamp_factor, blockchain.smallest_bit_difficulty)
 
 
