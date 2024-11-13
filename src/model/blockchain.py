@@ -18,6 +18,84 @@ from src.controller.helpers import adjust_difficulty
 from src.utils.logging_utils import log_mined_block
 
 
+# class Blockchain:
+#     def __init__(
+#             self,
+#             initial_bit_difficulty,
+#             target_block_mining_time,
+#             adjustment_block_interval,
+#             number_blocks_to_add,
+#             clamp_factor,
+#             smallest_bit_difficulty,
+#             number_blocks_slice,
+#     ):
+#         self.logger = configure_logging()
+#
+#         self.initial_bit_difficulty = initial_bit_difficulty
+#         self.target_block_mining_time = target_block_mining_time
+#         self.adjustment_block_interval = adjustment_block_interval
+#         self.number_blocks_to_add = number_blocks_to_add
+#         self.clamp_factor = clamp_factor
+#         self.smallest_bit_difficulty = smallest_bit_difficulty
+#         # self.slice_factor = slice_factor
+#         # self.number_blocks_slice = int(number_blocks_to_add / slice_factor) if slice_factor != 0 else 0
+#         self.number_blocks_slice = number_blocks_slice
+#
+#         self.block_indexes = list(range(number_blocks_to_add + 1))
+#
+#         self.bit_difficulties = [initial_bit_difficulty]
+#
+#         # genesis_block = create_genesis_block(self, initial_bit_difficulty)  # todo not introducing the create_genesis_block method
+#         genesis_block = Block(0, 0, time.time(), GENESIS_BLOCK_DATA,
+#                               GENESIS_BLOCK_PREVIOUS_HASH)  # todo intentionally generalized, I can see more pros than cons.
+#         # todo Shouldn't be done in the generic case?
+#
+#         self.blocks = [genesis_block]  # todo duplicate of self.chain. Fix it
+#         self.chain = [genesis_block]  # todo duplicate of self.blocks. Fix it
+#
+#         log_mined_block(genesis_block)
+#         log_validity(self)
+#         self.logger.debug(
+#             f"Actual mining time for block {genesis_block.index}: {0.0:{DEFAULT_PRECISION}f} seconds")  # todo ugly, generalize it
+#         self.logger.debug(f"")
+#
+#         self.mining_times = [0.0]  # todo generalize it, applying check mining time for the Genesis Block
+#         # self.mining_times: list[float] = []  # todo generalize it, applying check mining time for the Genesis Block
+#
+#         logger.debug(f"Blockchain created")
+#         logger.debug(f"")
+#
+#
+#
+#     def add_block(self, new_block: Block, clamp_factor, smallest_bit_difficulty) -> None:
+#         new_block.previous_hash = self.get_latest_block().hash if self.blocks else GENESIS_BLOCK_HASH
+#
+#         new_block.timestamp = time.time()  # Set the timestamp at the time of block creation
+#
+#         ProofOfWork.find_nonce(new_block, self.bit_difficulties[-1])
+#
+#         actual_mining_time = new_block.timestamp - self.get_latest_block().timestamp
+#
+#
+#         if not ProofOfWork.validate_proof(new_block, self.bit_difficulties[-1]):
+#             self.logger.error(f"Block {new_block.index} was mined with a hash that does not meet the difficulty")
+#             self.logger.error(f"Block hash: {new_block.hash}")
+#             self.logger.error(f"Target value: {(BASE ** (HASH_BIT_LENGTH - self.bit_difficulties[-1])) - 1}")
+#             return
+#
+#         self.blocks.append(new_block)
+#         self.mining_times.append(actual_mining_time)
+#         self.bit_difficulties.append(self.bit_difficulties[-1])
+#
+#         adjust_difficulty(self, clamp_factor, smallest_bit_difficulty)
+#
+#         log_validity(self)
+#         self.logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.{DEFAULT_PRECISION}f} seconds")
+#         self.logger.debug(f"")
+
+
+
+
 class Blockchain:
     def __init__(
             self,
@@ -37,45 +115,30 @@ class Blockchain:
         self.number_blocks_to_add = number_blocks_to_add
         self.clamp_factor = clamp_factor
         self.smallest_bit_difficulty = smallest_bit_difficulty
-        # self.slice_factor = slice_factor
-        # self.number_blocks_slice = int(number_blocks_to_add / slice_factor) if slice_factor != 0 else 0
         self.number_blocks_slice = number_blocks_slice
 
         self.block_indexes = list(range(number_blocks_to_add + 1))
 
         self.bit_difficulties = [initial_bit_difficulty]
 
-        # genesis_block = create_genesis_block(self, initial_bit_difficulty)  # todo not introducing the create_genesis_block method
-        genesis_block = Block(0, 0, time.time(), GENESIS_BLOCK_DATA,
-                              GENESIS_BLOCK_PREVIOUS_HASH)  # todo intentionally generalized, I can see more pros than cons.
-        # todo Shouldn't be done in the generic case?
+        genesis_block = Block(0, 0, time.time(), GENESIS_BLOCK_DATA, GENESIS_BLOCK_PREVIOUS_HASH)
 
-        self.blocks = [genesis_block]  # todo duplicate of self.chain. Fix it
-        self.chain = [genesis_block]  # todo duplicate of self.blocks. Fix it
+        self.blocks = [genesis_block]
+        self.chain = [genesis_block]
 
         log_mined_block(genesis_block)
         log_validity(self)
-        self.logger.debug(
-            f"Actual mining time for block {genesis_block.index}: {0.0:{DEFAULT_PRECISION}f} seconds")  # todo ugly, generalize it
-        self.logger.debug(f"")
 
-        self.mining_times = [0.0]  # todo generalize it, applying check mining time for the Genesis Block
-        # self.mining_times: list[float] = []  # todo generalize it, applying check mining time for the Genesis Block
+        self.mining_times = []
 
         logger.debug(f"Blockchain created")
         logger.debug(f"")
 
-
-
     def add_block(self, new_block: Block, clamp_factor, smallest_bit_difficulty) -> None:
         new_block.previous_hash = self.get_latest_block().hash if self.blocks else GENESIS_BLOCK_HASH
-
         new_block.timestamp = time.time()  # Set the timestamp at the time of block creation
-
         ProofOfWork.find_nonce(new_block, self.bit_difficulties[-1])
-
         actual_mining_time = new_block.timestamp - self.get_latest_block().timestamp
-
 
         if not ProofOfWork.validate_proof(new_block, self.bit_difficulties[-1]):
             self.logger.error(f"Block {new_block.index} was mined with a hash that does not meet the difficulty")
@@ -92,6 +155,7 @@ class Blockchain:
         log_validity(self)
         self.logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.{DEFAULT_PRECISION}f} seconds")
         self.logger.debug(f"")
+
 
 
 
