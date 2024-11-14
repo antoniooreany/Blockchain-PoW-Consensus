@@ -184,7 +184,7 @@ class GUI:
 
         end_time = time.time()
         execution_time = end_time - start_time
-        logger.info(f"Blockchain execution time: {execution_time:.2f} seconds")
+        logger.info(f"Blockchain full execution time (with all auxiliary functions): {execution_time:.2f} seconds")
         logger.info(f"")
 
         # Re-enable the button after the blockchain has been run
