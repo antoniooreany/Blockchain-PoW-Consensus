@@ -158,7 +158,7 @@ def log_blockchain_statistics(logger, blockchain):
     logger.info(create_log_message(NUMBER_BLOCKS_SLICE_KEY, blockchain_stats, "block", precision=0))
     logger.info(f"")
 
-    # for the statistical partition
+    # for the statistical partition of the mining time
     logger.info(create_log_message(AVERAGE_MINING_TIME_SLICE_KEY, blockchain_stats, "second"))
     logger.info(
         create_log_message(ABSOLUTE_DEVIATION_MINING_TIME_AVERAGE_FROM_TARGET_SLICE_KEY, blockchain_stats, "second"))
@@ -167,19 +167,41 @@ def log_blockchain_statistics(logger, blockchain):
     logger.info(create_log_message(STANDARD_DEVIATION_MINING_TIME_SLICE_KEY, blockchain_stats, "second"))
     logger.info(f"")
 
+    # # for the statistical partition of the bit difficulty
+    # logger.info(create_log_message(AVERAGE_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, "bit"))
+    # logger.info(
+    #     create_log_message(ABSOLUTE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY, blockchain_stats, "bit"))
+    # logger.info(
+    #     create_log_message(RELATIVE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY, blockchain_stats, "%"))
+    # logger.info(create_log_message(VARIANCE_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, "bit*bit"))
+    # logger.info(create_log_message(STANDARD_DEVIATION_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, "bits"))
+    # logger.info(f"")
+    #
+    # # for the linear relation between the mining time and the bit difficulty
+    # logger.info(create_log_message(COVARIANCE_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, "second*bit"))
+    # logger.info(create_log_message(CORRELATION_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, ""))
+    # logger.info(f"")
+
+
+
+    # for the statistical partition of the bit difficulty
     logger.info(create_log_message(AVERAGE_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, "bit"))
-    logger.info(
-        create_log_message(ABSOLUTE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY, blockchain_stats, "bit"))
-    logger.info(
-        create_log_message(RELATIVE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY, blockchain_stats, "%"))
+    logger.info(create_log_message(ABSOLUTE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY, blockchain_stats, "bit"))
+    logger.info(create_log_message(RELATIVE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY, blockchain_stats, "%"))
     logger.info(create_log_message(VARIANCE_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, "bit*bit"))
     logger.info(create_log_message(STANDARD_DEVIATION_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, "bits"))
     logger.info(f"")
 
+    # for the linear relation between the mining time and the bit difficulty
     logger.info(create_log_message(COVARIANCE_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, "second*bit"))
     logger.info(create_log_message(CORRELATION_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, ""))
     logger.info(f"")
 
+
+
+
+
+    # for the number of blocks mined with 0.0 seconds (anomalies)
     logger.info(create_log_message(ZERO_MINING_TIME_BLOCKS_NUMBER_KEY, blockchain_stats, ""))
     logger.info(create_log_message(RELATIVE_ZERO_MINING_TIME_BLOCKS_NUMBER_KEY, blockchain_stats, "%"))
     logger.info(f"")
@@ -197,39 +219,49 @@ def get_blockchain_statistics(
 ):
     # num_blocks_slice = int(len(blockchain.mining_times) / slice_factor)
     # Slice the lists to the num_blocks_slice length
+
+
+    # Statistics for the mining time
     mining_times_slice = blockchain.mining_times[:number_blocks_slice]
-    bit_difficulties_slice = blockchain.bit_difficulties[:number_blocks_slice]
 
     average_mining_time_slice = blockchain.get_average_mining_time(num_last_blocks=number_blocks_slice)
-    absolute_deviation_mining_time_average_from_target_slice = abs(
-        average_mining_time_slice - blockchain.target_block_mining_time)
-    relative_deviation_mining_time_average_from_target_slice = (
-                                                                       absolute_deviation_mining_time_average_from_target_slice / blockchain.target_block_mining_time) * 100.0
-
-    average_bit_difficulty_slice = sum(bit_difficulties_slice) / number_blocks_slice
-    absolute_deviation_bit_difficulty_average_from_initial_slice = abs(
-        average_bit_difficulty_slice - blockchain.initial_bit_difficulty)
-    relative_deviation_bit_difficulty_average_from_initial_slice = (
-                                                                           absolute_deviation_bit_difficulty_average_from_initial_slice / blockchain.initial_bit_difficulty) * 100.0
+    absolute_deviation_mining_time_average_from_target_slice = abs(average_mining_time_slice - blockchain.target_block_mining_time)
+    relative_deviation_mining_time_average_from_target_slice = (absolute_deviation_mining_time_average_from_target_slice / blockchain.target_block_mining_time) * 100.0
 
     variance_mining_time_slice = variance(mining_times_slice)
-    variance_bit_difficulty_slice = variance(bit_difficulties_slice)
     standard_deviation_mining_time_slice = variance_mining_time_slice ** 0.5
-    standard_deviation_bit_difficulty_slice = variance_bit_difficulty_slice ** 0.5
+
+
+    # Statistics for the bit_difficulty
+    bit_difficulties_slice = blockchain.bit_difficulties[:number_blocks_slice] # todo change to difficulties
+
+    average_bit_difficulty_slice = sum(bit_difficulties_slice) / number_blocks_slice # todo change to difficulties
+    absolute_deviation_bit_difficulty_average_from_initial_slice = abs(average_bit_difficulty_slice - blockchain.initial_bit_difficulty) # todo change to difficulties
+    relative_deviation_bit_difficulty_average_from_initial_slice = (absolute_deviation_bit_difficulty_average_from_initial_slice / blockchain.initial_bit_difficulty) * 100.0 # todo change to difficulties
+
+    variance_bit_difficulty_slice = variance(bit_difficulties_slice) # todo change to difficulties
+    standard_deviation_bit_difficulty_slice = variance_bit_difficulty_slice ** 0.5 # todo change to difficulties
+
     # covariance_mining_time_bit_difficulty_slice = covariance(mining_times_slice, bit_difficulties_slice)
-    covariance_mining_time_bit_difficulty_slice = np.cov(mining_times_slice, bit_difficulties_slice)[0, 1]
+    covariance_mining_time_bit_difficulty_slice = np.cov(mining_times_slice, bit_difficulties_slice)[0, 1] # todo change to difficulties
 
     if standard_deviation_mining_time_slice == 0 or standard_deviation_bit_difficulty_slice == 0:
-        correlation_mining_time_bit_difficulty_slice = 0
+        correlation_mining_time_bit_difficulty_slice = 0 # todo is it correct from the math point of view?
     else:
-        correlation_mining_time_bit_difficulty_slice = (covariance_mining_time_bit_difficulty_slice /
-                                                        (
-                                                                standard_deviation_mining_time_slice * standard_deviation_bit_difficulty_slice))
+        correlation_mining_time_bit_difficulty_slice = (covariance_mining_time_bit_difficulty_slice / (standard_deviation_mining_time_slice * standard_deviation_bit_difficulty_slice))
 
     # Number of blocks mined with 0.0 seconds:
     zero_mining_time_blocks_number = sum(
         1 for time in blockchain.mining_times if time == 0.0) - 1  # -1 for the Genesis Block
     relative_zero_mining_time_blocks_number = (zero_mining_time_blocks_number / blockchain.number_blocks_to_add) * 100.0
+
+
+    # todo do the same for difficulties:
+    # Statistics for the difficulty:
+    # difficulties_slice = blockchain.difficulties[:number_blocks_slice] # todo create a field for difficulties in blockchain
+
+
+
 
     return {
         INITIAL_BIT_DIFFICULTY_KEY: blockchain.initial_bit_difficulty,
@@ -239,41 +271,31 @@ def get_blockchain_statistics(
         CLAMP_FACTOR_KEY: blockchain.clamp_factor,
         SMALLEST_BIT_DIFFICULTY_KEY: blockchain.smallest_bit_difficulty,
         # SLICE_FACTOR_KEY: blockchain.slice_factor,
-        NUMBER_BLOCKS_SLICE_KEY: number_blocks_slice,  # todo should blockchain.num_blocks_slice be created?
+        NUMBER_BLOCKS_SLICE_KEY: number_blocks_slice,
+        # todo should blockchain.num_blocks_slice,
+        #  blockchain.average_mining_time_slice,
+        #  blockchain.absolute_deviation_mining_time_average_from_target_slice etc.
+        #  be created?
 
         AVERAGE_MINING_TIME_SLICE_KEY: average_mining_time_slice,
-        # todo should blockchain.average_mining_time_slice be created?
         ABSOLUTE_DEVIATION_MINING_TIME_AVERAGE_FROM_TARGET_SLICE_KEY: absolute_deviation_mining_time_average_from_target_slice,
-        # todo should blockchain.absolute_deviation_mining_time_average_from_target_slice be created?
         RELATIVE_DEVIATION_MINING_TIME_AVERAGE_FROM_TARGET_SLICE_KEY: relative_deviation_mining_time_average_from_target_slice,
-        # todo should blockchain.relative_deviation_mining_time_average_from_target_slice be created?
 
         AVERAGE_BIT_DIFFICULTY_SLICE_KEY: average_bit_difficulty_slice,
-        # todo should blockchain.average_bit_difficulty_slice be created?
         ABSOLUTE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY: absolute_deviation_bit_difficulty_average_from_initial_slice,
-        # todo should blockchain.absolute_deviation_bit_difficulty_average_from_initial_slice be created?
         RELATIVE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY: relative_deviation_bit_difficulty_average_from_initial_slice,
-        # todo should blockchain.relative_deviation_bit_difficulty_average_from_initial_slice be created?
 
         VARIANCE_MINING_TIME_SLICE_KEY: variance_mining_time_slice,
-        # todo should blockchain.variance_mining_time_slice be created?
         STANDARD_DEVIATION_MINING_TIME_SLICE_KEY: standard_deviation_mining_time_slice,
-        # todo should blockchain.standard_deviation_mining_time_slice be created?
 
         VARIANCE_BIT_DIFFICULTY_SLICE_KEY: variance_bit_difficulty_slice,
-        # todo should blockchain.variance_bit_difficulty_slice be created?
         STANDARD_DEVIATION_BIT_DIFFICULTY_SLICE_KEY: standard_deviation_bit_difficulty_slice,
-        # todo should blockchain.standard_deviation_bit_difficulty_slice be created?
 
         COVARIANCE_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY: covariance_mining_time_bit_difficulty_slice,
-        # todo should blockchain.covariance_mining_time_bit_difficulty_slice be created?
         CORRELATION_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY: correlation_mining_time_bit_difficulty_slice,
-        # todo should blockchain.correlation_mining_time_bit_difficulty_slice be created?
 
         ZERO_MINING_TIME_BLOCKS_NUMBER_KEY: zero_mining_time_blocks_number,
-        # todo should blockchain.zero_mining_time_blocks_number be created?
         RELATIVE_ZERO_MINING_TIME_BLOCKS_NUMBER_KEY: relative_zero_mining_time_blocks_number,
-        # todo should blockchain.relative_zero_mining_time_blocks_number be created?
     }
 
 
