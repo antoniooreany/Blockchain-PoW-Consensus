@@ -58,23 +58,48 @@ ADJUSTMENT_BLOCK_INTERVAL_KEY = "adjustment_block_interval"
 CLAMP_FACTOR_KEY = "clamp_factor"
 SMALLEST_BIT_DIFFICULTY_KEY = "smallest_bit_difficulty"
 
+# properties for the statistics naming:
+# mining time:
 AVERAGE_MINING_TIME_SLICE_KEY = "average_mining_time_slice"
 ABSOLUTE_DEVIATION_MINING_TIME_AVERAGE_FROM_TARGET_SLICE_KEY = "absolute_deviation_mining_time_average_from_target_slice"
 RELATIVE_DEVIATION_MINING_TIME_AVERAGE_FROM_TARGET_SLICE_KEY = "relative_deviation_mining_time_average_from_target_slice"
 
+VARIANCE_MINING_TIME_SLICE_KEY = "variance_mining_time_slice"
+STANDARD_DEVIATION_MINING_TIME_SLICE_KEY = "standard_deviation_mining_time_slice"
+
+# bit difficulty:
 AVERAGE_BIT_DIFFICULTY_SLICE_KEY = "average_bit_difficulty_slice"
 ABSOLUTE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY = "absolute_deviation_bit_difficulty_average_from_initial_slice"
 RELATIVE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY = "relative_deviation_bit_difficulty_average_from_initial_slice"
 
-VARIANCE_MINING_TIME_SLICE_KEY = "variance_mining_time_slice"
 VARIANCE_BIT_DIFFICULTY_SLICE_KEY = "variance_bit_difficulty_slice"
-STANDARD_DEVIATION_MINING_TIME_SLICE_KEY = "standard_deviation_mining_time_slice"
 STANDARD_DEVIATION_BIT_DIFFICULTY_SLICE_KEY = "standard_deviation_bit_difficulty_slice"
+
+# mining time and bit difficulty:
 COVARIANCE_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY = "covariance_mining_time_bit_difficulty_slice"
 CORRELATION_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY = "correlation_mining_time_bit_difficulty_slice"
 
+
+
+# difficulty:
+AVERAGE_DIFFICULTY_SLICE_KEY = "average_difficulty_slice"
+ABSOLUTE_DEVIATION_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY = "absolute_deviation_difficulty_average_from_initial_slice"
+RELATIVE_DEVIATION_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY = "relative_deviation_difficulty_average_from_initial_slice"
+
+VARIANCE_DIFFICULTY_SLICE_KEY = "variance_difficulty_slice"
+STANDARD_DEVIATION_DIFFICULTY_SLICE_KEY = "standard_deviation_difficulty_slice"
+
+# mining time and difficulty:
+COVARIANCE_MINING_TIME_DIFFICULTY_SLICE_KEY = "covariance_mining_time_difficulty_slice"
+CORRELATION_MINING_TIME_DIFFICULTY_SLICE_KEY = "correlation_mining_time_difficulty_slice"
+
+
+
+# zero mining time:
 ZERO_MINING_TIME_BLOCKS_NUMBER_KEY = "zero_mining_time_blocks_number"
 RELATIVE_ZERO_MINING_TIME_BLOCKS_NUMBER_KEY = "relative_zero_mining_time_blocks_number"
+
+
 
 # properties of the plotting: general:
 FONT_SIZE = 16  # font size for the plotting: axes label titles
