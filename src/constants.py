@@ -189,7 +189,7 @@ AX2_SCATTER_Z_ORDER = 3
 FIGURE_BASE = 0.5
 
 # properties of logging:
-DEFAULT_PRECISION = 25
+DEFAULT_PRECISION = 10  # default precision for the floating point numbers
 
 
 
