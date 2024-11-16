@@ -8,7 +8,7 @@ import math
 from matplotlib import pyplot as plt
 
 from src.constants import DIFFICULTY_COLOR, SCALING_FACTOR, BASE, BAR_WIDTH, LABEL_DIFFICULTY_COLOR, AX2_Y_LABEL_TEXT, \
-    FONT_SIZE, GRID_LINE_WIDTH
+    FONT_SIZE, GRID_LINE_WIDTH, INFINITY_0_DIFFICULTY_LABEL
 
 
 def plot_difficulties(ax1, blockchain, color=DIFFICULTY_COLOR, scaling_factor=SCALING_FACTOR):
@@ -32,7 +32,8 @@ def plot_difficulties(ax1, blockchain, color=DIFFICULTY_COLOR, scaling_factor=SC
     # Custom y-axis formatter for difficulties
     def custom_y_formatter(value, _):
         if value == 0:
-            return "-INF / 00_000"
+            # return "-INF / 00_000"
+            return INFINITY_0_DIFFICULTY_LABEL
         return f'{float(math.log(value, BASE)):.2f} / {value:_.0f}'
 
     ax2.yaxis.set_major_formatter(plt.FuncFormatter(custom_y_formatter))

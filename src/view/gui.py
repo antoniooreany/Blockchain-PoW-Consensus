@@ -56,6 +56,7 @@ class GUI:
         # Handle window close event
         self.root.protocol(CLOSE_TYPE, self.on_closing)
 
+        # todo extract all literals to the constants.py
         # Define main frame with padding
         main_frame = tk.Frame(self.root, padx=10, pady=10)
         main_frame.pack(side=tk.LEFT, fill="both", expand=True)
@@ -140,6 +141,9 @@ class GUI:
         log_level_counter_handler = LogLevelCounterHandler()
         logger.addHandler(log_level_counter_handler)
 
+        # Get the configuration parameters from the GUI
+        # todo init once, generalize in the loop
+        # todo don't allow to pass the wrong values (e.g. negative, zero, any non-digits etc.)
         initial_bit_difficulty = self.config_params[INITIAL_BIT_DIFFICULTY_KEY].get()  # todo init once, generalize in the loop
         target_block_mining_time = self.config_params[TARGET_BLOCK_MINING_TIME_KEY].get()
         adjustment_block_interval = self.config_params[ADJUSTMENT_BLOCK_INTERVAL_KEY].get()
