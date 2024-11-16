@@ -11,7 +11,7 @@ from matplotlib import pyplot as plt
 
 from src.constants import MINING_TIME_COLOR, FONT_SIZE, GRID_LINE_WIDTH, AVERAGE_MINING_TIME_COLOR, \
     TARGET_BLOCK_MINING_TIME, LINE_WIDTH, MINING_TIMES_SCATTER_COLOR, MARKER_SIZE, DIFFICULTY_COLOR, SCALING_FACTOR, \
-    BASE, BAR_WIDTH, AX2_Y_LABEL_TEXT, LABEL_DIFFICULTY_COLOR
+    BASE, BAR_WIDTH, AX2_Y_LABEL_TEXT, LABEL_DIFFICULTY_COLOR, AX1_Y_LABEL_TEXT, AX1_X_LABEL_TEXT
 
 
 def plot_mining_times(ax1, blockchain, color=MINING_TIME_COLOR):
@@ -34,8 +34,8 @@ def plot_mining_times(ax1, blockchain, color=MINING_TIME_COLOR):
 
             plot_average_mining_time_on_interval(adjustment_interval, avg_mining_time, ax1, start)
 
-    ax1.set_xlabel('Block Index', fontsize=FONT_SIZE)
-    ax1.set_ylabel('Block Mining Time (seconds)', fontsize=FONT_SIZE, color=MINING_TIME_COLOR)
+    ax1.set_xlabel(AX1_X_LABEL_TEXT, fontsize=FONT_SIZE)
+    ax1.set_ylabel(AX1_Y_LABEL_TEXT, fontsize=FONT_SIZE, color=MINING_TIME_COLOR)
     ax1.tick_params(axis='y', labelcolor=MINING_TIME_COLOR)
     ax1.grid(True, which='both', linestyle=':', linewidth=GRID_LINE_WIDTH, color=MINING_TIME_COLOR)
     ax1.relim()
