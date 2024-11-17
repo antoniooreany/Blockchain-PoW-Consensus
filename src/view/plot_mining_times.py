@@ -3,7 +3,6 @@
 #   This code is for a pow and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
-
 import math
 
 import numpy as np
@@ -12,7 +11,6 @@ from matplotlib import pyplot as plt
 from src.constants import MINING_TIME_COLOR, FONT_SIZE, GRID_LINE_WIDTH, AVERAGE_MINING_TIME_COLOR, \
     TARGET_BLOCK_MINING_TIME, LINE_WIDTH, MINING_TIMES_SCATTER_COLOR, MARKER_SIZE, DIFFICULTY_COLOR, SCALING_FACTOR, \
     BASE, BAR_WIDTH, AX2_Y_LABEL_TEXT, LABEL_DIFFICULTY_COLOR, AX1_Y_LABEL_TEXT, AX1_X_LABEL_TEXT
-
 
 def plot_mining_times(ax1, blockchain, color=MINING_TIME_COLOR):
     mining_times = blockchain.mining_times

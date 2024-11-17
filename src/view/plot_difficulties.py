@@ -10,7 +10,6 @@ from matplotlib import pyplot as plt
 from src.constants import DIFFICULTY_COLOR, SCALING_FACTOR, BASE, BAR_WIDTH, LABEL_DIFFICULTY_COLOR, AX2_Y_LABEL_TEXT, \
     FONT_SIZE, GRID_LINE_WIDTH, INFINITY_0_DIFFICULTY_LABEL
 
-
 def plot_difficulties(ax1, blockchain, color=DIFFICULTY_COLOR, scaling_factor=SCALING_FACTOR):
     ax2 = ax1.twinx()  # Create a second y-axis
     difficulty_values = [(BASE ** difficulty) * scaling_factor for difficulty in blockchain.bit_difficulties]
