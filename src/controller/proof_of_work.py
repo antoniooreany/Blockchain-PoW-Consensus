@@ -28,8 +28,11 @@ class ProofOfWork:
         Returns:
             str: The hash of the block as a hexadecimal string.
         """
-        sha = hashlib.sha256()
+        # Create a SHA256 hash object
+        sha: hashlib.sha256 = hashlib.sha256()
+        # Concatenate the base hash data and the nonce, and then hash the result
         sha.update(base_hash_data + str(nonce).encode(SHA256_ENCODING))
+        # Return the hash as a hexadecimal string
         return sha.hexdigest()
 
     @staticmethod
@@ -45,19 +48,19 @@ class ProofOfWork:
             None
         """
         # Set a random nonce
-        max_nonce = BASE ** NONCE_BIT_LENGTH - 1
-        block.nonce = random.randint(0, max_nonce)
+        max_nonce: int = BASE ** NONCE_BIT_LENGTH - 1
+        block.nonce: int = random.randint(0, max_nonce) # todo Non-self attribute could not be type hinted
 
         # Calculate the target value for the proof of work
-        target_value = math.pow(BASE, HASH_BIT_LENGTH - bit_difficulty) - 1
+        target_value: float = math.pow(BASE, HASH_BIT_LENGTH - bit_difficulty) - 1
 
         # Calculate the base hash data without the nonce
-        base_hash_data = (str(block.index) + str(block.timestamp) + str(block.data) + str(block.previous_hash)).encode(SHA256_ENCODING)
+        base_hash_data: bytes = (str(block.index) + str(block.timestamp) + str(block.data) + str(block.previous_hash)).encode(SHA256_ENCODING)
 
         # Loop until a valid nonce is found
         while True:
             # Calculate the hash of the block with the current nonce
-            block.hash = ProofOfWork.calculate_hash(base_hash_data, block.nonce)
+            block.hash: str = ProofOfWork.calculate_hash(base_hash_data, block.nonce) # todo Non-self attribute could not be type hinted
 
             # Check if the hash is valid
             if int(block.hash, HEXADECIMAL_BASE) < target_value:

@@ -30,7 +30,7 @@ class Blockchain:
         """
         Initialize a new blockchain with the given parameters.
 
-        Args:
+        Parameters:
             initial_bit_difficulty (float): The initial difficulty level of the blockchain.
             target_block_mining_time (float): The target time to mine a block in seconds.
             adjustment_block_interval (int): The number of blocks to wait before adjusting the difficulty.
@@ -39,8 +39,9 @@ class Blockchain:
             smallest_bit_difficulty (float): The smallest bit difficulty that we can adjust to.
             number_blocks_slice (int): The number of blocks to slice the list of blocks to calculate the statistics.
 
-        Returns:
-            None
+        Notes:
+            The number of blocks to add is the number of blocks to add to the blockchain after the Genesis Block.
+            The number of blocks slice is the number of blocks to slice the list of blocks to calculate the statistics.
         """
 
         self.logger = configure_logging()
@@ -53,14 +54,16 @@ class Blockchain:
         self.smallest_bit_difficulty: float = smallest_bit_difficulty
         self.number_blocks_slice: int = number_blocks_slice
 
-        self.block_indexes: list[int] = list(range(number_blocks_to_add + 1))
+        # self.block_indexes: list[int] = list(range(number_blocks_to_add + 1))
 
         self.bit_difficulties: list[float] = [initial_bit_difficulty]
 
-        genesis_block: Block = Block(0, 0, GENESIS_BLOCK_DATA, time.time(), GENESIS_BLOCK_PREVIOUS_HASH)
+        genesis_block: Block = Block(
+            0, 0, GENESIS_BLOCK_DATA, time.time(), GENESIS_BLOCK_PREVIOUS_HASH
+        )
 
         self.blocks: list[Block] = [genesis_block]
-        self.chain: list[Block] = [genesis_block] # todo why do we need it if we have self.blocks? try to remove it
+        self.chain: list[Block] = [genesis_block]  # todo why do we need it if we have self.blocks? try to remove it
 
         log_mined_block(genesis_block)
         log_validity(self)
