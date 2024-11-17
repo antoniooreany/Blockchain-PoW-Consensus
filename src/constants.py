@@ -3,9 +3,10 @@
 #   This code is for a constants.py and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
+HEXADECIMAL_BASE = 16  # base for the hexadecimal numbers
+
 # properties of the execution:
 INITIAL_BIT_DIFFICULTY = 16.0  # bit difficulty of the first block; todo is it better to use linear_difficulty?
-
 
 # properties of the blockchain:
 BASE = 2  # base for the blockchain
@@ -79,8 +80,6 @@ STANDARD_DEVIATION_BIT_DIFFICULTY_SLICE_KEY = "standard_deviation_bit_difficulty
 COVARIANCE_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY = "covariance_mining_time_bit_difficulty_slice"
 CORRELATION_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY = "correlation_mining_time_bit_difficulty_slice"
 
-
-
 # difficulty:
 AVERAGE_DIFFICULTY_SLICE_KEY = "average_difficulty_slice"
 ABSOLUTE_DEVIATION_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY = "absolute_deviation_difficulty_average_from_initial_slice"
@@ -93,13 +92,9 @@ STANDARD_DEVIATION_DIFFICULTY_SLICE_KEY = "standard_deviation_difficulty_slice"
 COVARIANCE_MINING_TIME_DIFFICULTY_SLICE_KEY = "covariance_mining_time_difficulty_slice"
 CORRELATION_MINING_TIME_DIFFICULTY_SLICE_KEY = "correlation_mining_time_difficulty_slice"
 
-
-
 # zero mining time:
 ZERO_MINING_TIME_BLOCKS_NUMBER_KEY = "zero_mining_time_blocks_number"
 RELATIVE_ZERO_MINING_TIME_BLOCKS_NUMBER_KEY = "relative_zero_mining_time_blocks_number"
-
-
 
 # properties of the plotting: general:
 FONT_SIZE = 16  # font size for the plotting: axes label titles
@@ -137,9 +132,9 @@ PROJECT_COPYRIGHT_NOTICE = f"{PROJECT_COPYRIGHT}\n\n{PROJECT_DESCRIPTION}\n{PROJ
 
 # properties of
 ENCODING = "utf-8"  # encoding for the strings
-GENESIS_BLOCK_HASH = "0"  # genesis block hash
-GENESIS_BLOCK_PREVIOUS_HASH = "0"  # genesis block hash
-GENESIS_BLOCK_DATA = "Genesis Block"  # genesis block data
+# GENESIS_BLOCK_HASH = "0"  # genesis block hash todo incorrect
+GENESIS_BLOCK_PREVIOUS_HASH = "0" * HEXADECIMAL_BASE  # genesis block hash
+GENESIS_BLOCK_DATA = "Genesis Block Data"  # genesis block data
 
 # properties of the plotting: general:
 SCALING_FACTOR = 1.0  # scaling factor for the plotting
@@ -153,7 +148,7 @@ PLOT_BACKGROUND = 'default'  # background color of the plot
 # Light blue: #ADD8E6
 # BIT_DIFFICULTY_COLOR = '#ADD8E6'  # color of the bit difficulty plot
 
-BIT_DIFFICULTY_COLOR = (173/255, 216/255, 230/255, 0.5)  # Light blue with 50% transparency
+BIT_DIFFICULTY_COLOR = (173 / 255, 216 / 255, 230 / 255, 0.5)  # Light blue with 50% transparency
 
 # MINING_TIME_COLOR = 'green'  # color of the mining time plot
 MINING_TIME_COLOR = 'red'  # color of the mining time plot
@@ -191,8 +186,6 @@ FIGURE_BASE = 0.5
 # properties of logging:
 DEFAULT_PRECISION = 10  # default precision for the floating point numbers
 
-
-
 # constants.py
 
 # Colors for different plot elements
@@ -202,7 +195,7 @@ MINING_TIMES_SCATTER_COLOR = 'red'  # Color for scatter plot of mining times
 
 LABEL_DIFFICULTY_COLOR = 'blue'
 
-DIFFICULTY_COLOR = (173/255, 216/255, 230/255, 0.7)  # Light blue for difficulty with 70% transparency
+DIFFICULTY_COLOR = (173 / 255, 216 / 255, 230 / 255, 0.7)  # Light blue for difficulty with 70% transparency
 
 # Font sizes and styles
 FONT_SIZE = 14  # General font size for labels
@@ -231,7 +224,6 @@ CONFIGURATION_PARAMETERS_BUTTON_TEXT = "Configuration Parameters"
 FIGSIZE = (14, 8)
 HIGHT = "600"
 WIDTH = "1200"
-HEXADECIMAL_BASE = 16
 SHA256_ENCODING = 'utf-8'
 AVERAGE_MINING_TIME_ADJUSTMENT_INTERVAL_KEY = "average_mining_time_adjustment_interval"
 LEGEND_TITLE = "Input Information"

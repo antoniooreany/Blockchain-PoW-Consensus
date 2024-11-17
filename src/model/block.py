@@ -14,8 +14,8 @@ class Block:
             bit_difficulty: float,
             index: int,
             data: str,
-            timestamp: float,
-            previous_hash: str = ''
+            timestamp: float, # todo why it is grey? It is used in the constructor
+            previous_hash: str,
     ) -> None:
         """Initialize a new block with its attributes.
 
@@ -26,17 +26,17 @@ class Block:
             data (str): The data contained within the block.
             previous_hash (str): The hash of the previous block in the chain.
         """
-        # Assign the block index
-        self.index: int = index
-
         # Set the difficulty level for the block
         self.bit_difficulty: float = bit_difficulty
 
-        # Record the timestamp of block creation
-        self.timestamp: float = time.time()
+        # Assign the block index
+        self.index: int = index
 
         # Store the block's data
         self.data: str = data
+
+        # Record the timestamp of block creation
+        self.timestamp: float = time.time()
 
         # Store the hash of the previous block
         self.previous_hash: str = previous_hash

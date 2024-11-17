@@ -7,7 +7,7 @@ import time
 from venv import logger
 
 from src.model.block import Block
-from ..constants import HASH_BIT_LENGTH, GENESIS_BLOCK_HASH, BASE, DEFAULT_PRECISION
+from ..constants import HASH_BIT_LENGTH, BASE, DEFAULT_PRECISION
 # from helpers import create_genesis_block
 from src.utils.logging_utils import configure_logging
 from src.utils.logging_utils import log_validity
@@ -58,7 +58,11 @@ class Blockchain:
 
 
         genesis_block: Block = Block(
-            bit_difficulty=0, index=0, data=GENESIS_BLOCK_DATA, timestamp=time.time(), previous_hash=GENESIS_BLOCK_PREVIOUS_HASH
+            bit_difficulty=0, # todo it might be initial_bit_difficulty
+            index=0,
+            data=GENESIS_BLOCK_DATA,
+            timestamp=time.time(),
+            previous_hash=GENESIS_BLOCK_PREVIOUS_HASH,
         )
 
         self.blocks: list[Block] = [genesis_block]
@@ -93,7 +97,7 @@ class Blockchain:
         """
 
         # Set the previous hash of the new block to the hash of the latest block in the blockchain
-        new_block.previous_hash = self.get_latest_block().hash if self.blocks else GENESIS_BLOCK_HASH
+        new_block.previous_hash = self.get_latest_block().hash if self.blocks else GENESIS_BLOCK_PREVIOUS_HASH
         # Find a nonce for the new block
         ProofOfWork.find_nonce(new_block, self.bit_difficulties[-1])
         # Set the timestamp of the new block to the current time
