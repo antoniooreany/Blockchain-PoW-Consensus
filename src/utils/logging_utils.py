@@ -87,7 +87,7 @@ class LogLevelCounterHandler(logging.Handler):
 
     def print_log_counts(self):
         logger = logging.getLogger()
-        logger.info(f"Log log-levels:")
+        logger.info(f"Log levels:")
         logger.info(f"")
         logger.info(f"NotSet messages: {self.notset_count}")
         logger.info(f"Info messages: {self.info_count}")
@@ -157,6 +157,14 @@ def log_blockchain_statistics(logger, blockchain):
     logger.info(create_log_message(NUMBER_BLOCKS_SLICE_KEY, blockchain_stats, "block", precision=0))
     logger.info(f"")
 
+    #####################################################################################################
+
+    # for the number of blocks mined with 0.0 seconds (anomalies)
+    logger.info(create_log_message(ZERO_MINING_TIME_BLOCKS_NUMBER_KEY, blockchain_stats, ""))
+    logger.info(create_log_message(RELATIVE_ZERO_MINING_TIME_BLOCKS_NUMBER_KEY, blockchain_stats, "%"))
+    logger.info(f"")
+
+
     # for the statistical partition of the mining time
     logger.info(create_log_message(AVERAGE_MINING_TIME_SLICE_KEY, blockchain_stats, "second"))
     logger.info(
@@ -210,12 +218,7 @@ def log_blockchain_statistics(logger, blockchain):
     logger.info(create_log_message(CORRELATION_MINING_TIME_DIFFICULTY_SLICE_KEY, blockchain_stats, ""))
     logger.info(f"")
 
-    #####################################################################################################
 
-    # for the number of blocks mined with 0.0 seconds (anomalies)
-    logger.info(create_log_message(ZERO_MINING_TIME_BLOCKS_NUMBER_KEY, blockchain_stats, ""))
-    logger.info(create_log_message(RELATIVE_ZERO_MINING_TIME_BLOCKS_NUMBER_KEY, blockchain_stats, "%"))
-    logger.info(f"")
 
 
 def create_log_message(
