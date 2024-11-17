@@ -56,7 +56,6 @@ class Blockchain:
 
         # self.block_indexes: list[int] = list(range(number_blocks_to_add + 1))
 
-        self.bit_difficulties: list[float] = [initial_bit_difficulty]
 
         genesis_block: Block = Block(
             0, 0, GENESIS_BLOCK_DATA, time.time(), GENESIS_BLOCK_PREVIOUS_HASH
@@ -67,6 +66,8 @@ class Blockchain:
 
         log_mined_block(genesis_block)
         log_validity(self)
+
+        self.bit_difficulties: list[float] = [initial_bit_difficulty]
 
         self.mining_times: list[float] = [0.0]  # avoid the check for the Genesis Block
 
