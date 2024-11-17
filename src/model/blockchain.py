@@ -58,7 +58,7 @@ class Blockchain:
 
 
         genesis_block: Block = Block(
-            0, 0, GENESIS_BLOCK_DATA, time.time(), GENESIS_BLOCK_PREVIOUS_HASH
+            bit_difficulty=0, index=0, data=GENESIS_BLOCK_DATA, timestamp=time.time(), previous_hash=GENESIS_BLOCK_PREVIOUS_HASH
         )
 
         self.blocks: list[Block] = [genesis_block]
@@ -69,7 +69,7 @@ class Blockchain:
 
         self.bit_difficulties: list[float] = [initial_bit_difficulty]
 
-        self.mining_times: list[float] = [0.0]  # avoid the check for the Genesis Block
+        self.mining_times: list[float] = [0.0]  # avoid the check for the Genesis Block todo ugly, calculate the mining time for the Genesis Block in generic way.
 
         logger.debug("Blockchain created")
         logger.debug("")
