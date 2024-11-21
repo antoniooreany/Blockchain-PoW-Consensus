@@ -15,6 +15,8 @@ from src.controller.proof_of_work import ProofOfWork
 from src.constants import GENESIS_BLOCK_PREVIOUS_HASH, GENESIS_BLOCK_DATA
 from src.controller.helpers import adjust_difficulty
 from src.utils.logging_utils import log_mined_block
+from ..utils.hash_utils import calculate_hash
+
 
 class Blockchain:
     def __init__(
@@ -179,7 +181,7 @@ class Blockchain:
             previous_block: Block = self.chain[i - 1]  # type hint
 
             # Check if the current block's hash matches its calculated hash
-            if current_block.hash != current_block.calculate_hash():
+            if current_block.hash != calculate_hash(current_block.index, current_block.timestamp, current_block.data, current_block.previous_hash, current_block.nonce):
                 return False
 
             # Check if the current block's previous hash matches the hash of the previous block

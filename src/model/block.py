@@ -7,6 +7,8 @@ import hashlib
 import time
 
 from ..constants import ENCODING
+from ..utils.hash_utils import calculate_hash
+
 
 class Block:
     def __init__(
@@ -44,32 +46,10 @@ class Block:
         # Initialize the nonce for the proof of work algorithm
         self.nonce: int = 0
 
-        # Compute the initial hash of the block
-        self.hash: str = self.calculate_hash()
+        # Compute the hash of the block
+        self.hash: str = calculate_hash(self.index, self.timestamp, self.data, self.previous_hash, self.nonce)
 
-    def calculate_hash(self) -> str:
-        """Compute the hash of the block by combining the various attributes together.
 
-        The hash is computed by concatenating the index, timestamp, data, previous hash, and nonce, and then
-        hashing the result.
+    # def calculate_hash(self) -> str:
+    #     return calculate_hash(self.index, self.timestamp, self.data, self.previous_hash, self.nonce)
 
-        Returns:
-            str: The hash of the block as a hexadecimal string.
-        """
-        # Create a SHA256 hash object
-        sha: hashlib.sha256 = hashlib.sha256()
-
-        # Concatenate the block's attributes and encode the result as bytes
-        data_to_hash: bytes = (
-                str(self.index) +  # The index of the block in the blockchain
-                str(self.timestamp) +  # The time at which the block was created
-                str(self.data) +  # The data contained within the block
-                str(self.previous_hash) +  # The hash of the previous block in the chain
-                str(self.nonce)  # The nonce for the proof of work algorithm
-        ).encode(ENCODING)
-
-        # Update the hash object with the concatenated data
-        sha.update(data_to_hash)
-
-        # Return the hash as a hexadecimal string
-        return sha.hexdigest()

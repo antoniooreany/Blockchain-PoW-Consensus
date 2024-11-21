@@ -10,30 +10,15 @@ import logging
 
 from src.model.block import Block
 from src.constants import HASH_BIT_LENGTH, NONCE_BIT_LENGTH, BASE, HEXADECIMAL_BASE, SHA256_ENCODING
+from src.utils.hash_utils import calculate_hash
 from src.utils.logging_utils import log_mined_block
 
 class ProofOfWork:
-    @staticmethod
-    def calculate_hash(base_hash_data: bytes, nonce: int) -> str:
-        """
-        Compute the hash of a block by combining the various attributes together.
 
-        The hash is computed by concatenating the index, timestamp, data, previous hash, and nonce, and then
-        hashing the result.
+    # @staticmethod
+    # def calculate_hash(index: int, timestamp: float, data: str, previous_hash: str, nonce: int) -> str:
+    #     return calculate_hash(index, timestamp, data, previous_hash, nonce)
 
-        Args:
-            base_hash_data (bytes): The concatenated data without the nonce.
-            nonce (int): The nonce used in the proof of work algorithm.
-
-        Returns:
-            str: The hash of the block as a hexadecimal string.
-        """
-        # Create a SHA256 hash object
-        sha: hashlib.sha256 = hashlib.sha256()
-        # Concatenate the base hash data and the nonce, and then hash the result
-        sha.update(base_hash_data + str(nonce).encode(SHA256_ENCODING))
-        # Return the hash as a hexadecimal string
-        return sha.hexdigest()
 
     @staticmethod
     def find_nonce(block: Block, bit_difficulty: float) -> None:
@@ -54,13 +39,12 @@ class ProofOfWork:
         # Calculate the target value for the proof of work
         target_value: float = math.pow(BASE, HASH_BIT_LENGTH - bit_difficulty) - 1
 
-        # Calculate the base hash data without the nonce
-        base_hash_data: bytes = (str(block.index) + str(block.timestamp) + str(block.data) + str(block.previous_hash)).encode(SHA256_ENCODING)
-
         # Loop until a valid nonce is found
         while True:
             # Calculate the hash of the block with the current nonce
-            block.hash: str = ProofOfWork.calculate_hash(base_hash_data, block.nonce) # todo Non-self attribute could not be type hinted
+            block.hash: str = calculate_hash(
+                block.index, block.timestamp, block.data, block.previous_hash, block.nonce
+            ) # todo Non-self attribute could not be type hinted
 
             # Check if the hash is valid
             if int(block.hash, HEXADECIMAL_BASE) < target_value:
