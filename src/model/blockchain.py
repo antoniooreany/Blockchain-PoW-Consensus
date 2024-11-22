@@ -2,11 +2,11 @@
 #   All rights reserved.
 #   This code is for a blockchain.py and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
+
 import math
 import time
 from venv import logger
 
-from src.controller.helpers import clamp
 from src.model.block import Block
 from src.constants import HASH_BIT_LENGTH, BASE, DEFAULT_PRECISION, AVERAGE_MINING_TIME_ADJUSTMENT_INTERVAL_KEY, \
     REVERSED_ADJUSTMENT_FACTOR_KEY
@@ -246,3 +246,23 @@ class Blockchain:
             # Update the last bit difficulty in the blockchain
             self.bit_difficulties[-1] = new_bit_difficulty
 
+
+def clamp(
+        bit_adjustment_factor: float,  # type hint for bit_adjustment_factor
+        bit_clamp_factor: float  # type hint for bit_clamp_factor
+) -> float:  # type hint for return value
+    """
+    Clamp the bit adjustment factor within the range determined by the bit clamp factor.
+
+    Args:
+        bit_adjustment_factor (float): The factor by which the bit difficulty is adjusted.
+        bit_clamp_factor (float): The maximum allowable adjustment factor.
+
+    Returns:
+        float: The clamped bit adjustment factor.
+    """
+    if bit_adjustment_factor > bit_clamp_factor:
+        bit_adjustment_factor = bit_clamp_factor
+    elif bit_adjustment_factor < -bit_clamp_factor:
+        bit_adjustment_factor = -bit_clamp_factor
+    return bit_adjustment_factor

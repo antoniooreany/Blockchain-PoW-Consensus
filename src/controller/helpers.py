@@ -4,13 +4,6 @@
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
 
-import logging
-import math
-import time
-
-from src.constants import AVERAGE_MINING_TIME_COLOR, AVERAGE_MINING_TIME_SLICE_KEY, \
-    AVERAGE_MINING_TIME_ADJUSTMENT_INTERVAL_KEY, REVERSED_ADJUSTMENT_FACTOR_KEY, DEFAULT_PRECISION
-from src.model.block import Block
 # from src.model.blockchain import Blockchain
 
 
@@ -37,27 +30,6 @@ from src.model.block import Block
 #             previous_hash=blockchain.blocks[-1].hash if blockchain.blocks else None,
 #         )
 #         blockchain.add_block(block, blockchain.clamp_factor, blockchain.smallest_bit_difficulty)
-
-
-def clamp(
-        bit_adjustment_factor: float,  # type hint for bit_adjustment_factor
-        bit_clamp_factor: float  # type hint for bit_clamp_factor
-) -> float:  # type hint for return value
-    """
-    Clamp the bit adjustment factor within the range determined by the bit clamp factor.
-
-    Args:
-        bit_adjustment_factor (float): The factor by which the bit difficulty is adjusted.
-        bit_clamp_factor (float): The maximum allowable adjustment factor.
-
-    Returns:
-        float: The clamped bit adjustment factor.
-    """
-    if bit_adjustment_factor > bit_clamp_factor:
-        bit_adjustment_factor = bit_clamp_factor
-    elif bit_adjustment_factor < -bit_clamp_factor:
-        bit_adjustment_factor = -bit_clamp_factor
-    return bit_adjustment_factor
 
 
 # def adjust_difficulty(
