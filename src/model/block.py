@@ -6,9 +6,8 @@
 import hashlib
 import time
 
-from ..constants import ENCODING
-from ..utils.hash_utils import calculate_hash
-
+from src.constants import ENCODING
+from src.utils.hash_utils import calculate_hash
 
 class Block:
     def __init__(
@@ -16,7 +15,7 @@ class Block:
             bit_difficulty: float,
             index: int,
             data: str,
-            timestamp: float, # todo why it is grey? It is used in the constructor
+            timestamp: float, # timestamp is used in the constructor todo why it is grey?
             previous_hash: str,
     ) -> None:
         """Initialize a new block with its attributes.
@@ -48,8 +47,3 @@ class Block:
 
         # Compute the hash of the block
         self.hash: str = calculate_hash(self.index, self.timestamp, self.data, self.previous_hash, self.nonce)
-
-
-    # def calculate_hash(self) -> str:
-    #     return calculate_hash(self.index, self.timestamp, self.data, self.previous_hash, self.nonce)
-

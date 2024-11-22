@@ -7,7 +7,7 @@ import time
 from venv import logger
 
 from src.model.block import Block
-from ..constants import HASH_BIT_LENGTH, BASE, DEFAULT_PRECISION
+from src.constants import HASH_BIT_LENGTH, BASE, DEFAULT_PRECISION
 # from helpers import create_genesis_block
 from src.utils.logging_utils import configure_logging
 from src.utils.logging_utils import log_validity
@@ -15,7 +15,7 @@ from src.controller.proof_of_work import ProofOfWork
 from src.constants import GENESIS_BLOCK_PREVIOUS_HASH, GENESIS_BLOCK_DATA
 from src.controller.helpers import adjust_difficulty
 from src.utils.logging_utils import log_mined_block
-from ..utils.hash_utils import calculate_hash
+from src.utils.hash_utils import calculate_hash
 
 
 class Blockchain:
@@ -58,9 +58,8 @@ class Blockchain:
 
         # self.block_indexes: list[int] = list(range(number_blocks_to_add + 1))
 
-
         genesis_block: Block = Block(
-            bit_difficulty=0, # todo it might be initial_bit_difficulty
+            bit_difficulty=0,  # todo it might be initial_bit_difficulty
             index=0,
             data=GENESIS_BLOCK_DATA,
             timestamp=time.time(),
@@ -75,16 +74,17 @@ class Blockchain:
 
         self.bit_difficulties: list[float] = [initial_bit_difficulty]
 
-        self.mining_times: list[float] = [0.0]  # avoid the check for the Genesis Block todo ugly, calculate the mining time for the Genesis Block in generic way.
+        self.mining_times: list[float] = [
+            0.0]  # avoid the check for the Genesis Block todo ugly, calculate the mining time for the Genesis Block in generic way.
 
         logger.debug("Blockchain created")
         logger.debug("")
 
     def add_block(
-        self,
-        new_block: Block,
-        clamp_factor: float,
-        smallest_bit_difficulty: float
+            self,
+            new_block: Block,
+            clamp_factor: float,
+            smallest_bit_difficulty: float
     ) -> None:
         """
         Add a new block to the blockchain, validate it and update the blockchain state.
@@ -128,10 +128,10 @@ class Blockchain:
         # Log the validity of the blockchain
         log_validity(self)
         # Log the actual mining time of the new block
-        self.logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.{DEFAULT_PRECISION}f} seconds")
+        self.logger.debug(
+            f"Actual mining time for block {new_block.index}: {actual_mining_time:.{DEFAULT_PRECISION}f} seconds")
         # Log a newline
         self.logger.debug(f"")
-
 
     def get_latest_block(self) -> Block | None:
         """
@@ -181,7 +181,8 @@ class Blockchain:
             previous_block: Block = self.chain[i - 1]  # type hint
 
             # Check if the current block's hash matches its calculated hash
-            if current_block.hash != calculate_hash(current_block.index, current_block.timestamp, current_block.data, current_block.previous_hash, current_block.nonce):
+            if current_block.hash != calculate_hash(current_block.index, current_block.timestamp, current_block.data,
+                                                    current_block.previous_hash, current_block.nonce):
                 return False
 
             # Check if the current block's previous hash matches the hash of the previous block

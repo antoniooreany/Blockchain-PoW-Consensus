@@ -15,11 +15,6 @@ from src.utils.logging_utils import log_mined_block
 
 class ProofOfWork:
 
-    # @staticmethod
-    # def calculate_hash(index: int, timestamp: float, data: str, previous_hash: str, nonce: int) -> str:
-    #     return calculate_hash(index, timestamp, data, previous_hash, nonce)
-
-
     @staticmethod
     def find_nonce(block: Block, bit_difficulty: float) -> None:
         """

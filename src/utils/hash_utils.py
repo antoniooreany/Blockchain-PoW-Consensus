@@ -3,10 +3,8 @@
 #   This code is for a pow and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
-# src/utils/hash_utils.py
-
 import hashlib
-from ..constants import ENCODING
+from src.constants import ENCODING
 
 def calculate_hash(index: int, timestamp: float, data: str, previous_hash: str, nonce: int) -> str:
     """Compute the hash of the block by combining the various attributes together.

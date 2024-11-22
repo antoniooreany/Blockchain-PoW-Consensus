@@ -60,14 +60,6 @@ def clamp(
     return bit_adjustment_factor
 
 
-# def collect_filtered_bit_difficulties(blockchain, adjustment_interval):
-#     filtered_bit_difficulties = []
-#     for i, difficulty in enumerate(blockchain.bit_difficulties):
-#         if (i + 1) % adjustment_interval != 0:
-#             filtered_bit_difficulties.append(difficulty)
-#     return filtered_bit_difficulties
-
-
 def adjust_difficulty(
         blockchain: 'Blockchain',  # type hint for blockchain: Unresolved reference 'Blockchain' # todo fix circular import
         bit_clamp_factor: float,  # type hint for bit_clamp_factor
