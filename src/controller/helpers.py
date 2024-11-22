@@ -60,53 +60,53 @@ def clamp(
     return bit_adjustment_factor
 
 
-def adjust_difficulty(
-        blockchain: 'Blockchain',  # type hint for blockchain: Unresolved reference 'Blockchain' # todo fix circular import
-        bit_clamp_factor: float,  # type hint for bit_clamp_factor
-        smallest_bit_difficulty: float  # type hint for smallest_bit_difficulty
-) -> None:  # type hint for return value
-    """
-    Adjust the difficulty of the blockchain.
-
-    This function is called every time a new block is added to the blockchain.
-    It checks if the number of blocks in the blockchain is a multiple of the
-    adjustment block interval. If it is, it calculates the average mining time
-    of the last adjustment block interval and adjusts the difficulty of the
-    blockchain accordingly.
-
-    Args:
-        blockchain (Blockchain): The blockchain object.
-        bit_clamp_factor (float): The maximum allowable adjustment factor.
-        smallest_bit_difficulty (float): The smallest bit difficulty that we can adjust to.
-
-    Returns:
-        None
-    """
-    if (len(blockchain.blocks) - 1) % blockchain.adjustment_block_interval == 0:
-        # Calculate the average mining time of the last adjustment block interval
-        average_mining_time_adjustment_interval: float = blockchain.get_average_mining_time(
-            blockchain.adjustment_block_interval)
-        # Calculate the reversed adjustment factor
-        reversed_adjustment_factor: float = average_mining_time_adjustment_interval / blockchain.target_block_mining_time
-
-        # Log the average mining time and the reversed adjustment factor
-        logging.debug(f"{AVERAGE_MINING_TIME_ADJUSTMENT_INTERVAL_KEY}: "
-                      f"{average_mining_time_adjustment_interval:.{DEFAULT_PRECISION}f} seconds")
-        logging.debug(f"{REVERSED_ADJUSTMENT_FACTOR_KEY}: {reversed_adjustment_factor:.{DEFAULT_PRECISION}f}")
-
-        # Get the last bit difficulty
-        last_bit_difficulty: float = blockchain.bit_difficulties[-1]
-
-        if reversed_adjustment_factor > 0:
-            # Calculate the bit adjustment factor
-            bit_adjustment_factor: float = math.log2(reversed_adjustment_factor)
-            # Clamp the bit adjustment factor
-            clamped_bit_adjustment_factor: float = clamp(bit_adjustment_factor, bit_clamp_factor)
-            # Calculate the new bit difficulty
-            new_bit_difficulty: float = max(smallest_bit_difficulty, last_bit_difficulty - clamped_bit_adjustment_factor)
-        else:
-            # Set the new bit difficulty to the smallest bit difficulty if the reversed adjustment factor is 0 or negative
-            new_bit_difficulty: float = smallest_bit_difficulty
-
-        # Update the last bit difficulty in the blockchain
-        blockchain.bit_difficulties[-1] = new_bit_difficulty
+# def adjust_difficulty(
+#         blockchain: 'Blockchain',  # type hint for blockchain: Unresolved reference 'Blockchain' # todo fix circular import
+#         bit_clamp_factor: float,  # type hint for bit_clamp_factor
+#         smallest_bit_difficulty: float  # type hint for smallest_bit_difficulty
+# ) -> None:  # type hint for return value
+#     """
+#     Adjust the difficulty of the blockchain.
+#
+#     This function is called every time a new block is added to the blockchain.
+#     It checks if the number of blocks in the blockchain is a multiple of the
+#     adjustment block interval. If it is, it calculates the average mining time
+#     of the last adjustment block interval and adjusts the difficulty of the
+#     blockchain accordingly.
+#
+#     Args:
+#         blockchain (Blockchain): The blockchain object.
+#         bit_clamp_factor (float): The maximum allowable adjustment factor.
+#         smallest_bit_difficulty (float): The smallest bit difficulty that we can adjust to.
+#
+#     Returns:
+#         None
+#     """
+#     if (len(blockchain.blocks) - 1) % blockchain.adjustment_block_interval == 0:
+#         # Calculate the average mining time of the last adjustment block interval
+#         average_mining_time_adjustment_interval: float = blockchain.get_average_mining_time(
+#             blockchain.adjustment_block_interval)
+#         # Calculate the reversed adjustment factor
+#         reversed_adjustment_factor: float = average_mining_time_adjustment_interval / blockchain.target_block_mining_time
+#
+#         # Log the average mining time and the reversed adjustment factor
+#         logging.debug(f"{AVERAGE_MINING_TIME_ADJUSTMENT_INTERVAL_KEY}: "
+#                       f"{average_mining_time_adjustment_interval:.{DEFAULT_PRECISION}f} seconds")
+#         logging.debug(f"{REVERSED_ADJUSTMENT_FACTOR_KEY}: {reversed_adjustment_factor:.{DEFAULT_PRECISION}f}")
+#
+#         # Get the last bit difficulty
+#         last_bit_difficulty: float = blockchain.bit_difficulties[-1]
+#
+#         if reversed_adjustment_factor > 0:
+#             # Calculate the bit adjustment factor
+#             bit_adjustment_factor: float = math.log2(reversed_adjustment_factor)
+#             # Clamp the bit adjustment factor
+#             clamped_bit_adjustment_factor: float = clamp(bit_adjustment_factor, bit_clamp_factor)
+#             # Calculate the new bit difficulty
+#             new_bit_difficulty: float = max(smallest_bit_difficulty, last_bit_difficulty - clamped_bit_adjustment_factor)
+#         else:
+#             # Set the new bit difficulty to the smallest bit difficulty if the reversed adjustment factor is 0 or negative
+#             new_bit_difficulty: float = smallest_bit_difficulty
+#
+#         # Update the last bit difficulty in the blockchain
+#         blockchain.bit_difficulties[-1] = new_bit_difficulty

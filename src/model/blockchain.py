@@ -2,18 +2,20 @@
 #   All rights reserved.
 #   This code is for a blockchain.py and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
-
+import math
 import time
 from venv import logger
 
+from src.controller.helpers import clamp
 from src.model.block import Block
-from src.constants import HASH_BIT_LENGTH, BASE, DEFAULT_PRECISION
+from src.constants import HASH_BIT_LENGTH, BASE, DEFAULT_PRECISION, AVERAGE_MINING_TIME_ADJUSTMENT_INTERVAL_KEY, \
+    REVERSED_ADJUSTMENT_FACTOR_KEY
 # from helpers import create_genesis_block
 from src.utils.logging_utils import configure_logging
 from src.utils.logging_utils import log_validity
 from src.controller.proof_of_work import ProofOfWork
 from src.constants import GENESIS_BLOCK_PREVIOUS_HASH, GENESIS_BLOCK_DATA
-from src.controller.helpers import adjust_difficulty
+# from src.controller.helpers import adjust_difficulty
 from src.utils.logging_utils import log_mined_block
 from src.utils.hash_utils import calculate_hash
 
@@ -123,7 +125,8 @@ class Blockchain:
         self.bit_difficulties.append(self.bit_difficulties[-1])
 
         # Adjust the difficulty of the blockchain
-        adjust_difficulty(self, clamp_factor, smallest_bit_difficulty)
+        # self.adjust_difficulty(self, clamp_factor, smallest_bit_difficulty)
+        self.adjust_difficulty(clamp_factor, smallest_bit_difficulty)
 
         # Log the validity of the blockchain
         log_validity(self)
@@ -195,3 +198,51 @@ class Blockchain:
 
         # All blocks are valid
         return True
+
+    def adjust_difficulty(self, bit_clamp_factor: float, smallest_bit_difficulty: float) -> None:
+        """
+        Adjust the difficulty of the blockchain.
+
+        This function is called every time a new block is added to the blockchain.
+        It checks if the number of blocks in the blockchain is a multiple of the
+        adjustment block interval. If it is, it calculates the average mining time
+        of the last adjustment block interval and adjusts the difficulty of the
+        blockchain accordingly.
+
+        Args:
+            bit_clamp_factor (float): The maximum allowable adjustment factor.
+            smallest_bit_difficulty (float): The smallest bit difficulty that we can adjust to.
+
+        Returns:
+            None
+        """
+        if (len(self.blocks) - 1) % self.adjustment_block_interval == 0:
+            # Calculate the average mining time of the last adjustment block interval
+            average_mining_time_adjustment_interval: float = self.get_average_mining_time(
+                self.adjustment_block_interval)
+            # Calculate the reversed adjustment factor
+            reversed_adjustment_factor: float = average_mining_time_adjustment_interval / self.target_block_mining_time
+
+            # Log the average mining time and the reversed adjustment factor
+            self.logger.debug(f"{AVERAGE_MINING_TIME_ADJUSTMENT_INTERVAL_KEY}: "
+                              f"{average_mining_time_adjustment_interval:.{DEFAULT_PRECISION}f} seconds")
+            self.logger.debug(f"{REVERSED_ADJUSTMENT_FACTOR_KEY}: {reversed_adjustment_factor:.{DEFAULT_PRECISION}f}")
+
+            # Get the last bit difficulty
+            last_bit_difficulty: float = self.bit_difficulties[-1]
+
+            if reversed_adjustment_factor > 0:
+                # Calculate the bit adjustment factor
+                bit_adjustment_factor: float = math.log2(reversed_adjustment_factor)
+                # Clamp the bit adjustment factor
+                clamped_bit_adjustment_factor: float = clamp(bit_adjustment_factor, bit_clamp_factor)
+                # Calculate the new bit difficulty
+                new_bit_difficulty: float = max(smallest_bit_difficulty,
+                                                last_bit_difficulty - clamped_bit_adjustment_factor)
+            else:
+                # Set the new bit difficulty to the smallest bit difficulty if the reversed adjustment factor is 0 or negative
+                new_bit_difficulty: float = smallest_bit_difficulty
+
+            # Update the last bit difficulty in the blockchain
+            self.bit_difficulties[-1] = new_bit_difficulty
+
