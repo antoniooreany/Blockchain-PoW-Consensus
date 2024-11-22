@@ -3,13 +3,11 @@
 #   This code is for a pow and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
-import hashlib
 import math
 import random
-import logging
 
 from src.model.block import Block
-from src.constants import HASH_BIT_LENGTH, NONCE_BIT_LENGTH, BASE, HEXADECIMAL_BASE, SHA256_ENCODING
+from src.constants import HASH_BIT_LENGTH, NONCE_BIT_LENGTH, BASE, HEXADECIMAL_BASE
 from src.utils.hash_utils import calculate_hash
 from src.utils.logging_utils import log_mined_block
 
@@ -29,7 +27,7 @@ class ProofOfWork:
         """
         # Set a random nonce
         max_nonce: int = BASE ** NONCE_BIT_LENGTH - 1
-        block.nonce: int = random.randint(0, max_nonce) # todo Non-self attribute could not be type hinted
+        block.nonce = random.randint(0, max_nonce) # todo Non-self attribute could not be type hinted
 
         # Calculate the target value for the proof of work
         target_value: float = math.pow(BASE, HASH_BIT_LENGTH - bit_difficulty) - 1
@@ -37,7 +35,7 @@ class ProofOfWork:
         # Loop until a valid nonce is found
         while True:
             # Calculate the hash of the block with the current nonce
-            block.hash: str = calculate_hash(
+            block.hash = calculate_hash(
                 block.index, block.timestamp, block.data, block.previous_hash, block.nonce
             ) # todo Non-self attribute could not be type hinted
 

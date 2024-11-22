@@ -6,8 +6,19 @@
 import hashlib
 from src.constants import ENCODING
 
-def calculate_hash(index: int, timestamp: float, data: str, previous_hash: str, nonce: int) -> str:
+def calculate_hash(index: int, timestamp: float, data: str, previous_hash: str, nonce: int) -> str: # todo make it take Block as an argument
     """Compute the hash of the block by combining the various attributes together.
+
+    This function takes the attributes of a block, combines them together in a
+    single string, and then computes the SHA256 hash of that string. The resulting
+    hash is then returned as a hexadecimal string.
+
+    The attributes of the block used to compute the hash are:
+    - The index of the block in the blockchain
+    - The timestamp of when the block was created
+    - The data stored in the block
+    - The hash of the previous block in the chain
+    - The nonce for the proof of work algorithm
 
     Args:
         index (int): The position of the block in the blockchain.

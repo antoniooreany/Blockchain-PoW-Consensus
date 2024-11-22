@@ -3,10 +3,8 @@
 #   This code is for a block and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
-import hashlib
 import time
 
-from src.constants import ENCODING
 from src.utils.hash_utils import calculate_hash
 
 class Block:
@@ -15,7 +13,7 @@ class Block:
             bit_difficulty: float,
             index: int,
             data: str,
-            timestamp: float, # timestamp is used in the constructor todo why it is grey?
+            timestamp: float,  # timestamp is used in the constructor todo why it is grey?
             previous_hash: str,
     ) -> None:
         """Initialize a new block with its attributes.
@@ -23,9 +21,10 @@ class Block:
         Args:
             bit_difficulty (float): The difficulty level of the block.
             index (int): The position of the block in the blockchain.
-            timestamp (float): The time at which the block was created.
             data (str): The data contained within the block.
             previous_hash (str): The hash of the previous block in the chain.
+            timestamp (float): The time at which the block was created. This is not used in the
+                constructor, but is used in the hash calculation.
         """
         # Set the difficulty level for the block
         self.bit_difficulty: float = bit_difficulty
