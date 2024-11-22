@@ -12,7 +12,8 @@ from tkinter import messagebox
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from src.model.blockchain import Blockchain
-from src.controller.helpers import add_blocks
+# from src.controller.helpers import add_blocks
+from src.controller.blockchain_runner import add_blocks
 from src.utils.logger_singleton import LoggerSingleton
 from src.constants import INITIAL_BIT_DIFFICULTY, TARGET_BLOCK_MINING_TIME, ADJUSTMENT_BLOCK_INTERVAL, CLAMP_FACTOR, \
     SMALLEST_BIT_DIFFICULTY, NUMBER_BLOCKS_TO_ADD, NUMBER_BLOCKS_SLICE, INITIAL_BIT_DIFFICULTY_KEY, \
