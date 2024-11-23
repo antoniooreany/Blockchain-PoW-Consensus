@@ -154,12 +154,12 @@ class GUI:
         number_blocks_slice = self.config_params[NUMBER_BLOCKS_SLICE_KEY].get() # todo if changed in the GUI, it should be changed for the next run, but not changed.
 
         blockchain = Blockchain(
-            initial_bit_difficulty=initial_bit_difficulty,
-            target_block_mining_time=target_block_mining_time,
-            adjustment_block_interval=adjustment_block_interval,
+            # initial_bit_difficulty=initial_bit_difficulty,
+            # target_block_mining_time=target_block_mining_time,
+            # adjustment_block_interval=adjustment_block_interval,
             number_blocks_to_add=number_blocks_to_add,
-            clamp_factor=clamp_factor,
-            smallest_bit_difficulty=smallest_bit_difficulty,
+            # clamp_factor=clamp_factor,
+            # smallest_bit_difficulty=smallest_bit_difficulty,
             number_blocks_slice=number_blocks_slice,
         )
 

@@ -38,4 +38,7 @@ def add_blocks(
             previous_hash=blockchain.blocks[-1].hash if blockchain.blocks else None,
         )
         # Add the block to the blockchain
-        blockchain.add_block(block, blockchain.clamp_factor, blockchain.smallest_bit_difficulty)
+        blockchain.add_block(
+            new_block=block,
+            # blockchain.clamp_factor, blockchain.smallest_bit_difficulty,
+        )

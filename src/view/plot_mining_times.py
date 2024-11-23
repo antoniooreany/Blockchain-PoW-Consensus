@@ -23,7 +23,7 @@ def plot_mining_times(ax1, blockchain, color=MINING_TIME_COLOR):
     plot_target_mining_time(ax1)
 
     # Calculate and plot the average mining time per adjustment interval
-    adjustment_interval = blockchain.adjustment_block_interval
+    adjustment_interval = blockchain.proof_of_work.adjustment_block_interval
     for start in range(1, len(mining_times), adjustment_interval):
         interval_mining_times = mining_times[start:start + adjustment_interval]
         if interval_mining_times:
