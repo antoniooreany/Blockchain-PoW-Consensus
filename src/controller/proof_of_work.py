@@ -47,11 +47,11 @@ class ProofOfWork:
         if block is None:
             raise ValueError("Block cannot be None")
 
-        # Calculate the maximum possible nonce value
-        max_nonce: int = BASE ** NONCE_BIT_LENGTH - 1
-
-        # Initialize the nonce with a random value within the possible range
-        block.nonce = random.randint(0, max_nonce)
+        # # Calculate the maximum possible nonce value
+        # max_nonce: int = BASE ** NONCE_BIT_LENGTH - 1
+        #
+        # # Initialize the nonce with a random value within the possible range
+        # block.nonce = random.randint(0, max_nonce)
 
         # Calculate the target value for the hash based on bit difficulty
         target_value: float = math.pow(BASE, HASH_BIT_LENGTH - bit_difficulty) - 1

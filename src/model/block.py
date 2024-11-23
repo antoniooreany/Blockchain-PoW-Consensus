@@ -2,9 +2,10 @@
 #   All rights reserved.
 #   This code is for a block and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
-
+import random
 import time
 
+from src.constants import NONCE_BIT_LENGTH, BASE
 from src.utils.hash_utils import calculate_block_hash
 
 class Block:
@@ -42,7 +43,14 @@ class Block:
         self.previous_hash: str = previous_hash
 
         # Initialize the nonce for the proof of work algorithm
-        self.nonce: int = 0
+        # self.nonce: int = 0
+
+        # Calculate the maximum possible nonce value
+        max_nonce: int = BASE ** NONCE_BIT_LENGTH - 1
+
+        # Initialize the nonce with a random value within the possible range
+        self.nonce = random.randint(0, max_nonce)
+
 
         # Compute the hash of the block
         self.hash: str = calculate_block_hash(self.index, self.timestamp, self.data, self.previous_hash, self.nonce)
