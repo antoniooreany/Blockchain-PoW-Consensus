@@ -277,7 +277,7 @@ class Blockchain:
                 # Calculate the bit adjustment factor
                 bit_adjustment_factor: float = math.log2(reversed_adjustment_factor)
                 # Clamp the bit adjustment factor
-                clamped_bit_adjustment_factor: float = self.proof_of_work.clamp(bit_adjustment_factor, bit_clamp_factor)
+                clamped_bit_adjustment_factor: float = self.proof_of_work.clamp_bit_adjustment_factor(bit_adjustment_factor, bit_clamp_factor)
                 # Calculate the new bit difficulty
                 new_bit_difficulty: float = max(smallest_bit_difficulty,
                                                 last_bit_difficulty - clamped_bit_adjustment_factor)
