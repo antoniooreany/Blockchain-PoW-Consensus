@@ -70,4 +70,28 @@ class ProofOfWork:
         # Check if the hash value is less than the target value
         return hash_value < target_value
 
+    @staticmethod
+    def clamp(
+            bit_adjustment_factor: float,
+            bit_clamp_factor: float
+    ) -> float:
+        """
+        Clamp the bit adjustment factor within the range determined by the bit clamp factor.
 
+        Args:
+            bit_adjustment_factor (float): The factor by which the bit difficulty is adjusted.
+            bit_clamp_factor (float): The maximum allowable adjustment factor.
+
+        Returns:
+            float: The clamped bit adjustment factor.
+        """
+        # Check if the bit adjustment factor exceeds the positive clamp factor
+        if bit_adjustment_factor > bit_clamp_factor:
+            # Restrict the adjustment factor to the maximum positive clamp factor
+            bit_adjustment_factor = bit_clamp_factor
+        # Check if the bit adjustment factor is below the negative clamp factor
+        elif bit_adjustment_factor < -bit_clamp_factor:
+            # Restrict the adjustment factor to the maximum negative clamp factor
+            bit_adjustment_factor = -bit_clamp_factor
+        # Return the clamped bit adjustment factor
+        return bit_adjustment_factor

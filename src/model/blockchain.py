@@ -254,7 +254,7 @@ class Blockchain:
                 # Calculate the bit adjustment factor
                 bit_adjustment_factor: float = math.log2(reversed_adjustment_factor)
                 # Clamp the bit adjustment factor
-                clamped_bit_adjustment_factor: float = clamp(bit_adjustment_factor, bit_clamp_factor)
+                clamped_bit_adjustment_factor: float = ProofOfWork.clamp(bit_adjustment_factor, bit_clamp_factor)
                 # Calculate the new bit difficulty
                 new_bit_difficulty: float = max(smallest_bit_difficulty,
                                                 last_bit_difficulty - clamped_bit_adjustment_factor)
@@ -266,27 +266,3 @@ class Blockchain:
             self.bit_difficulties[-1] = new_bit_difficulty
 
 
-def clamp(
-        bit_adjustment_factor: float,
-        bit_clamp_factor: float
-) -> float:
-    """
-    Clamp the bit adjustment factor within the range determined by the bit clamp factor.
-
-    Args:
-        bit_adjustment_factor (float): The factor by which the bit difficulty is adjusted.
-        bit_clamp_factor (float): The maximum allowable adjustment factor.
-
-    Returns:
-        float: The clamped bit adjustment factor.
-    """
-    # Check if the bit adjustment factor exceeds the positive clamp factor
-    if bit_adjustment_factor > bit_clamp_factor:
-        # Restrict the adjustment factor to the maximum positive clamp factor
-        bit_adjustment_factor = bit_clamp_factor
-    # Check if the bit adjustment factor is below the negative clamp factor
-    elif bit_adjustment_factor < -bit_clamp_factor:
-        # Restrict the adjustment factor to the maximum negative clamp factor
-        bit_adjustment_factor = -bit_clamp_factor
-    # Return the clamped bit adjustment factor
-    return bit_adjustment_factor
