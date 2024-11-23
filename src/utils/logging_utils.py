@@ -11,7 +11,7 @@ import logging
 from statistics import variance
 import numpy as np
 
-from src.model.block import Block
+# from src.model.block import Block
 from src.constants import (
     # SLICE_FACTOR,
     INITIAL_BIT_DIFFICULTY_KEY,
@@ -117,7 +117,7 @@ class ColorFormatter(logging.Formatter):
         return super().format(record)
 
 
-def log_mined_block(block: Block) -> None:
+def log_mined_block(block) -> None:
     assert block is not None, "Block cannot be null"
     assert block.index is not None, "Block index cannot be null"
     assert block.hash is not None, "Block hash cannot be null"
@@ -128,7 +128,7 @@ def log_mined_block(block: Block) -> None:
     logger.info(f"Index: {block.index}")
     logger.info(f"Timestamp at the beginning of the block {block.index}: {block.timestamp}")
     logger.info(f"Data: {block.data}")
-    # logger.info(f"Previous hash: {block.previous_hash}")
+    logger.info(f"Previous hash: {block.previous_hash}")
     logger.info(f"Nonce: {block.nonce}")
     logger.info(f"Hash: {block.hash}")
 
@@ -140,6 +140,8 @@ def log_blockchain_statistics(logger, blockchain):
         # number_blocks_slice=NUMBER_BLOCKS_SLICE, # todo use it
         number_blocks_slice=blockchain.number_blocks_slice,
     )
+
+    logger = logger.getLogger().setLevel(logging.INFO)
 
     logger.info(f"Blockchain statistics:")
     logger.info(f"")
@@ -163,7 +165,6 @@ def log_blockchain_statistics(logger, blockchain):
     logger.info(create_log_message(ZERO_MINING_TIME_BLOCKS_NUMBER_KEY, blockchain_stats, ""))
     logger.info(create_log_message(RELATIVE_ZERO_MINING_TIME_BLOCKS_NUMBER_KEY, blockchain_stats, "%"))
     logger.info(f"")
-
 
     # for the statistical partition of the mining time
     logger.info(create_log_message(AVERAGE_MINING_TIME_SLICE_KEY, blockchain_stats, "second"))
@@ -219,8 +220,6 @@ def log_blockchain_statistics(logger, blockchain):
     logger.info(f"")
 
 
-
-
 def create_log_message(
         key: str, blockchain_stats: dict[str, float], unit: str,
         precision: int = DEFAULT_PRECISION
@@ -243,7 +242,7 @@ def get_blockchain_statistics(
     absolute_deviation_mining_time_average_from_target_slice = abs(
         average_mining_time_slice - blockchain.target_block_mining_time)
     relative_deviation_mining_time_average_from_target_slice = (
-                                                                           absolute_deviation_mining_time_average_from_target_slice / blockchain.target_block_mining_time) * 100.0
+                                                                       absolute_deviation_mining_time_average_from_target_slice / blockchain.target_block_mining_time) * 100.0
 
     variance_mining_time_slice = variance(mining_times_slice)
     standard_deviation_mining_time_slice = variance_mining_time_slice ** 0.5
@@ -255,7 +254,7 @@ def get_blockchain_statistics(
     absolute_deviation_bit_difficulty_average_from_initial_slice = abs(
         average_bit_difficulty_slice - blockchain.initial_bit_difficulty)  # todo change to difficulties
     relative_deviation_bit_difficulty_average_from_initial_slice = (
-                                                                               absolute_deviation_bit_difficulty_average_from_initial_slice / blockchain.initial_bit_difficulty) * 100.0  # todo change to difficulties
+                                                                           absolute_deviation_bit_difficulty_average_from_initial_slice / blockchain.initial_bit_difficulty) * 100.0  # todo change to difficulties
 
     variance_bit_difficulty_slice = variance(bit_difficulties_slice)  # todo change to difficulties
     standard_deviation_bit_difficulty_slice = variance_bit_difficulty_slice ** 0.5  # todo change to difficulties
@@ -268,7 +267,7 @@ def get_blockchain_statistics(
         correlation_mining_time_bit_difficulty_slice = 0  # todo is it correct from the math point of view?
     else:
         correlation_mining_time_bit_difficulty_slice = (covariance_mining_time_bit_difficulty_slice / (
-                    standard_deviation_mining_time_slice * standard_deviation_bit_difficulty_slice))
+                standard_deviation_mining_time_slice * standard_deviation_bit_difficulty_slice))
 
     # Number of blocks mined with 0.0 seconds:
     zero_mining_time_blocks_number = sum(
@@ -287,7 +286,7 @@ def get_blockchain_statistics(
     absolute_deviation_difficulty_average_from_initial_slice = abs(
         average_difficulty_slice - BASE ** blockchain.initial_bit_difficulty)
     relative_deviation_difficulty_average_from_initial_slice = (
-                                                                           absolute_deviation_difficulty_average_from_initial_slice / BASE ** blockchain.initial_bit_difficulty) * 100.0
+                                                                       absolute_deviation_difficulty_average_from_initial_slice / BASE ** blockchain.initial_bit_difficulty) * 100.0
 
     variance_difficulty_slice = variance(difficulties_slice)
     standard_deviation_difficulty_slice = variance_difficulty_slice ** 0.5
@@ -299,7 +298,7 @@ def get_blockchain_statistics(
         correlation_mining_time_difficulty_slice = 0  # todo is it correct from the math point of view?
     else:
         correlation_mining_time_difficulty_slice = (covariance_mining_time_difficulty_slice / (
-                    standard_deviation_mining_time_slice * standard_deviation_difficulty_slice))
+                standard_deviation_mining_time_slice * standard_deviation_difficulty_slice))
 
     return {
         INITIAL_BIT_DIFFICULTY_KEY: blockchain.initial_bit_difficulty,

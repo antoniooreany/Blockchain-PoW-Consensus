@@ -42,11 +42,10 @@ def add_blocks(
     for index in range(1, number_of_blocks_to_add + 1):
         # 1. Create a new block with the bit difficulty of the last block in the blockchain
         #    and the index of the block.
-        block = Block(
+        block: Block = Block(
             bit_difficulty=blockchain.bit_difficulties[-1] if blockchain.bit_difficulties else 0,
             index=index,
             data=f"Block {index} Data",  # todo mock data is used, it should be replaced with real data
-            # timestamp=time.time(),
             previous_hash=blockchain.blocks[-1].hash if blockchain.blocks else None,
         )
         # 2. Add the block to the blockchain.

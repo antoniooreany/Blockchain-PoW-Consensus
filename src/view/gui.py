@@ -20,7 +20,7 @@ from src.constants import INITIAL_BIT_DIFFICULTY, TARGET_BLOCK_MINING_TIME, ADJU
     CLOSE_TYPE, CONFIGURATION_PARAMETERS_BUTTON_TEXT, HIGHT, WIDTH
 from src.controller.blockchain_runner import add_blocks
 from src.model.blockchain import Blockchain
-from src.utils.logger_singleton import LoggerSingleton
+# from src.utils.logger_singleton import LoggerSingleton
 from src.utils.logging_utils import LogLevelCounterHandler, log_blockchain_statistics
 from src.view.plotting import plot_blockchain_statistics  # todo why isn't used?
 
@@ -133,9 +133,9 @@ class GUI:
 
         start_time = time.time()
 
-        logger = LoggerSingleton.get_instance().logger
+        # logger = LoggerSingleton.get_instance().logger
         log_level_counter_handler = LogLevelCounterHandler()
-        logger.addHandler(log_level_counter_handler)
+        # logger.addHandler(log_level_counter_handler)
 
         # Get the configuration parameters from the GUI
         # todo init once, generalize in the loop
@@ -163,6 +163,9 @@ class GUI:
             number_of_blocks_to_add=number_blocks_to_add,
         )
 
+
+        logger = logging.getLogger()
+        # Log the blockchain statistics
         log_blockchain_statistics(logger, blockchain)
 
         # Clear the previous plot
