@@ -130,7 +130,7 @@ def log_mined_block(block: Block) -> None:
     logger.info(f"Data: {block.data}")
     # logger.info(f"Previous hash: {block.previous_hash}")
     logger.info(f"Nonce: {block.nonce}")
-    logger.info(f"Hash: {block.hash}")
+    logger.info(f"Hash of the block with index {block.index}: {block.hash}")
 
 
 def log_blockchain_statistics(logger, blockchain):
@@ -245,7 +245,15 @@ def get_blockchain_statistics(
     relative_deviation_mining_time_average_from_target_slice = (
                                                                            absolute_deviation_mining_time_average_from_target_slice / blockchain.target_block_mining_time) * 100.0
 
-    variance_mining_time_slice = variance(mining_times_slice)
+    # variance_mining_time_slice = variance(mining_times_slice)
+
+    print("Mining Times Slice:", mining_times_slice)
+
+    if len(mining_times_slice) < 2:
+        variance_mining_time_slice = None  # or 0.0, depending on your needs
+    else:
+        variance_mining_time_slice = variance(mining_times_slice)
+
     standard_deviation_mining_time_slice = variance_mining_time_slice ** 0.5
 
     # Statistics for the bit_difficulty

@@ -69,7 +69,8 @@ class Blockchain:
         )
 
         self.blocks: list[Block] = [genesis_block]  # The list of blocks in the blockchain.
-        self.chain: list[Block] = [genesis_block]  # todo why do we need it if we have self.blocks? try to remove it
+        self.chain: list[Block] = [genesis_block]  # todo Why do we need it if we have self.blocks? If removed,
+        # todo Block 1 has an invalid previous hash, Blockchain validity: False.
 
         log_mined_block(genesis_block)
         log_validity(self)
@@ -82,67 +83,315 @@ class Blockchain:
         logger.debug("Blockchain created")
         logger.debug("")
 
-    def add_block(
-            self,
-            new_block: Block,
-            clamp_factor: float,
-            smallest_bit_difficulty: float
-    ) -> None:
-        """
-        Add a new block to the blockchain, validate it and update the blockchain state.
+    # def add_block(
+    #         self,
+    #         new_block: Block,
+    #         clamp_factor: float,
+    #         smallest_bit_difficulty: float
+    # ) -> None:
+    #     """
+    #     Add a new block to the blockchain, validate it and update the blockchain state.
+    #
+    #     Args:
+    #         new_block (Block): The new block to add.
+    #         clamp_factor (float): The factor to clamp the adjustment of the difficulty.
+    #         smallest_bit_difficulty (float): The smallest bit difficulty that we can adjust to.
+    #
+    #     Returns:
+    #         None
+    #     """
+    #
+    #     # Set the previous hash of the new block to the hash of the latest block in the blockchain
+    #     new_block.previous_hash = self.get_latest_block().hash if self.blocks else GENESIS_BLOCK_PREVIOUS_HASH
+    #
+    #     # Find a nonce for the new block to satisfy proof of work
+    #     self.proof_of_work.find_nonce(new_block, self.bit_difficulties[-1])
+    #
+    #     # Set the timestamp of the new block to the current time
+    #     new_block.timestamp = time.time()
+    #
+    #     # Calculate the actual mining time of the new block
+    #     actual_mining_time = new_block.timestamp - self.get_latest_block().timestamp
+    #
+    #     # Validate the new block's proof of work
+    #     if not self.proof_of_work.validate_proof(new_block, self.bit_difficulties[-1]):
+    #         # If the block is invalid, log an error and return
+    #         self.logger.error(f"Block {new_block.index} was mined with a hash that does not meet the difficulty")
+    #         self.logger.error(f"Block hash: {new_block.hash}")
+    #         self.logger.error(f"Target value: {(BASE ** (HASH_BIT_LENGTH - self.bit_difficulties[-1])) - 1}")
+    #         return
+    #
+    #     # Add the new block to the blockchain
+    #     self.blocks.append(new_block)
+    #
+    #     # Append the actual mining time of the new block to the list of mining times
+    #     self.mining_times.append(actual_mining_time)
+    #
+    #     # Update the bit difficulties list to include the new block's difficulty
+    #     self.bit_difficulties.append(self.bit_difficulties[-1])
+    #
+    #     # Adjust the difficulty of the blockchain
+    #     self.adjust_difficulty(clamp_factor, smallest_bit_difficulty)
+    #
+    #     # Log the validity of the blockchain
+    #     if self.is_chain_valid():
+    #         self.logger.info("Blockchain is valid: True")
+    #     else:
+    #         self.logger.critical("Blockchain validity: False")
+    #
+    #     # Log the actual mining time of the new block
+    #     self.logger.debug(
+    #         f"Actual mining time for block {new_block.index}: {actual_mining_time:.{DEFAULT_PRECISION}f} seconds")
+    #
+    #     # Log a newline for separation in the logs
+    #     self.logger.debug("")
 
-        Args:
-            new_block (Block): The new block to add.
-            clamp_factor (float): The factor to clamp the adjustment of the difficulty.
-            smallest_bit_difficulty (float): The smallest bit difficulty that we can adjust to.
+    # def add_block(
+    #         self,
+    #         new_block: Block,
+    #         clamp_factor: float,
+    #         smallest_bit_difficulty: float
+    # ) -> None:
+    #     """
+    #     Add a new block to the blockchain, validate it and update the blockchain state.
+    #
+    #     Args:
+    #         new_block (Block): The new block to add.
+    #         clamp_factor (float): The factor to clamp the adjustment of the difficulty.
+    #         smallest_bit_difficulty (float): The smallest bit difficulty that we can adjust to.
+    #
+    #     Returns:
+    #         None
+    #     """
+    #
+    #     # Set the previous hash of the new block to the hash of the latest block in the blockchain
+    #     new_block.previous_hash = self.get_latest_block().hash if self.blocks else GENESIS_BLOCK_PREVIOUS_HASH
+    #
+    #     # Set the timestamp of the new block to the current time
+    #     new_block.timestamp = time.time()
+    #
+    #     # Find a nonce for the new block to satisfy proof of work
+    #     self.proof_of_work.find_nonce(new_block, self.bit_difficulties[-1])
+    #
+    #     # Calculate the hash of the new block
+    #     new_block.hash = calculate_hash(new_block.index, new_block.timestamp, new_block.data, new_block.previous_hash,
+    #                                     new_block.nonce)
+    #
+    #     # Log the data used for hash calculation
+    #     self.logger.debug(f"Index: {new_block.index}")
+    #     self.logger.debug(f"Timestamp: {new_block.timestamp}")
+    #     self.logger.debug(f"Data: {new_block.data}")
+    #     self.logger.debug(f"Previous Hash: {new_block.previous_hash}")
+    #     self.logger.debug(f"Nonce: {new_block.nonce}")
+    #     self.logger.debug(f"Calculated Hash: {new_block.hash}")
+    #
+    #     # Calculate the actual mining time of the new block
+    #     actual_mining_time = new_block.timestamp - self.get_latest_block().timestamp
+    #
+    #     # Validate the new block's proof of work
+    #     if not self.proof_of_work.validate_proof(new_block, self.bit_difficulties[-1]):
+    #         # If the block is invalid, log an error and return
+    #         self.logger.error(f"Block {new_block.index} was mined with a hash that does not meet the difficulty")
+    #         self.logger.error(f"Block hash: {new_block.hash}")
+    #         self.logger.error(f"Target value: {(BASE ** (HASH_BIT_LENGTH - self.bit_difficulties[-1])) - 1}")
+    #         return
+    #
+    #     # Add the new block to the blockchain
+    #     self.blocks.append(new_block)
+    #
+    #     # Append the actual mining time of the new block to the list of mining times
+    #     self.mining_times.append(actual_mining_time)
+    #
+    #     # Update the bit difficulties list to include the new block's difficulty
+    #     self.bit_difficulties.append(self.bit_difficulties[-1])
+    #
+    #     # Adjust the difficulty of the blockchain
+    #     self.adjust_difficulty(clamp_factor, smallest_bit_difficulty)
+    #
+    #     # Log the validity of the blockchain
+    #     if self.is_chain_valid():
+    #         self.logger.info("Blockchain is valid: True")
+    #     else:
+    #         self.logger.critical("Blockchain validity: False")
+    #
+    #     # Log the actual mining time of the new block
+    #     self.logger.debug(
+    #         f"Actual mining time for block {new_block.index}: {actual_mining_time:.{DEFAULT_PRECISION}f} seconds")
+    #
+    #     # Log a newline for separation in the logs
+    #     self.logger.debug("")
 
-        Returns:
-            None
-        """
 
-        # Set the previous hash of the new block to the hash of the latest block in the blockchain
-        new_block.previous_hash = self.get_latest_block().hash if self.blocks else GENESIS_BLOCK_PREVIOUS_HASH
 
-        # proof_of_work = ProofOfWork()
+    # def add_block(
+    #     self,
+    #     new_block: Block,
+    #     clamp_factor: float,
+    #     smallest_bit_difficulty: float
+    # ) -> None:
+    #     """
+    #     Add a new block to the blockchain, validate it and update the blockchain state.
+    #
+    #     Args:
+    #         new_block (Block): The new block to add.
+    #         clamp_factor (float): The factor to clamp the adjustment of the difficulty.
+    #         smallest_bit_difficulty (float): The smallest bit difficulty that we can adjust to.
+    #
+    #     Returns:
+    #         None
+    #     """
+    #
+    #     # Set the previous hash of the new block to the hash of the latest block in the blockchain
+    #     new_block.previous_hash = self.get_latest_block().hash if self.blocks else GENESIS_BLOCK_PREVIOUS_HASH
+    #
+    #     # Set the timestamp of the new block to the current time
+    #     new_block.timestamp = time.time()
+    #
+    #     # Find a nonce for the new block to satisfy proof of work
+    #     self.proof_of_work.find_nonce(new_block, self.bit_difficulties[-1])
+    #
+    #     # Calculate the hash of the new block
+    #     new_block.hash = calculate_hash(new_block.index, new_block.timestamp, new_block.data, new_block.previous_hash, new_block.nonce)
+    #
+    #     # Log the data used for hash calculation
+    #     self.logger.debug(f"Index: {new_block.index}")
+    #     self.logger.debug(f"Timestamp: {new_block.timestamp}")
+    #     self.logger.debug(f"Data: {new_block.data}")
+    #     self.logger.debug(f"Previous Hash: {new_block.previous_hash}")
+    #     self.logger.debug(f"Nonce: {new_block.nonce}")
+    #     self.logger.debug(f"Calculated Hash: {new_block.hash}")
+    #
+    #     # Calculate the actual mining time of the new block
+    #     actual_mining_time = new_block.timestamp - self.get_latest_block().timestamp
+    #
+    #     # Validate the new block's proof of work
+    #     if not self.proof_of_work.validate_proof(new_block, self.bit_difficulties[-1]):
+    #         # If the block is invalid, log an error and return
+    #         self.logger.error(f"Block {new_block.index} was mined with a hash that does not meet the difficulty")
+    #         self.logger.error(f"Block hash: {new_block.hash}")
+    #         self.logger.error(f"Target value: {(BASE ** (HASH_BIT_LENGTH - self.bit_difficulties[-1])) - 1}")
+    #         return
+    #
+    #     # Add the new block to the blockchain
+    #     self.blocks.append(new_block)
+    #
+    #     # Append the actual mining time of the new block to the list of mining times
+    #     self.mining_times.append(actual_mining_time)
+    #
+    #     # Update the bit difficulties list to include the new block's difficulty
+    #     self.bit_difficulties.append(self.bit_difficulties[-1])
+    #
+    #     # Adjust the difficulty of the blockchain
+    #     self.adjust_difficulty(clamp_factor, smallest_bit_difficulty)
+    #
+    #     # Log the validity of the blockchain
+    #     if self.is_chain_valid():
+    #         self.logger.info("Blockchain is valid: True")
+    #     else:
+    #         self.logger.critical("Blockchain validity: False")
+    #
+    #     # Log the actual mining time of the new block
+    #     self.logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.{DEFAULT_PRECISION}f} seconds")
+    #
+    #     # Log a newline for separation in the logs
+    #     self.logger.debug("")
 
-        # Find a nonce for the new block to satisfy proof of work
-        self.proof_of_work.find_nonce(new_block, self.bit_difficulties[-1])
 
-        # Set the timestamp of the new block to the current time
-        new_block.timestamp = time.time()
 
-        # Calculate the actual mining time of the new block
-        actual_mining_time = new_block.timestamp - self.get_latest_block().timestamp
+    # def add_block(
+    #     self,
+    #     new_block: Block,
+    #     clamp_factor: float,
+    #     smallest_bit_difficulty: float
+    # ) -> None:
+    #     """
+    #     Add a new block to the blockchain, validate it and update the blockchain state.
+    #
+    #     Args:
+    #         new_block (Block): The new block to add.
+    #         clamp_factor (float): The factor to clamp the adjustment of the difficulty.
+    #         smallest_bit_difficulty (float): The smallest bit difficulty that we can adjust to.
+    #
+    #     Returns:
+    #         None
+    #     """
+    #
+    #     # Set the previous hash of the new block to the hash of the latest block in the blockchain
+    #     new_block.previous_hash = self.get_latest_block().hash if self.blocks else GENESIS_BLOCK_PREVIOUS_HASH
+    #
+    #     # Set the timestamp of the new block to the current time
+    #     new_block.timestamp = time.time()
+    #
+    #     # Find a nonce for the new block to satisfy proof of work
+    #     self.proof_of_work.find_nonce(new_block, self.bit_difficulties[-1])
+    #
+    #     # Calculate the hash of the new block
+    #     new_block.hash = calculate_hash(new_block.index, new_block.timestamp, new_block.data, new_block.previous_hash, new_block.nonce)
+    #
+    #     # Log the data used for hash calculation
+    #     self.logger.debug(f"Index: {new_block.index}")
+    #     self.logger.debug(f"Timestamp: {new_block.timestamp}")
+    #     self.logger.debug(f"Data: {new_block.data}")
+    #     self.logger.debug(f"Previous Hash: {new_block.previous_hash}")
+    #     self.logger.debug(f"Nonce: {new_block.nonce}")
+    #     self.logger.debug(f"Calculated Hash: {new_block.hash}")
+    #
+    #     # Calculate the actual mining time of the new block
+    #     actual_mining_time = new_block.timestamp - self.get_latest_block().timestamp
+    #
+    #     # Validate the new block's proof of work
+    #     if not self.proof_of_work.validate_proof(new_block, self.bit_difficulties[-1]):
+    #         # If the block is invalid, log an error and return
+    #         self.logger.error(f"Block {new_block.index} has an invalid proof of work")
+    #         return
+    #
+    #     # Add the new block to the blockchain
+    #     self.blocks.append(new_block)
+    #
+    #     # Append the actual mining time of the new block to the list of mining times
+    #     self.mining_times.append(actual_mining_time)
+    #
+    #     # Update the bit difficulties list to include the new block's difficulty
+    #     self.bit_difficulties.append(self.bit_difficulties[-1])
+    #
+    #     # Adjust the difficulty of the blockchain
+    #     self.adjust_difficulty(clamp_factor, smallest_bit_difficulty)
+    #
+    #     # Log the validity of the blockchain
+    #     if self.is_chain_valid():
+    #         self.logger.info("Blockchain is valid: True")
+    #     else:
+    #         self.logger.critical("Blockchain validity: False")
+    #
+    #     # Log the actual mining time of the new block
+    #     self.logger.debug(f"Actual mining time for block {new_block.index}: {actual_mining_time:.{DEFAULT_PRECISION}f} seconds")
+    #
+    #     # Log a newline for separation in the logs
+    #     self.logger.debug("")
 
-        # Validate the new block's proof of work
-        if not self.proof_of_work.validate_proof(new_block, self.bit_difficulties[-1]):
-            # If the block is invalid, log an error and return
-            self.logger.error(f"Block {new_block.index} was mined with a hash that does not meet the difficulty")
-            self.logger.error(f"Block hash: {new_block.hash}")
-            self.logger.error(f"Target value: {(BASE ** (HASH_BIT_LENGTH - self.bit_difficulties[-1])) - 1}")
+    def add_block(self, clamp_factor: float, smallest_bit_difficulty: float) -> None:
+        latest_block = self.get_latest_block()
+        new_block = Block(
+            bit_difficulty=self.bit_difficulties[-1],
+            index=len(self.blocks),
+            data=f"Block {len(self.blocks)} Data",
+            timestamp=time.time(),
+            previous_hash=latest_block.hash if latest_block else GENESIS_BLOCK_PREVIOUS_HASH,
+        )
+
+        # Mine the block
+        self.proof_of_work.find_nonce(new_block, new_block.bit_difficulty)
+
+        # Validate the block
+        if not self.proof_of_work.validate_proof(new_block, new_block.bit_difficulty):
+            self.logger.error(f"Block {new_block.index} has an invalid proof of work")
             return
 
         # Add the new block to the blockchain
         self.blocks.append(new_block)
 
-        # Append the actual mining time of the new block to the list of mining times
-        self.mining_times.append(actual_mining_time)
-
-        # Update the bit difficulties list to include the new block's difficulty
-        self.bit_difficulties.append(self.bit_difficulties[-1])
-
-        # Adjust the difficulty of the blockchain
-        self.adjust_difficulty(clamp_factor, smallest_bit_difficulty)
-
-        # Log the validity of the blockchain
-        log_validity(self)
-
-        # Log the actual mining time of the new block
-        self.logger.debug(
-            f"Actual mining time for block {new_block.index}: {actual_mining_time:.{DEFAULT_PRECISION}f} seconds")
-
-        # Log a newline for separation in the logs
-        self.logger.debug("")
+        # Log the addition
+        self.logger.info(f"Block {new_block.index} added to the blockchain.")
 
     def get_latest_block(self) -> Block | None:
         """
@@ -181,11 +430,102 @@ class Blockchain:
         # or if the blockchain has less than `num_last_blocks+1` blocks, then
         # the average mining time for all blocks (except the Genesis Block) is returned
         if len(self.blocks) <= 1:  # in the case of the Genesis Block
-            return 0.0 # return 0.0 as the average mining time
+            return 0.0  # return 0.0 as the average mining time
         if len(self.blocks) < num_last_blocks + 1:  # (+1) to exclude the Genesis Block from the calculation
             return sum(self.mining_times[1:]) / (len(self.mining_times) - 1)
-        total_time: float = sum(self.mining_times[-num_last_blocks:])  # sum the mining times of the last `num_last_blocks` blocks
+        total_time: float = sum(
+            self.mining_times[-num_last_blocks:])  # sum the mining times of the last `num_last_blocks` blocks
         return total_time / num_last_blocks  # calculate the average mining time
+
+        # def is_chain_valid(self) -> bool:
+        #     """
+        #     Validate the blockchain by checking each block's integrity and proof of work.
+        #
+        #     This function checks each block in the chain to ensure that its hash matches its calculated hash,
+        #     its previous hash matches the hash of the previous block, and its proof of work is valid.
+        #
+        #     Returns:
+        #         bool: True if the blockchain is valid, False otherwise.
+        #     """
+        #     # Iterate over each block in the chain, starting from the second block
+        #     # for i in range(1, len(self.chain)):
+        #     for i in range(1, len(self.blocks)):
+        #         # Get the current block and the previous block
+        #         # current_block: Block = self.chain[i]
+        #         # previous_block: Block = self.chain[i - 1] # todo why do we need it if we have self.blocks?
+        #         current_block: Block = self.blocks[i]
+        #         previous_block: Block = self.blocks[i - 1]
+        #
+        #
+        #         # Check if the current block's hash matches its calculated hash
+        #         if current_block.hash != calculate_hash(current_block.index, current_block.timestamp, current_block.data,
+        #                                                 current_block.previous_hash, current_block.nonce):
+        #             # If the hash does not match, return False
+        #             return False
+        #
+        #         # Check if the current block's previous hash matches the hash of the previous block
+        #         if current_block.previous_hash != previous_block.hash:
+        #             # If the previous hash does not match, return False
+        #             return False
+        #
+        #         # Validate the proof of work for the current block
+        #         if not self.proof_of_work.validate_proof(current_block, self.bit_difficulties[i]):
+        #             # If the proof of work is invalid, return False
+        #             return False
+        #
+        #     # All blocks are valid
+        #     return True
+
+    # def is_chain_valid(self) -> bool:
+    #     """
+    #     Validate the blockchain by checking each block's integrity and proof of work.
+    #
+    #     This function checks each block in the chain to ensure that its hash matches its calculated hash,
+    #     its previous hash matches the hash of the previous block, and its proof of work is valid.
+    #
+    #     Returns:
+    #         bool: True if the blockchain is valid, False otherwise.
+    #     """
+    #     # # Iterate over each block in the chain, starting from the second block
+    #     # for i in range(1, len(self.chain)):
+    #     #     # Get the current block and the previous block
+    #     #     current_block: Block = self.chain[i]
+    #     #     previous_block: Block = self.chain[i - 1] # todo why do we need it if we have self.blocks? If removed,
+    #     # # todo Block 1 has an invalid previous hash, Blockchain validity: False.
+    #
+    #     # Iterate over each block in the blocks, starting from the second block
+    #     for i in range(1, len(self.blocks)):
+    #         # Get the current block and the previous block
+    #         current_block: Block = self.blocks[i]
+    #         previous_block: Block = self.blocks[i - 1]  # todo why do we need it if we have self.blocks? If removed,
+    #         # todo Block 1 has an invalid previous hash, Blockchain validity: False.
+    #
+    #         # Check if the current block's hash matches its calculated hash
+    #         if current_block.hash != calculate_hash(
+    #                 index=current_block.index,
+    #                 timestamp=current_block.timestamp,
+    #                 data=current_block.data,
+    #                 previous_hash=current_block.previous_hash,
+    #                 nonce=current_block.nonce,
+    #         ):
+    #             # If the hash does not match, log an error and return False
+    #             self.logger.error(f"Block {current_block.index} has an invalid hash: {current_block.hash}")
+    #             return False
+    #
+    #         # Check if the current block's previous hash matches the hash of the previous block
+    #         if current_block.previous_hash != previous_block.hash:
+    #             # If the previous hash does not match, log an error and return False
+    #             self.logger.error(f"Block {current_block.index} has an invalid previous hash")
+    #             return False
+    #
+    #         # Validate the proof of work for the current block
+    #         if not self.proof_of_work.validate_proof(current_block, self.bit_difficulties[i]):
+    #             # If the proof of work is invalid, log an error and return False
+    #             self.logger.error(f"Block {current_block.index} has an invalid proof of work")
+    #             return False
+    #
+    #     # All blocks are valid
+    #     return True
 
     def is_chain_valid(self) -> bool:
         """
@@ -197,29 +537,36 @@ class Blockchain:
         Returns:
             bool: True if the blockchain is valid, False otherwise.
         """
-        # Iterate over each block in the chain, starting from the second block
-        for i in range(1, len(self.chain)):
-            # Get the current block and the previous block
-            current_block: Block = self.chain[i]
-            previous_block: Block = self.chain[i - 1]
+        for i in range(1, len(self.blocks)):
+            current_block: Block = self.blocks[i]
+            previous_block: Block = self.blocks[i - 1]
+
+            # Calculate the expected hash
+            expected_hash = calculate_hash(
+                index=current_block.index,
+                timestamp=current_block.timestamp,
+                data=current_block.data,
+                previous_hash=current_block.previous_hash,
+                nonce=current_block.nonce,
+            )
 
             # Check if the current block's hash matches its calculated hash
-            if current_block.hash != calculate_hash(current_block.index, current_block.timestamp, current_block.data,
-                                                    current_block.previous_hash, current_block.nonce):
-                # If the hash does not match, return False
+            if current_block.hash != expected_hash:
+                self.logger.error(f"Block {current_block.index} has an invalid hash: {current_block.hash}")
+                self.logger.error(f"Expected hash: {expected_hash}")
                 return False
 
             # Check if the current block's previous hash matches the hash of the previous block
             if current_block.previous_hash != previous_block.hash:
-                # If the previous hash does not match, return False
+                self.logger.error(f"Block {current_block.index} has an invalid previous hash")
+                self.logger.error(f"Expected previous hash: {previous_block.hash}")
                 return False
 
             # Validate the proof of work for the current block
             if not self.proof_of_work.validate_proof(current_block, self.bit_difficulties[i]):
-                # If the proof of work is invalid, return False
+                self.logger.error(f"Block {current_block.index} has an invalid proof of work")
                 return False
 
-        # All blocks are valid
         return True
 
     def adjust_difficulty(self, bit_clamp_factor: float, smallest_bit_difficulty: float) -> None:
@@ -268,5 +615,3 @@ class Blockchain:
 
             # Update the last bit difficulty in the blockchain
             self.bit_difficulties[-1] = new_bit_difficulty
-
-

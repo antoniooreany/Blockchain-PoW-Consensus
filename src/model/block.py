@@ -1,48 +1,93 @@
-#   Copyright (c) 2024, Anton Gorshkov
-#   All rights reserved.
-#   This code is for a block and its unit tests.
-#   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
+# # #   Copyright (c) 2024, Anton Gorshkov
+# # #   All rights reserved.
+# # #   This code is for a block and its unit tests.
+# # #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
+# #
+# # import time
+# #
+# # from src.utils.hash_utils import calculate_hash
+# #
+# # class Block:
+# #     def __init__(
+# #             self,
+# #             bit_difficulty: float,
+# #             index: int,
+# #             data: str,
+# #             timestamp: float,  # timestamp is used in the constructor todo why it is grey?
+# #             previous_hash: str,
+# #     ) -> None:
+# #         """Initialize a new block with its attributes.
+# #
+# #         Args:
+# #             bit_difficulty (float): The difficulty level of the block.
+# #             index (int): The position of the block in the blockchain.
+# #             data (str): The data contained within the block.
+# #             previous_hash (str): The hash of the previous block in the chain.
+# #             timestamp (float): The time at which the block was created. This is not used in the
+# #                 constructor, but is used in the hash calculation.
+# #         """
+# #         # Set the difficulty level for the block
+# #         self.bit_difficulty: float = bit_difficulty
+# #
+# #         # Assign the block index
+# #         self.index: int = index
+# #
+# #         # Store the block's data
+# #         self.data: str = data
+# #
+# #         # Record the timestamp of block creation
+# #         self.timestamp: float = time.time()
+# #
+# #         # Store the hash of the previous block
+# #         self.previous_hash: str = previous_hash
+# #
+# #         # Initialize the nonce for the proof of work algorithm
+# #         self.nonce: int = 0
+# #
+# #         # Compute the hash of the block
+# #         self.hash: str = calculate_hash(self.index, self.timestamp, self.data, self.previous_hash, self.nonce)
+#
+# from dataclasses import dataclass, field
+# import time
+# from src.utils.hash_utils import calculate_hash
+#
+# @dataclass(frozen=True)
+# class Block:
+#     bit_difficulty: float
+#     index: int
+#     data: str
+#     previous_hash: str
+#     nonce: int = 0
+#     timestamp: float = field(default_factory=time.time)
+#     hash: str = field(init=False)
+#
+#     def __post_init__(self):
+#         # Calculate hash on initialization
+#         object.__setattr__(self, 'hash', calculate_hash(
+#             self.index, self.timestamp, self.data, self.previous_hash, self.nonce
+#         ))
+#
+#
 
+
+from dataclasses import dataclass, field
 import time
-
 from src.utils.hash_utils import calculate_hash
 
+@dataclass
 class Block:
-    def __init__(
-            self,
-            bit_difficulty: float,
-            index: int,
-            data: str,
-            timestamp: float,  # timestamp is used in the constructor todo why it is grey?
-            previous_hash: str,
-    ) -> None:
-        """Initialize a new block with its attributes.
+    bit_difficulty: float
+    index: int
+    data: str
+    previous_hash: str
+    nonce: int = 0
+    timestamp: float = field(default_factory=time.time)
+    hash: str = field(init=False)
 
-        Args:
-            bit_difficulty (float): The difficulty level of the block.
-            index (int): The position of the block in the blockchain.
-            data (str): The data contained within the block.
-            previous_hash (str): The hash of the previous block in the chain.
-            timestamp (float): The time at which the block was created. This is not used in the
-                constructor, but is used in the hash calculation.
-        """
-        # Set the difficulty level for the block
-        self.bit_difficulty: float = bit_difficulty
+    def __post_init__(self):
+        # Calculate hash on initialization
+        self.hash = calculate_hash(
+            self.index, self.timestamp, self.data, self.previous_hash, self.nonce
+        )
 
-        # Assign the block index
-        self.index: int = index
 
-        # Store the block's data
-        self.data: str = data
-
-        # Record the timestamp of block creation
-        self.timestamp: float = time.time()
-
-        # Store the hash of the previous block
-        self.previous_hash: str = previous_hash
-
-        # Initialize the nonce for the proof of work algorithm
-        self.nonce: int = 0
-
-        # Compute the hash of the block
-        self.hash: str = calculate_hash(self.index, self.timestamp, self.data, self.previous_hash, self.nonce)
