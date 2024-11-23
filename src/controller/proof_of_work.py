@@ -1,20 +1,20 @@
-# #   Copyright (c) 2024, Anton Gorshkov
-# #   All rights reserved.
-# #   This code is for a pow and its unit tests.
-# #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
-#
+#   Copyright (c) 2024, Anton Gorshkov
+#   All rights reserved.
+#   This code is for a pow and its unit tests.
+#   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
+
 import math
 import random
 
 from src.model.block import Block
 from src.constants import HASH_BIT_LENGTH, NONCE_BIT_LENGTH, BASE, HEXADECIMAL_BASE
-from src.utils.hash_utils import calculate_hash
+from src.utils.hash_utils import calculate_block_hash
 from src.utils.logging_utils import log_mined_block
 
 
 class ProofOfWork:
     def __init__(self):  # use oop-style to be more flexible in the future
-        pass
+        pass  # todo fill with the state attributes
 
     def find_nonce(self, block: Block, bit_difficulty: float) -> None:
         """
@@ -33,7 +33,7 @@ class ProofOfWork:
         target_value: float = math.pow(BASE, HASH_BIT_LENGTH - bit_difficulty) - 1
 
         while True:
-            block.hash = calculate_hash(
+            block.hash = calculate_block_hash(
                 block.index, block.timestamp, block.data, block.previous_hash, block.nonce
             )
 

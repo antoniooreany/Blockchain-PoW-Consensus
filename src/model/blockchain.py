@@ -3,9 +3,9 @@
 #   This code is for a blockchain.py and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
+import logging
 import math
 import time
-from venv import logger
 
 from src.model.block import Block
 from src.constants import HASH_BIT_LENGTH, BASE, DEFAULT_PRECISION, AVERAGE_MINING_TIME_ADJUSTMENT_INTERVAL_KEY, \
@@ -15,7 +15,7 @@ from src.utils.logging_utils import log_validity
 from src.controller.proof_of_work import ProofOfWork
 from src.constants import GENESIS_BLOCK_PREVIOUS_HASH, GENESIS_BLOCK_DATA
 from src.utils.logging_utils import log_mined_block
-from src.utils.hash_utils import calculate_hash
+from src.utils.hash_utils import calculate_block_hash
 
 
 class Blockchain:
@@ -69,7 +69,7 @@ class Blockchain:
         )
 
         self.blocks: list[Block] = [genesis_block]  # The list of blocks in the blockchain.
-        self.chain: list[Block] = [genesis_block]  # todo why do we need it if we have self.blocks? try to remove it
+        self.chain: list[Block] = [genesis_block]  # The list of blocks in the blockchain.
 
         log_mined_block(genesis_block)
         log_validity(self)
@@ -79,8 +79,8 @@ class Blockchain:
         self.mining_times: list[float] = [0.0]  # avoid the check for the Genesis Block
         # todo ugly, calculate the mining time for the Genesis Block in generic way.
 
-        logger.debug("Blockchain created")
-        logger.debug("")
+        logging.debug("Blockchain created")
+        logging.debug("")
 
     def add_block(
             self,
@@ -102,8 +102,6 @@ class Blockchain:
 
         # Set the previous hash of the new block to the hash of the latest block in the blockchain
         new_block.previous_hash = self.get_latest_block().hash if self.blocks else GENESIS_BLOCK_PREVIOUS_HASH
-
-        # proof_of_work = ProofOfWork()
 
         # Find a nonce for the new block to satisfy proof of work
         self.proof_of_work.find_nonce(new_block, self.bit_difficulties[-1])
@@ -181,10 +179,11 @@ class Blockchain:
         # or if the blockchain has less than `num_last_blocks+1` blocks, then
         # the average mining time for all blocks (except the Genesis Block) is returned
         if len(self.blocks) <= 1:  # in the case of the Genesis Block
-            return 0.0 # return 0.0 as the average mining time
+            return 0.0  # return 0.0 as the average mining time
         if len(self.blocks) < num_last_blocks + 1:  # (+1) to exclude the Genesis Block from the calculation
             return sum(self.mining_times[1:]) / (len(self.mining_times) - 1)
-        total_time: float = sum(self.mining_times[-num_last_blocks:])  # sum the mining times of the last `num_last_blocks` blocks
+        total_time: float = sum(
+            self.mining_times[-num_last_blocks:])  # sum the mining times of the last `num_last_blocks` blocks
         return total_time / num_last_blocks  # calculate the average mining time
 
     def is_chain_valid(self) -> bool:
@@ -204,18 +203,38 @@ class Blockchain:
             previous_block: Block = self.chain[i - 1]
 
             # Check if the current block's hash matches its calculated hash
-            if current_block.hash != calculate_hash(current_block.index, current_block.timestamp, current_block.data,
-                                                    current_block.previous_hash, current_block.nonce):
+            expected_hash: str = calculate_block_hash(
+                index=current_block.index,
+                timestamp=current_block.timestamp,
+                data=current_block.data,
+                previous_hash=current_block.previous_hash,
+                nonce=current_block.nonce,
+            )
+            if current_block.hash != expected_hash:
+                logging.error(
+                    f"Block with index {current_block.index} "
+                    f"has an invalid hash: {current_block.hash}, "
+                    f"expected hash: {expected_hash}",
+                )
                 # If the hash does not match, return False
                 return False
 
             # Check if the current block's previous hash matches the hash of the previous block
             if current_block.previous_hash != previous_block.hash:
+                logging.error(
+                    f"Block with index {current_block.index} "
+                    f"has an invalid previous hash: {current_block.previous_hash}, "
+                    f"expected previous hash: {previous_block.hash}",
+                )
                 # If the previous hash does not match, return False
                 return False
 
             # Validate the proof of work for the current block
             if not self.proof_of_work.validate_proof(current_block, self.bit_difficulties[i]):
+                logging.error(
+                    f"Block with index {current_block.index} "
+                    f"has an invalid proof of work",
+                )
                 # If the proof of work is invalid, return False
                 return False
 
@@ -268,5 +287,3 @@ class Blockchain:
 
             # Update the last bit difficulty in the blockchain
             self.bit_difficulties[-1] = new_bit_difficulty
-
-

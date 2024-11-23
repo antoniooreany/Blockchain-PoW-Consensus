@@ -5,26 +5,24 @@
 
 
 import logging
-import tkinter as tk
+import re
 import time
+import tkinter as tk
 from tkinter import messagebox
 
-from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from src.model.blockchain import Blockchain
-# from src.controller.helpers import add_blocks
-from src.controller.blockchain_runner import add_blocks
-from src.utils.logger_singleton import LoggerSingleton
+from matplotlib.figure import Figure
+
 from src.constants import INITIAL_BIT_DIFFICULTY, TARGET_BLOCK_MINING_TIME, ADJUSTMENT_BLOCK_INTERVAL, CLAMP_FACTOR, \
     SMALLEST_BIT_DIFFICULTY, NUMBER_BLOCKS_TO_ADD, NUMBER_BLOCKS_SLICE, INITIAL_BIT_DIFFICULTY_KEY, \
     TARGET_BLOCK_MINING_TIME_KEY, ADJUSTMENT_BLOCK_INTERVAL_KEY, CLAMP_FACTOR_KEY, SMALLEST_BIT_DIFFICULTY_KEY, \
-    NUMBER_BLOCKS_TO_ADD_KEY, NUMBER_BLOCKS_SLICE_KEY, GUI_TITLE, EXIT_BUTTON_TEXT, CLEAR_LOG_BUTTON_TEXT, \
-    RUN_BLOCKCHAIN_BUTTON_TEXT, CLOSE_TYPE, CONFIGURATION_PARAMETERS_BUTTON_TEXT, HIGHT, WIDTH
+    NUMBER_BLOCKS_TO_ADD_KEY, NUMBER_BLOCKS_SLICE_KEY, GUI_TITLE, EXIT_BUTTON_TEXT, RUN_BLOCKCHAIN_BUTTON_TEXT, \
+    CLOSE_TYPE, CONFIGURATION_PARAMETERS_BUTTON_TEXT, HIGHT, WIDTH
+from src.controller.blockchain_runner import add_blocks
+from src.model.blockchain import Blockchain
+from src.utils.logger_singleton import LoggerSingleton
 from src.utils.logging_utils import LogLevelCounterHandler, log_blockchain_statistics
-from src.view.plotting import plot_blockchain_statistics # todo why isn't used?
-
-
-import re
+from src.view.plotting import plot_blockchain_statistics  # todo why isn't used?
 
 
 class TextHandler(logging.Handler):
@@ -89,9 +87,6 @@ class GUI:
         self.run_button = tk.Button(button_frame, text=RUN_BLOCKCHAIN_BUTTON_TEXT, command=self.run_blockchain, width=25)
         self.run_button.grid(row=0, column=0, padx=10)
         self.root.after(100, self.run_button.focus_set)
-
-        # self.clear_log_button = tk.Button(button_frame, text=CLEAR_LOG_BUTTON_TEXT, command=self.clear_log, width=15)
-        # self.clear_log_button.grid(row=0, column=1, padx=10)
 
         self.exit_button = tk.Button(button_frame, text=EXIT_BUTTON_TEXT, command=self.exit_app, width=15)
         self.exit_button.grid(row=0, column=2, padx=10)
@@ -174,17 +169,9 @@ class GUI:
         self.figure.clear()
 
         # # Plot the blockchain statistics on the canvas
-        # ax1 = self.figure.add_subplot(111)
         plot_blockchain_statistics(blockchain)
-        #
-        # self.canvas.draw()
 
-        # # Display log information in the Text widget
-        # self.log_text.delete(1.0, tk.END)
-        # for handler in logger.handlers:
-        #     if isinstance(handler, LogLevelCounterHandler):
-        #         self.log_text.insert(tk.END, handler.get_log_contents())
-        #
+        # Update the canvas with the new plot
         log_level_counter_handler.print_log_counts()
 
         end_time = time.time()
@@ -194,16 +181,6 @@ class GUI:
 
         # Re-enable the button after the blockchain has been run
         self.run_button.config(state=tk.NORMAL)
-
-    # def clear_log(self):
-    #     self.log_text.config(state=tk.NORMAL)
-    #     self.log_text.delete(1.0, tk.END)
-    #     self.log_text.config(state=tk.DISABLED)
-    #
-    #     # Re-attach the text handler to the logger
-    #     logger = LoggerSingleton.get_instance().logger
-    #     logger.handlers = [h for h in logger.handlers if not isinstance(h, TextHandler)]
-    #     logger.addHandler(self.text_handler)
 
     def exit_app(self):
         self.root.quit()

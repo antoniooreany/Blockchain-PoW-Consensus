@@ -5,7 +5,7 @@
 
 import time
 
-from src.utils.hash_utils import calculate_hash
+from src.utils.hash_utils import calculate_block_hash
 
 class Block:
     def __init__(
@@ -13,7 +13,7 @@ class Block:
             bit_difficulty: float,
             index: int,
             data: str,
-            timestamp: float,  # timestamp is used in the constructor todo why it is grey?
+            timestamp: float,  # timestamp is used in the constructor todo why it is grey in intellij?
             previous_hash: str,
     ) -> None:
         """Initialize a new block with its attributes.
@@ -45,4 +45,4 @@ class Block:
         self.nonce: int = 0
 
         # Compute the hash of the block
-        self.hash: str = calculate_hash(self.index, self.timestamp, self.data, self.previous_hash, self.nonce)
+        self.hash: str = calculate_block_hash(self.index, self.timestamp, self.data, self.previous_hash, self.nonce)

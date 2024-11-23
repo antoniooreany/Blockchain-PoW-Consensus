@@ -36,7 +36,8 @@ class Blockchain:
         self.difficulty = initial_difficulty
         self.target_block_time = target_block_time  # Target block time in seconds
         self.base = base  # Base for numeral system
-        self.pid_controller = PIDController(kp=1.0, ki=0.1, kd=0.05)  # Initialize PID controller with chosen coefficients
+        self.pid_controller = PIDController(kp=1.0, ki=0.1,
+                                            kd=0.05)  # Initialize PID controller with chosen coefficients
 
     def create_genesis_block(self) -> Block:
         genesis_block = Block(0, time.time(), "Genesis Block", "0")
@@ -72,7 +73,7 @@ class Blockchain:
         for i in range(1, len(self.chain)):
             current_block: Block = self.chain[i]
             previous_block: Block = self.chain[i - 1]
-            if current_block.hash != current_block.calculate_hash():
+            if current_block.hash != current_block.calculate_block_hash():
                 return False
             if current_block.previous_hash != previous_block.hash:
                 return False
