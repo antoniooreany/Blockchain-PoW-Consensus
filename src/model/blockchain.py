@@ -56,6 +56,8 @@ class Blockchain:
         self.smallest_bit_difficulty: float = smallest_bit_difficulty  # The smallest bit difficulty that we can adjust to.
         self.number_blocks_slice: int = number_blocks_slice  # The number of blocks to slice the list of blocks to calculate the statistics.
 
+        self.proof_of_work = ProofOfWork()  # Create an instance of ProofOfWork
+
         # self.block_indexes: list[int] = list(range(number_blocks_to_add + 1))
 
         genesis_block: Block = Block(
@@ -101,8 +103,10 @@ class Blockchain:
         # Set the previous hash of the new block to the hash of the latest block in the blockchain
         new_block.previous_hash = self.get_latest_block().hash if self.blocks else GENESIS_BLOCK_PREVIOUS_HASH
 
+        # proof_of_work = ProofOfWork()
+
         # Find a nonce for the new block to satisfy proof of work
-        ProofOfWork.find_nonce(new_block, self.bit_difficulties[-1])
+        self.proof_of_work.find_nonce(new_block, self.bit_difficulties[-1])
 
         # Set the timestamp of the new block to the current time
         new_block.timestamp = time.time()
@@ -111,7 +115,7 @@ class Blockchain:
         actual_mining_time = new_block.timestamp - self.get_latest_block().timestamp
 
         # Validate the new block's proof of work
-        if not ProofOfWork.validate_proof(new_block, self.bit_difficulties[-1]):
+        if not self.proof_of_work.validate_proof(new_block, self.bit_difficulties[-1]):
             # If the block is invalid, log an error and return
             self.logger.error(f"Block {new_block.index} was mined with a hash that does not meet the difficulty")
             self.logger.error(f"Block hash: {new_block.hash}")
@@ -211,7 +215,7 @@ class Blockchain:
                 return False
 
             # Validate the proof of work for the current block
-            if not ProofOfWork.validate_proof(current_block, self.bit_difficulties[i]):
+            if not self.proof_of_work.validate_proof(current_block, self.bit_difficulties[i]):
                 # If the proof of work is invalid, return False
                 return False
 
@@ -254,7 +258,7 @@ class Blockchain:
                 # Calculate the bit adjustment factor
                 bit_adjustment_factor: float = math.log2(reversed_adjustment_factor)
                 # Clamp the bit adjustment factor
-                clamped_bit_adjustment_factor: float = ProofOfWork.clamp(bit_adjustment_factor, bit_clamp_factor)
+                clamped_bit_adjustment_factor: float = self.proof_of_work.clamp(bit_adjustment_factor, bit_clamp_factor)
                 # Calculate the new bit difficulty
                 new_bit_difficulty: float = max(smallest_bit_difficulty,
                                                 last_bit_difficulty - clamped_bit_adjustment_factor)
