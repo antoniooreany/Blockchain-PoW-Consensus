@@ -128,7 +128,7 @@ def log_mined_block(block: Block) -> None:
     logger.info(f"Index: {block.index}")
     logger.info(f"Timestamp at the beginning of the block {block.index}: {block.timestamp}")
     logger.info(f"Data: {block.data}")
-    # logger.info(f"Previous hash: {block.previous_hash}")
+    logger.info(f"Previous hash: {block.previous_hash}")
     logger.info(f"Nonce: {block.nonce}")
     logger.info(f"Hash: {block.hash}")
 

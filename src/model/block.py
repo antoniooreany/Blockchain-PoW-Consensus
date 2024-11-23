@@ -6,8 +6,9 @@
 import random
 import time
 
-from src.constants import NONCE_BIT_LENGTH, BASE
+from src.constants import MAX_NONCE
 from src.utils.hash_utils import calculate_block_hash
+
 
 class Block:
     def __init__(
@@ -15,7 +16,6 @@ class Block:
             bit_difficulty: float,
             index: int,
             data: str,
-            # timestamp: float,
             previous_hash: str,
     ) -> None:
         """
@@ -26,8 +26,6 @@ class Block:
             index (int): The position of the block in the blockchain.
             data (str): The data contained within the block.
             previous_hash (str): The hash of the previous block in the chain.
-            timestamp (float): The time at which the block was created. This is not used in the
-                constructor, but is used in the hash calculation.
         """
         # Set the difficulty level for the block
         self.bit_difficulty: float = bit_difficulty
@@ -44,14 +42,8 @@ class Block:
         # Store the hash of the previous block
         self.previous_hash: str = previous_hash
 
-        # Initialize the nonce for the proof of work algorithm
-        # self.nonce: int = 0
-
-        # Calculate the maximum possible nonce value
-        max_nonce: int = BASE ** NONCE_BIT_LENGTH - 1
-
         # Initialize the nonce with a random value within the possible range
-        self.nonce: int = random.randint(0, max_nonce)
+        self.nonce: int = random.randint(0, MAX_NONCE)
 
         # Compute the hash of the block
         self.hash: str = calculate_block_hash(self.index, self.timestamp, self.data, self.previous_hash, self.nonce)

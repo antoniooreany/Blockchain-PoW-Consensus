@@ -229,3 +229,4 @@ AVERAGE_MINING_TIME_ADJUSTMENT_INTERVAL_KEY = "average_mining_time_adjustment_in
 LEGEND_TITLE = "Input Information"
 
 REVERSED_ADJUSTMENT_FACTOR_KEY = "reversed_adjustment_factor"
+MAX_NONCE = BASE ** NONCE_BIT_LENGTH - 1

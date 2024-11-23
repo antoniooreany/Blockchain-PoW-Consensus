@@ -46,7 +46,6 @@ def add_blocks(
             bit_difficulty=blockchain.bit_difficulties[-1] if blockchain.bit_difficulties else 0,
             index=index,
             data=f"Block {index} Data",  # todo mock data is used, it should be replaced with real data
-            # timestamp=time.time(),
             previous_hash=blockchain.blocks[-1].hash if blockchain.blocks else None,
         )
         # 2. Add the block to the blockchain.
