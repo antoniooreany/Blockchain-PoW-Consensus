@@ -37,8 +37,6 @@ def calculate_block_hash(
     # Return the hash as a hexadecimal string
     return hash_object.hexdigest()
 
-# Cleaned up the code by removing unnecessary comments and debugging statements, standardizing variable names, and improving readability.
-
 
 def validate_block_attributes(
     index: int, timestamp: float, data: str, previous_block_hash: str, nonce: int
@@ -63,5 +61,3 @@ def validate_block_attributes(
             raise ValueError(f"{name}: {attribute!r} cannot be null")
         if isinstance(attribute, str) and not attribute:
             raise ValueError(f"{name}: {attribute!r} cannot be empty")
-
-# Things look good. If any issues arise, please provide a stack trace for further investigation.

@@ -64,7 +64,7 @@ class Blockchain:
             bit_difficulty=0,  # todo it might be initial_bit_difficulty
             index=0,
             data=GENESIS_BLOCK_DATA,
-            timestamp=time.time(),
+            # timestamp=time.time(),
             previous_hash=GENESIS_BLOCK_PREVIOUS_HASH,
         )
 

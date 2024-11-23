@@ -2,6 +2,7 @@
 #   All rights reserved.
 #   This code is for a block and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
+
 import random
 import time
 
@@ -14,10 +15,11 @@ class Block:
             bit_difficulty: float,
             index: int,
             data: str,
-            timestamp: float,  # timestamp is used in the constructor todo why it is grey in intellij?
+            # timestamp: float,
             previous_hash: str,
     ) -> None:
-        """Initialize a new block with its attributes.
+        """
+        Initialize a new block with its attributes.
 
         Args:
             bit_difficulty (float): The difficulty level of the block.
@@ -49,8 +51,7 @@ class Block:
         max_nonce: int = BASE ** NONCE_BIT_LENGTH - 1
 
         # Initialize the nonce with a random value within the possible range
-        self.nonce = random.randint(0, max_nonce)
-
+        self.nonce: int = random.randint(0, max_nonce)
 
         # Compute the hash of the block
         self.hash: str = calculate_block_hash(self.index, self.timestamp, self.data, self.previous_hash, self.nonce)

@@ -129,9 +129,3 @@ class ProofOfWork:
 
         clamped_bit_adjustment_factor: float = max(-bit_clamp_factor, min(bit_adjustment_factor, bit_clamp_factor))
         return clamped_bit_adjustment_factor
-
-# Clean up:
-# - Standardized variable names
-# - Removed debugging statements
-# - Improved readability by using a consistent naming convention
-# - Improved performance by using max and min functions instead of if-elif-else statements
