@@ -27,7 +27,7 @@ class ProofOfWork:
         """
         pass  # todo add any initialization logic here
 
-    def find_nonce(self, block: Block, difficulty: float) -> None:
+    def find_nonce(self, block: Block, bit_difficulty: float) -> None:
         """
         Finds a nonce for the given block to satisfy the proof of work algorithm.
 
@@ -37,7 +37,7 @@ class ProofOfWork:
 
         Args:
             block (Block): The block for which to find the nonce.
-            difficulty (float): The difficulty level of the block.
+            bit_difficulty (float): The difficulty level of the block.
 
         Returns:
             None
@@ -49,7 +49,7 @@ class ProofOfWork:
             raise ValueError("Block cannot be None")
 
         # Calculate the target value for the hash based on difficulty
-        target = math.pow(BASE, HASH_BIT_LENGTH - difficulty) - 1
+        target = math.pow(BASE, HASH_BIT_LENGTH - bit_difficulty) - 1
 
         while True:
             block.hash = calculate_block_hash(
