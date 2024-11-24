@@ -218,7 +218,7 @@ class Blockchain:
                 nonce=current_block.nonce,
             )
             if current_block.hash != expected_hash:
-                logging.error(
+                logging.critical(
                     f"Block with index {current_block.index} "
                     f"has an invalid hash: {current_block.hash}, "
                 )
@@ -235,7 +235,7 @@ class Blockchain:
 
             # Check if the current block's previous hash matches the hash of the previous block
             if current_block.previous_hash != previous_block.hash:
-                logging.error(
+                logging.critical(
                     f"Block with index {current_block.index} "
                     f"has an invalid previous hash: {current_block.previous_hash}, "
                     f"expected previous hash: {previous_block.hash}",
@@ -245,7 +245,7 @@ class Blockchain:
 
             # Validate the proof of work for the current block
             if not self.proof_of_work.validate_proof(current_block, self.bit_difficulties[i]):
-                logging.error(
+                logging.critical(
                     f"Block with index {current_block.index} "
                     f"has an invalid proof of work",
                 )

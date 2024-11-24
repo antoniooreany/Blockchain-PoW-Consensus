@@ -41,8 +41,9 @@ NUMBER_BLOCKS_TO_ADD = 20  # how many blocks do we plan to add; property of the 
 # SLICE_FACTOR = 2.5  # which last part of the blockchain to consider for the statistics
 
 # NUMBER_BLOCKS_SLICE = 2  # todo how was rounded in logging_utils.py? how many blocks to consider for the statistics
+NUMBER_BLOCKS_SLICE = 10  # todo how was rounded in logging_utils.py? how many blocks to consider for the statistics
+# NUMBER_BLOCKS_SLICE = 20  # todo how was rounded in logging_utils.py? how many blocks to consider for the statistics
 # NUMBER_BLOCKS_SLICE = 25  # todo how was rounded in logging_utils.py? how many blocks to consider for the statistics
-NUMBER_BLOCKS_SLICE = 20  # todo how was rounded in logging_utils.py? how many blocks to consider for the statistics
 # NUMBER_BLOCKS_SLICE = 50  # todo how was rounded in logging_utils.py? how many blocks to consider for the statistics
 # NUMBER_BLOCKS_SLICE = round(NUMBER_BLOCKS_TO_ADD / SLICE_FACTOR)  # todo how was rounded in logging_utils.py? how many blocks to consider for the statistics
 

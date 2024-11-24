@@ -47,4 +47,10 @@ class Block:
         logging.info(f"Block {self.index} initial nonce search enter point: {self.nonce}")
 
         # Compute the hash of the block
-        self.hash: str = calculate_block_hash(self.index, self.timestamp, self.data, self.previous_hash, self.nonce)
+        self.hash: str = calculate_block_hash(
+            index=self.index,
+            timestamp=self.timestamp,
+            data=self.data,
+            previous_block_hash=self.previous_hash,
+            nonce=self.nonce,
+        )
