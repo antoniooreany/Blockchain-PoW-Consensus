@@ -68,7 +68,7 @@ class Blockchain:
         )
 
         self.blocks: list[Block] = [genesis_block]  # The list of blocks in the blockchain.
-        self.chain: list[Block] = [genesis_block]  # The list of blocks in the blockchain.
+        # self.chain: list[Block] = [genesis_block]  # The list of blocks in the blockchain.
 
         log_mined_block(genesis_block)
         log_validity(self)
@@ -105,8 +105,8 @@ class Blockchain:
         # Find a nonce for the new block to satisfy proof of work
         self.proof_of_work.find_nonce(new_block, self.bit_difficulties[-1])
 
-        # Set the timestamp of the new block to the current time
-        new_block.timestamp = time.time()
+        # # Set the timestamp of the new block to the current time
+        # new_block.timestamp = time.time()
 
         # Calculate the actual mining time of the new block
         actual_mining_time = new_block.timestamp - self.get_latest_block().timestamp
@@ -185,6 +185,7 @@ class Blockchain:
             self.mining_times[-num_last_blocks:])  # sum the mining times of the last `num_last_blocks` blocks
         return total_time / num_last_blocks  # calculate the average mining time
 
+    # @property
     def is_chain_valid(self) -> bool:
         """
         Validate the blockchain by checking each block's integrity and proof of work.
@@ -195,26 +196,39 @@ class Blockchain:
         Returns:
             bool: True if the blockchain is valid, False otherwise.
         """
-        # Iterate over each block in the chain, starting from the second block
-        for i in range(1, len(self.chain)):
+        # # Iterate over each block in the chain, starting from the second block
+        # for i in range(1, len(self.chain)):
+        #     # Get the current block and the previous block
+        #     current_block: Block = self.chain[i]
+        #     previous_block: Block = self.chain[i - 1]
+
+        # Iterate over each block in the blocks, starting from the second block
+        for i in range(1, len(self.blocks)):
             # Get the current block and the previous block
-            current_block: Block = self.chain[i]
-            previous_block: Block = self.chain[i - 1]
+            current_block: Block = self.blocks[i]
+            previous_block: Block = self.blocks[i - 1]
 
             # Check if the current block's hash matches its calculated hash
             expected_hash: str = calculate_block_hash(
                 index=current_block.index,
                 timestamp=current_block.timestamp,
                 data=current_block.data,
-                previous_hash=current_block.previous_hash,
+                previous_block_hash=current_block.previous_hash,
                 nonce=current_block.nonce,
             )
             if current_block.hash != expected_hash:
                 logging.error(
                     f"Block with index {current_block.index} "
                     f"has an invalid hash: {current_block.hash}, "
-                    f"expected hash: {expected_hash}",
                 )
+                logging.error(f"expected_hash: {expected_hash}")
+
+                logging.error(f"current_block.index: {current_block.index}")
+                logging.error(f"current_block.timestamp: {current_block.timestamp}")
+                logging.error(f"current_block.data: {current_block.data}")
+                logging.error(f"current_block.previous_hash: {current_block.previous_hash}")
+                logging.error(f"current_block.nonce: {current_block.nonce}")
+
                 # If the hash does not match, return False
                 return False
 
