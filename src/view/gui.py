@@ -124,7 +124,8 @@ class GUI:
             self.root.destroy()
 
     def run_blockchain(self, event=None):
-        logging.info("New blockchain is running...")
+        # logging.info("New blockchain is running...")
+        logging.info("NEW BLOCKCHAIN JUST CREATED AND RUNNING...")
 
         self.root.update()  # Update the window to apply the fullscreen attribute
 

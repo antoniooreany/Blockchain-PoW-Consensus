@@ -78,7 +78,7 @@ class Blockchain:
         self.mining_times: list[float] = [0.0]  # avoid the check for the Genesis Block
         # todo ugly, calculate the mining time for the Genesis Block in generic way.
 
-        logging.debug("Blockchain created")
+        # logging.debug("Blockchain created")
         logging.debug("")
 
     def add_block(
@@ -133,6 +133,7 @@ class Blockchain:
 
         # Log the validity of the blockchain
         log_validity(self)
+        logging.debug("")
 
         # Log the actual mining time of the new block
         self.logger.debug(

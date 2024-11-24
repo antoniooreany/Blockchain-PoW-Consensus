@@ -5,6 +5,7 @@
 
 import math
 import random
+from venv import logger
 
 from src.model.block import Block
 from src.constants import HASH_BIT_LENGTH, NONCE_BIT_LENGTH, BASE, HEXADECIMAL_BASE
@@ -56,18 +57,33 @@ class ProofOfWork:
         # Calculate the target value for the hash based on bit difficulty
         target_value: float = math.pow(BASE, HASH_BIT_LENGTH - bit_difficulty) - 1
 
-        while True:
-            # Calculate the hash of the block with the current nonce
-            block.hash = calculate_block_hash(
-                block.index, block.timestamp, block.data, block.previous_hash, block.nonce
-            )
+        # while True:
+        #     # Calculate the hash of the block with the current nonce
+        #     block.hash = calculate_block_hash(
+        #         block.index, block.timestamp, block.data, block.previous_hash, block.nonce
+        #     )
+        #
+        #     # Check if the hash is less than the target value
+        #     if int(block.hash, HEXADECIMAL_BASE) < target_value:
+        #         break
+        #
+        #     # Increment the nonce to try a new value
+        #     block.nonce += 1
 
-            # Check if the hash is less than the target value
+        while True:
+            block.hash = calculate_block_hash(
+                index=block.index,
+                timestamp=block.timestamp,
+                data=block.data,
+                previous_block_hash=block.previous_hash,
+                nonce=block.nonce,
+            )
             if int(block.hash, HEXADECIMAL_BASE) < target_value:
                 break
-
-            # Increment the nonce to try a new value
             block.nonce += 1
+            if block.nonce % 10_000 == 0:  # Log every 10,000 iterations
+                # logger.debug(f"looking for nonce...: {block.nonce}, Hash: {block.hash}")
+                logger.debug(f"going through nonce for block {block.index}: {block.nonce}, Hash: {block.hash}")
 
         # Log the mined block details
         log_mined_block(block)
