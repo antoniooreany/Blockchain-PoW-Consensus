@@ -136,7 +136,7 @@ class GUI:
             self.run_blockchain()
 
     def on_closing(self):
-        if messagebox.askokcancel("Quit", "Do you want to quit?"):
+        # if messagebox.askokcancel("Quit", "Do you want to quit?"): # todo uncomment if the confirmation is needed
             self.root.destroy()
 
     def run_blockchain(self, event=None):
