@@ -2,7 +2,7 @@
 #   All rights reserved.
 #   This code is for a block and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
-
+import logging
 import random
 import time
 
@@ -44,6 +44,7 @@ class Block:
 
         # Initialize the nonce with a random value within the possible range
         self.nonce: int = random.randint(0, MAX_NONCE)
+        logging.info(f"Block {self.index} initial nonce search enter point: {self.nonce}")
 
         # Compute the hash of the block
         self.hash: str = calculate_block_hash(self.index, self.timestamp, self.data, self.previous_hash, self.nonce)

@@ -42,12 +42,18 @@ class TextHandler(logging.Handler):
         self.text_widget.yview(tk.END)
 
 
-
 class GUI:
     def __init__(self, root):
         self.root = root
         self.root.title(GUI_TITLE)
         self.root.geometry(f"{WIDTH}x{HIGHT}")  # Adjust window size
+
+        # Auto-run toggle
+        self.auto_run_enabled = tk.BooleanVar(value=True)  # Auto-run is enabled by default
+        auto_run_checkbox = tk.Checkbutton(
+            root, text="Enable Auto-Run", variable=self.auto_run_enabled
+        )
+        auto_run_checkbox.pack(pady=5)
 
         # Bind the Esc key to the exit_app method
         self.root.bind('<Escape>', lambda event: self.exit_app())
@@ -84,8 +90,13 @@ class GUI:
         button_frame = tk.Frame(main_frame, pady=10)
         button_frame.pack()
 
-        self.run_button = tk.Button(button_frame, text=RUN_BLOCKCHAIN_BUTTON_TEXT, command=self.run_blockchain, width=25)
+        self.run_button = tk.Button(button_frame, text=RUN_BLOCKCHAIN_BUTTON_TEXT, command=self.run_blockchain,
+                                    width=25)
         self.run_button.grid(row=0, column=0, padx=10)
+
+        # Automatically press the "Run Blockchain" button after startup
+        self.root.after(1000, self.auto_press_run_button)
+
         self.root.after(100, self.run_button.focus_set)
 
         self.exit_button = tk.Button(button_frame, text=EXIT_BUTTON_TEXT, command=self.exit_app, width=15)
@@ -119,6 +130,11 @@ class GUI:
         self.text_handler.setFormatter(formatter)
         logging.basicConfig(level=logging.DEBUG, handlers=[self.text_handler])
 
+    def auto_press_run_button(self):
+        """Automatically press the Run Blockchain button if auto-run is enabled."""
+        if self.auto_run_enabled.get():  # Check if auto-run is enabled
+            self.run_blockchain()
+
     def on_closing(self):
         if messagebox.askokcancel("Quit", "Do you want to quit?"):
             self.root.destroy()
@@ -141,13 +157,15 @@ class GUI:
         # Get the configuration parameters from the GUI
         # todo init once, generalize in the loop
         # todo don't allow to pass the wrong values (e.g. negative, zero, any non-digits etc.)
-        initial_bit_difficulty = self.config_params[INITIAL_BIT_DIFFICULTY_KEY].get()  # todo init once, generalize in the loop
+        initial_bit_difficulty = self.config_params[
+            INITIAL_BIT_DIFFICULTY_KEY].get()  # todo init once, generalize in the loop
         target_block_mining_time = self.config_params[TARGET_BLOCK_MINING_TIME_KEY].get()
         adjustment_block_interval = self.config_params[ADJUSTMENT_BLOCK_INTERVAL_KEY].get()
         clamp_factor = self.config_params[CLAMP_FACTOR_KEY].get()
         smallest_bit_difficulty = self.config_params[SMALLEST_BIT_DIFFICULTY_KEY].get()
         number_blocks_to_add = self.config_params[NUMBER_BLOCKS_TO_ADD_KEY].get()
-        number_blocks_slice = self.config_params[NUMBER_BLOCKS_SLICE_KEY].get() # todo if changed in the GUI, it should be changed for the next run, but not changed.
+        number_blocks_slice = self.config_params[
+            NUMBER_BLOCKS_SLICE_KEY].get()  # todo if changed in the GUI, it should be changed for the next run, but not changed.
 
         blockchain = Blockchain(
             initial_bit_difficulty=initial_bit_difficulty,
@@ -187,10 +205,10 @@ class GUI:
         self.root.quit()
         self.root.destroy()
 
+
 def config_gui():
     """Function to initialize and run the configuration UI."""
     root = tk.Tk()
     root.attributes('-fullscreen', True)  # Start the GUI in full screen
     app = GUI(root)
     root.mainloop()
-

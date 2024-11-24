@@ -48,27 +48,9 @@ class ProofOfWork:
         if block is None:
             raise ValueError("Block cannot be None")
 
-        # # Calculate the maximum possible nonce value
-        # max_nonce: int = BASE ** NONCE_BIT_LENGTH - 1
-        #
-        # # Initialize the nonce with a random value within the possible range
-        # block.nonce = random.randint(0, max_nonce)
-
         # Calculate the target value for the hash based on bit difficulty
         target_value: float = math.pow(BASE, HASH_BIT_LENGTH - bit_difficulty) - 1
 
-        # while True:
-        #     # Calculate the hash of the block with the current nonce
-        #     block.hash = calculate_block_hash(
-        #         block.index, block.timestamp, block.data, block.previous_hash, block.nonce
-        #     )
-        #
-        #     # Check if the hash is less than the target value
-        #     if int(block.hash, HEXADECIMAL_BASE) < target_value:
-        #         break
-        #
-        #     # Increment the nonce to try a new value
-        #     block.nonce += 1
 
         while True:
             block.hash = calculate_block_hash(
@@ -79,42 +61,44 @@ class ProofOfWork:
                 nonce=block.nonce,
             )
             if int(block.hash, HEXADECIMAL_BASE) < target_value:
+                logger.debug(f"Found nonce for block {block.index}: {block.nonce}, Hash: {block.hash}")
                 break
             block.nonce += 1
             if block.nonce % 10_000 == 0:  # Log every 10,000 iterations
-                # logger.debug(f"looking for nonce...: {block.nonce}, Hash: {block.hash}")
-                logger.debug(f"going through nonce for block {block.index}: {block.nonce}, Hash: {block.hash}")
+                logger.debug(f"Going through nonce for block {block.index}: {block.nonce}, Hash: {block.hash}")
+
 
         # Log the mined block details
         log_mined_block(block)
 
+    # def validate_proof(self, block: Block, bit_difficulty: float) -> bool:
+    #     target_value = pow(BASE, HASH_BIT_LENGTH - bit_difficulty) - 1
+    #     hash_value = int(block.hash, HEXADECIMAL_BASE)
+    #     logger.debug(f"Validating Block {block.index} | Hash: {block.hash} | Target: {target_value}")
+    #     return hash_value < target_value
+
     def validate_proof(self, block: Block, bit_difficulty: float) -> bool:
-        """
-        Checks if the given block satisfies the proof of work algorithm.
+        # Calculate the target value based on bit difficulty
+        target_value = pow(BASE, HASH_BIT_LENGTH - bit_difficulty) - 1
 
-        This function takes a block and a bit difficulty as parameters and checks if the block's
-        hash is less than the target value determined by the bit difficulty. If the hash is
-        less than the target value, the block is valid, otherwise it is invalid.
+        # Convert the hash from hexadecimal to a numerical value
+        hash_value = int(block.hash, 16)  # 16 is the base for hexadecimal
 
-        Args:
-            block (Block): The block to check.
-            bit_difficulty (float): The difficulty level of the block.
+        # Log the relevant comparison details
+        if hash_value < target_value:
+            logger.debug(f"Block {block.index} Validation: PASS")
+        else:
+            logger.debug(f"Block {block.index} Validation: FAIL")
 
-        Returns:
-            bool: True if the block is valid, False otherwise.
-        """
-        if block is None:
-            raise ValueError("Block cannot be null")
-        if block.hash is None:
-            raise ValueError("Block hash cannot be null")
+        # Add clear log comparison
+        logger.debug(
+            f"Validating Block {block.index}: \n"
+            f"  Hash Value: {hash_value} \n"
+            f"  Target Value: {target_value} \n"
+            f"  Comparison: {'Hash < Target (Valid)' if hash_value < target_value else 'Hash >= Target (Invalid)'}"
+        )
 
-        # Calculate the target value for the hash based on the bit difficulty
-        target_value: float = pow(BASE, HASH_BIT_LENGTH - bit_difficulty) - 1
-
-        # Calculate the hash value of the block
-        hash_value: int = int(block.hash, HEXADECIMAL_BASE)
-
-        # Check if the hash value is less than the target value
+        # Return validation result
         return hash_value < target_value
 
     def clamp_bit_adjustment_factor(self, bit_adjustment_factor: float, bit_clamp_factor: float) -> float:

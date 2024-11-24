@@ -88,13 +88,13 @@ class LogLevelCounterHandler(logging.Handler):
     def print_log_counts(self):
         logger = logging.getLogger()
         logger.info(f"Log levels:")
-        logger.info(f"")
         logger.info(f"NotSet messages: {self.notset_count}")
         logger.info(f"Info messages: {self.info_count}")
         logger.debug(f"Debug messages: {self.debug_count}")
         logger.warning(f"Warning messages: {self.warning_count}")
         logger.error(f"Error messages: {self.error_count}")
         logger.critical(f"Critical messages: {self.critical_count}")
+        logger.info(f"")
 
 
 class ColorFormatter(logging.Formatter):
