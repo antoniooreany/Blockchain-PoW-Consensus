@@ -25,8 +25,8 @@ SMALLEST_BIT_DIFFICULTY = 4.0  # the smallest bit difficulty that we can adjust 
 # properties of the execution:
 # NUMBER_BLOCKS_TO_ADD = 3  # how many blocks do we plan to add; property of the current execution
 # NUMBER_BLOCKS_TO_ADD = 5  # how many blocks do we plan to add; property of the current execution
-# NUMBER_BLOCKS_TO_ADD = 10  # how many blocks do we plan to add; property of the current execution
-NUMBER_BLOCKS_TO_ADD = 20  # how many blocks do we plan to add; property of the current execution
+NUMBER_BLOCKS_TO_ADD = 10  # how many blocks do we plan to add; property of the current execution
+# NUMBER_BLOCKS_TO_ADD = 20  # how many blocks do we plan to add; property of the current execution
 # NUMBER_BLOCKS_TO_ADD = 30  # how many blocks do we plan to add; property of the current execution
 # NUMBER_BLOCKS_TO_ADD = 40  # how many blocks do we plan to add; property of the current execution
 # NUMBER_BLOCKS_TO_ADD = 50  # how many blocks do we plan to add; property of the current execution
@@ -41,7 +41,8 @@ NUMBER_BLOCKS_TO_ADD = 20  # how many blocks do we plan to add; property of the 
 # SLICE_FACTOR = 2.5  # which last part of the blockchain to consider for the statistics
 
 # NUMBER_BLOCKS_SLICE = 2  # todo how was rounded in logging_utils.py? how many blocks to consider for the statistics
-NUMBER_BLOCKS_SLICE = 10  # todo how was rounded in logging_utils.py? how many blocks to consider for the statistics
+NUMBER_BLOCKS_SLICE = 5  # todo how was rounded in logging_utils.py? how many blocks to consider for the statistics
+# NUMBER_BLOCKS_SLICE = 10  # todo how was rounded in logging_utils.py? how many blocks to consider for the statistics
 # NUMBER_BLOCKS_SLICE = 20  # todo how was rounded in logging_utils.py? how many blocks to consider for the statistics
 # NUMBER_BLOCKS_SLICE = 25  # todo how was rounded in logging_utils.py? how many blocks to consider for the statistics
 # NUMBER_BLOCKS_SLICE = 50  # todo how was rounded in logging_utils.py? how many blocks to consider for the statistics
