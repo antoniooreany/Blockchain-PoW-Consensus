@@ -27,35 +27,17 @@ class ProofOfWork:
         """
         pass  # todo add any initialization logic here
 
+
     def find_nonce(self, block: Block, bit_difficulty: float) -> None:
-        """
-        Finds a nonce for the given block to satisfy the proof of work algorithm.
-
-        This function iteratively tries different nonce values for the given block
-        until it finds one that results in a hash value that is less than the target
-        value determined by the bit difficulty.
-
-        Args:
-            block (Block): The block for which to find the nonce.
-            bit_difficulty (float): The difficulty level of the block.
-
-        Returns:
-            None
-
-        Raises:
-            ValueError: If the provided block is None.
-        """
         if block is None:
             raise ValueError("Block cannot be None")
 
-        # Calculate the target value for the hash based on bit difficulty
         target_value: float = math.pow(BASE, HASH_BIT_LENGTH - bit_difficulty) - 1
-
 
         while True:
             block.hash = calculate_block_hash(
                 index=block.index,
-                timestamp=block.timestamp,
+                timestamp=block.timestamp,  # Ensure consistent timestamp
                 data=block.data,
                 previous_block_hash=block.previous_hash,
                 nonce=block.nonce,
@@ -64,12 +46,8 @@ class ProofOfWork:
                 logger.debug(f"Found nonce for block {block.index}: {block.nonce}, Hash: {block.hash}")
                 break
             block.nonce += 1
-            if block.nonce % 10_000 == 0:  # Log every 10,000 iterations
-                logger.debug(f"Going through nonce for block {block.index}: {block.nonce}, Hash: {block.hash}")
-
-
-        # Log the mined block details
-        log_mined_block(block)
+            if block.nonce % 10_000 == 0:
+                logger.debug(f"Trying nonce {block.nonce} for block {block.index}: {block.hash}")
 
 
     def validate_proof(self, block: Block, bit_difficulty: float) -> bool:
@@ -108,9 +86,11 @@ class ProofOfWork:
             f"  Target Value (int): {target_value_padded}"
         )
         if is_valid:
-            logger.info(f"Block {block.index} Validation: PASS\n")
+            logger.info(f"Block {block.index} Validation: PASS")
+            log_mined_block(block)
         else:
             logger.critical(f"Block {block.index} Validation: FAIL\n")
+
 
         # Return validation result
         return is_valid

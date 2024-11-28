@@ -117,7 +117,10 @@ class LogLevelCounterHandler(logging.Handler):
         logger.warning(f"Warning messages: {self.warning_count}")
         logger.error(f"Error messages: {self.error_count}")
         logger.critical(f"Critical messages: {self.critical_count}\n")
-        logger.info(f"Difficulty adjustment anomalies: {self.difficulty_anomalies_count}")
+        if self.difficulty_anomalies_count > 0:
+            logger.critical(f"Difficulty adjustment anomalies number: {self.difficulty_anomalies_count}")
+        else:
+            logger.info(f"No anomalies detected for blocks.")
 
 class ColorFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
@@ -375,12 +378,12 @@ def log_validity(blockchain) -> None:
     assert blockchain is not None, "Blockchain cannot be null"
     logger: logging.Logger = logging.getLogger()
     assert logger is not None, "Logger cannot be null"
-    is_blockchain_valid: bool = blockchain.is_chain_valid()
-    assert is_blockchain_valid is not None, "Blockchain validity cannot be null"
-    if is_blockchain_valid:
-        logger.info(f"Blockchain is valid: {is_blockchain_valid}")
-    else:
-        logger.critical(f"Blockchain validity: {is_blockchain_valid}")
+    # is_blockchain_valid: bool = blockchain.is_chain_valid()  # todo should be a property?
+    # assert is_blockchain_valid is not None, "Blockchain validity cannot be null"
+    # if is_blockchain_valid:
+    #     logger.info(f"Blockchain is valid: {is_blockchain_valid}")
+    # else:
+    #     logger.critical(f"Blockchain validity: {is_blockchain_valid}")
 
 
 def configure_logging():

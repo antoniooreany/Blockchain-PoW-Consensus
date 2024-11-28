@@ -38,7 +38,7 @@ class Block:
         self.data: str = data
 
         # Record the timestamp of block creation
-        self.timestamp: float = time.time()
+        self.timestamp: float = time.time()  # Here we use the current time as the timestamp
 
         # Store the hash of the previous block
         self.previous_hash: str = previous_hash

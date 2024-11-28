@@ -4,7 +4,9 @@
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
 import time
+from venv import logger
 
+from src.constants import GENESIS_BLOCK_PREVIOUS_HASH
 from src.model.block import Block
 from src.model.blockchain import Blockchain
 
@@ -46,7 +48,11 @@ def add_blocks(
             bit_difficulty=blockchain.bit_difficulties[-1] if blockchain.bit_difficulties else 0,
             index=index,
             data=f"Block {index} Data",  # todo mock data is used, it should be replaced with real data
-            previous_hash=blockchain.blocks[-1].hash if blockchain.blocks else None,
+            previous_hash=blockchain.blocks[-1].hash if blockchain.blocks else GENESIS_BLOCK_PREVIOUS_HASH,
         )
         # 2. Add the block to the blockchain.
         blockchain.add_block(block, blockchain.clamp_factor, blockchain.smallest_bit_difficulty)
+
+    # for i in range(1, len(blockchain.blocks)):
+    #     mining_time = blockchain.blocks[i].timestamp - blockchain.blocks[i-1].timestamp
+    #     logger.info(f"Block {i} mining time: {mining_time:.4f} seconds")
