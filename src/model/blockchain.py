@@ -294,71 +294,34 @@ class Blockchain:
             self.bit_difficulties[-1] = new_bit_difficulty
 
 
-    # def log_difficulty_anomalies(self) -> None:
-    #     """
-    #     Checks for anomalies in the difficulty adjustment.
-    #
-    #     Analyses the average mining time for the last adjustment interval and
-    #     compares it with the expected adjustment factor.
-    #
-    #     :return: None
-    #     """
-    #     # Set the interval for the analysis
-    #     interval: int = self.adjustment_block_interval
-    #
-    #     # Initialize a flag to track if any anomalies are detected
-    #     anomalies_detected: bool = False
-    #
-    #     # Iterate over the blocks in the blockchain
-    #     for i in range(interval, len(self.blocks), interval):
-    #         # Calculate the average mining time for the last adjustment interval
-    #         avg_mining_time: float = sum(self.mining_times[i - interval + 1:i + 1]) / interval
-    #
-    #         # Calculate the expected adjustment factor
-    #         expected_factor: float = avg_mining_time / self.target_block_mining_time
-    #
-    #         # Get the actual and previous difficulties
-    #         actual_difficulty: float = self.bit_difficulties[i]
-    #         previous_difficulty: float = self.bit_difficulties[i - interval]
-    #
-    #         # Calculate the expected adjustment
-    #         expected_adjustment: float = math.log2(expected_factor)
-    #         clamped_adjustment: float = self.proof_of_work.clamp_bit_adjustment_factor(expected_adjustment, self.clamp_factor)
-    #         expected_difficulty: float = max(self.smallest_bit_difficulty, previous_difficulty - clamped_adjustment)
-    #
-    #         # Check for anomalies
-    #         if abs(actual_difficulty - expected_difficulty) > 1e-6:
-    #             # Log the anomaly
-    #             self.logger.critical(
-    #                 f"Anomaly detected for blocks {i - interval + 1} to {i}:\n"
-    #                 f"  Average Mining Time: {avg_mining_time:.6f}s\n"
-    #                 f"  Expected Difficulty: {expected_difficulty:.6f}\n"
-    #                 f"  Actual Difficulty: {actual_difficulty:.6f}\n"
-    #             )
-    #             # Set the flag to True
-    #             anomalies_detected = True
-    #
-    #     # If no anomalies are detected, log a message
-    #     if not anomalies_detected:
-    #         self.logger.info("No adjust_difficulty anomalies detected")
-
 
     def log_difficulty_anomalies(self) -> None:
-        interval = self.adjustment_block_interval
-        anomalies_detected = False
+        """
+        Logs any anomalies in the difficulty adjustments by comparing the actual bit difficulty values
+        to the expected values calculated from the average mining times.
+
+        The function iterates over the blocks in chunks of the adjustment block interval, calculates the
+        average mining time for each chunk and the expected bit difficulty from the average mining time.
+        If the actual bit difficulty value differs from the expected value, the function logs a warning.
+
+        Returns:
+            None
+        """
+        interval: int = self.adjustment_block_interval
+        anomalies_detected: bool = False
 
         for i in range(interval, len(self.blocks), interval):
-            avg_mining_time = sum(self.mining_times[i - interval + 1:i + 1]) / interval
-            expected_factor = avg_mining_time / self.target_block_mining_time
+            avg_mining_time: float = sum(self.mining_times[i - interval + 1:i + 1]) / interval
+            expected_factor: float = avg_mining_time / self.target_block_mining_time
 
             # Handle invalid expected_factor values
             if expected_factor <= 0:
                 self.logger.error(f"Invalid expected_factor: {expected_factor}. Skipping log calculation.")
                 continue
 
-            expected_adjustment = math.log2(expected_factor)
-            clamped_adjustment = self.proof_of_work.clamp_bit_adjustment_factor(expected_adjustment, self.clamp_factor)
-            expected_difficulty = max(self.smallest_bit_difficulty, self.bit_difficulties[i - interval] - clamped_adjustment)
+            expected_adjustment: float = math.log2(expected_factor)
+            clamped_adjustment: float = self.proof_of_work.clamp_bit_adjustment_factor(expected_adjustment, self.clamp_factor)
+            expected_difficulty: float = max(self.smallest_bit_difficulty, self.bit_difficulties[i - interval] - clamped_adjustment)
 
             if abs(self.bit_difficulties[i] - expected_difficulty) > 1e-6:
                 self.logger.critical(
