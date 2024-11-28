@@ -293,7 +293,8 @@ def get_blockchain_statistics(
 
     # Number of blocks mined with 0.0 seconds:
     zero_mining_time_blocks_number = sum(
-        1 for time in blockchain.mining_times if time == 0.0) - 1  # -1 for the Genesis Block
+        # 1 for time in blockchain.mining_times if time == 0.0) - 1  # -1 for the Genesis Block
+        1 for time in blockchain.mining_times if time == 0.0)  #
     relative_zero_mining_time_blocks_number = (zero_mining_time_blocks_number / blockchain.number_blocks_to_add) * 100.0
 
     # create difficulties from blockchain.bit_difficulties

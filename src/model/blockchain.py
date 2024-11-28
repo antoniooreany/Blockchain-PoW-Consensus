@@ -49,6 +49,8 @@ class Blockchain:
         self.logger = configure_logging()
 
         self.initial_bit_difficulty: float = initial_bit_difficulty  # The initial difficulty level of the blockchain.
+        # self.bit_difficulties: list[float] = [0]  # The list of bit difficulties in the blockchain.
+        self.bit_difficulties: list[float] = [initial_bit_difficulty]  # The list of bit difficulties in the blockchain.
         self.target_block_mining_time: float = target_block_mining_time  # The target time to mine a block in seconds.
         self.adjustment_block_interval: int = adjustment_block_interval  # The number of blocks to wait before adjusting the difficulty.
         self.number_blocks_to_add: int = number_blocks_to_add  # The number of blocks to add to the blockchain.
@@ -70,9 +72,11 @@ class Blockchain:
         log_mined_block(genesis_block)
         log_validity(self)
 
-        self.bit_difficulties: list[float] = [initial_bit_difficulty]  # The list of bit difficulties in the blockchain.
+        # self.bit_difficulties: list[float] = [initial_bit_difficulty]  # The list of bit difficulties in the blockchain.
+        # self.bit_difficulties: list[float] = [0]  # The list of bit difficulties in the blockchain.
 
-        self.mining_times: list[float] = [0.0]  # avoid the check for the Genesis Block
+        # self.mining_times: list[float] = [0.0]  # avoid the check for the Genesis Block
+        self.mining_times: list[float] = []  # avoid the check for the Genesis Block
         # todo ugly, calculate the mining time for the Genesis Block in generic way.
 
         logging.debug("")
@@ -284,14 +288,25 @@ class Blockchain:
                 # Clamp the bit adjustment factor
                 clamped_bit_adjustment_factor: float = self.proof_of_work.clamp_bit_adjustment_factor(bit_adjustment_factor, bit_clamp_factor)
                 # Calculate the new bit difficulty
-                new_bit_difficulty: float = max(smallest_bit_difficulty,
-                                                last_bit_difficulty - clamped_bit_adjustment_factor)
+                # new_bit_difficulty: float = max(smallest_bit_difficulty,
+                #                                 last_bit_difficulty - clamped_bit_adjustment_factor)
+
+                # Calculate the new bit difficulty
+                # Use a dampening factor to smooth adjustments
+                dampening_factor = 0.5
+                new_bit_difficulty: float = max(
+                    smallest_bit_difficulty,
+                    last_bit_difficulty - dampening_factor * clamped_bit_adjustment_factor
+                )
+
+
             else:
                 # Set the new bit difficulty to the smallest bit difficulty if the reversed adjustment factor is 0 or negative
                 new_bit_difficulty: float = smallest_bit_difficulty
 
             # Update the last bit difficulty in the blockchain
             self.bit_difficulties[-1] = new_bit_difficulty
+            # self.bit_difficulties.append(new_bit_difficulty)
 
 
 
