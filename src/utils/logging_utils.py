@@ -54,6 +54,51 @@ from src.constants import (
 )
 
 
+# class LogLevelCounterHandler(logging.Handler):
+#     def __init__(self):
+#         super().__init__()
+#         self.notset_count = 0
+#         self.info_count = 0
+#         self.debug_count = 0
+#         self.warning_count = 0
+#         self.error_count = 0
+#         self.critical_count = 0
+#         self.log_contents = []  # Add this attribute to store log entries
+#
+#     def emit(self, record):
+#         if record.levelno == logging.NOTSET:
+#             self.notset_count += 1
+#         elif record.levelno == logging.INFO:
+#             self.info_count += 1
+#         elif record.levelno == logging.DEBUG:
+#             self.debug_count += 1
+#         elif record.levelno == logging.WARNING:
+#             self.warning_count += 1
+#         elif record.levelno == logging.ERROR:
+#             self.error_count += 1
+#         elif record.levelno == logging.CRITICAL:
+#             self.critical_count += 1
+#
+#         log_entry = self.format(record)
+#         self.log_contents.append(log_entry)  # Store the log entry
+#
+#
+#
+#     def print_log_counts(self):
+#         logger = logging.getLogger()
+#         logger.info(f"Log levels:")
+#         logger.info(f"NotSet messages: {self.notset_count}")
+#         logger.info(f"Info messages: {self.info_count}")
+#         logger.debug(f"Debug messages: {self.debug_count}")
+#         logger.warning(f"Warning messages: {self.warning_count}")
+#         logger.error(f"Error messages: {self.error_count}")
+#         logger.critical(f"Critical messages: {self.critical_count}")
+#         logger.info(f"")
+
+
+
+
+
 class LogLevelCounterHandler(logging.Handler):
     def __init__(self):
         super().__init__()
@@ -63,7 +108,8 @@ class LogLevelCounterHandler(logging.Handler):
         self.warning_count = 0
         self.error_count = 0
         self.critical_count = 0
-        self.log_contents = []  # Add this attribute to store log entries
+        self.difficulty_anomalies_count = 0  # Добавлено поле для подсчёта аномалий
+        self.log_contents = []  # Добавлено поле для хранения записей лога
 
     def emit(self, record):
         if record.levelno == logging.NOTSET:
@@ -79,11 +125,12 @@ class LogLevelCounterHandler(logging.Handler):
         elif record.levelno == logging.CRITICAL:
             self.critical_count += 1
 
-        log_entry = self.format(record)
-        self.log_contents.append(log_entry)  # Store the log entry
+        # Увеличиваем счётчик аномалий при ERROR-уровне и соответствующем сообщении
+        if "Anomaly detected for blocks" in record.msg:
+            self.difficulty_anomalies_count += 1
 
-    def get_log_contents(self):
-        return "\n".join(self.log_contents)
+        log_entry = self.format(record)
+        self.log_contents.append(log_entry)
 
     def print_log_counts(self):
         logger = logging.getLogger()
@@ -94,7 +141,12 @@ class LogLevelCounterHandler(logging.Handler):
         logger.warning(f"Warning messages: {self.warning_count}")
         logger.error(f"Error messages: {self.error_count}")
         logger.critical(f"Critical messages: {self.critical_count}")
+        logger.info(f"Difficulty adjustment anomalies: {self.difficulty_anomalies_count}")  # Выводим количество аномалий
         logger.info(f"")
+
+    # def get_log_contents(self):
+    #     return "\n".join(self.log_contents)
+
 
 
 class ColorFormatter(logging.Formatter):
