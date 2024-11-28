@@ -3,7 +3,6 @@
 #   This code is for a logger_singleton and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
-
 import logging
 
 from src.utils.logging_utils import ColorFormatter
@@ -30,12 +29,15 @@ class LoggerSingleton(object):
 
         If the singleton is already initialized, raise an exception.
         Otherwise, set the singleton instance to this and set up the logger.
+
+        Returns:
+            None
         """
         if LoggerSingleton._instance is not None:
             raise Exception("This class is a singleton!")
         else:
             LoggerSingleton._instance = self
-            self.logger = self.setup_logger()
+            self.logger: logging.Logger = self.setup_logger()
 
     @staticmethod
     def setup_logger(level: int = logging.DEBUG, console_level: int = logging.DEBUG) -> logging.Logger:

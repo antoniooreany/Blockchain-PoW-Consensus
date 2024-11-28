@@ -58,8 +58,6 @@ class Blockchain:
 
         self.proof_of_work = ProofOfWork()  # Create an instance of ProofOfWork
 
-        # self.block_indexes: list[int] = list(range(number_blocks_to_add + 1))
-
         genesis_block: Block = Block(
             bit_difficulty=0,  # todo it might be initial_bit_difficulty
             index=0,
@@ -68,7 +66,6 @@ class Blockchain:
         )
 
         self.blocks: list[Block] = [genesis_block]  # The list of blocks in the blockchain.
-        # self.chain: list[Block] = [genesis_block]  # The list of blocks in the blockchain.
 
         log_mined_block(genesis_block)
         log_validity(self)
@@ -78,7 +75,6 @@ class Blockchain:
         self.mining_times: list[float] = [0.0]  # avoid the check for the Genesis Block
         # todo ugly, calculate the mining time for the Genesis Block in generic way.
 
-        # logging.debug("Blockchain created")
         logging.debug("")
 
     def add_block(
@@ -105,9 +101,6 @@ class Blockchain:
         # Find a nonce for the new block to satisfy proof of work
         self.proof_of_work.find_nonce(new_block, self.bit_difficulties[-1])
 
-        # # Set the timestamp of the new block to the current time
-        # new_block.timestamp = time.time()
-
         # Calculate the actual mining time of the new block
         actual_mining_time = new_block.timestamp - self.get_latest_block().timestamp
 
@@ -131,7 +124,8 @@ class Blockchain:
         # Adjust the difficulty of the blockchain
         self.adjust_difficulty(clamp_factor, smallest_bit_difficulty)
 
-        self.log_difficulty_anomalies() # Логирование аномалий в корректировке сложности.
+        # Log difficulty anomalies
+        self.log_difficulty_anomalies()
 
         # Log the validity of the blockchain
         log_validity(self)
@@ -199,11 +193,6 @@ class Blockchain:
         Returns:
             bool: True if the blockchain is valid, False otherwise.
         """
-        # # Iterate over each block in the chain, starting from the second block
-        # for i in range(1, len(self.chain)):
-        #     # Get the current block and the previous block
-        #     current_block: Block = self.chain[i]
-        #     previous_block: Block = self.chain[i - 1]
 
         # Iterate over each block in the blocks, starting from the second block
         for i in range(1, len(self.blocks)):
@@ -304,71 +293,82 @@ class Blockchain:
             # Update the last bit difficulty in the blockchain
             self.bit_difficulties[-1] = new_bit_difficulty
 
+
     # def log_difficulty_anomalies(self) -> None:
     #     """
-    #     Логирование аномалий в корректировке сложности.
-    #     Анализирует среднее время майнинга по интервалу и ожидаемое изменение сложности.
+    #     Checks for anomalies in the difficulty adjustment.
+    #
+    #     Analyses the average mining time for the last adjustment interval and
+    #     compares it with the expected adjustment factor.
+    #
+    #     :return: None
     #     """
-    #     interval = self.adjustment_block_interval
+    #     # Set the interval for the analysis
+    #     interval: int = self.adjustment_block_interval
+    #
+    #     # Initialize a flag to track if any anomalies are detected
+    #     anomalies_detected: bool = False
+    #
+    #     # Iterate over the blocks in the blockchain
     #     for i in range(interval, len(self.blocks), interval):
-    #         # Вычисляем среднее время майнинга за предыдущий интервал
-    #         avg_mining_time = sum(self.mining_times[i - interval + 1:i + 1]) / interval
-    #         expected_factor = avg_mining_time / self.target_block_mining_time
+    #         # Calculate the average mining time for the last adjustment interval
+    #         avg_mining_time: float = sum(self.mining_times[i - interval + 1:i + 1]) / interval
     #
-    #         # Получаем фактическую и предыдущую сложности
-    #         actual_difficulty = self.bit_difficulties[i]
-    #         previous_difficulty = self.bit_difficulties[i - interval]
+    #         # Calculate the expected adjustment factor
+    #         expected_factor: float = avg_mining_time / self.target_block_mining_time
     #
-    #         # Рассчитываем ожидаемую сложность
-    #         expected_adjustment = math.log2(expected_factor)
-    #         clamped_adjustment = self.proof_of_work.clamp_bit_adjustment_factor(expected_adjustment, self.clamp_factor)
-    #         expected_difficulty = max(self.smallest_bit_difficulty, previous_difficulty - clamped_adjustment)
+    #         # Get the actual and previous difficulties
+    #         actual_difficulty: float = self.bit_difficulties[i]
+    #         previous_difficulty: float = self.bit_difficulties[i - interval]
     #
-    #         # Проверяем на аномалии
+    #         # Calculate the expected adjustment
+    #         expected_adjustment: float = math.log2(expected_factor)
+    #         clamped_adjustment: float = self.proof_of_work.clamp_bit_adjustment_factor(expected_adjustment, self.clamp_factor)
+    #         expected_difficulty: float = max(self.smallest_bit_difficulty, previous_difficulty - clamped_adjustment)
+    #
+    #         # Check for anomalies
     #         if abs(actual_difficulty - expected_difficulty) > 1e-6:
-    #             self.logger.error(
+    #             # Log the anomaly
+    #             self.logger.critical(
     #                 f"Anomaly detected for blocks {i - interval + 1} to {i}:\n"
     #                 f"  Average Mining Time: {avg_mining_time:.6f}s\n"
     #                 f"  Expected Difficulty: {expected_difficulty:.6f}\n"
     #                 f"  Actual Difficulty: {actual_difficulty:.6f}\n"
     #             )
-
+    #             # Set the flag to True
+    #             anomalies_detected = True
+    #
+    #     # If no anomalies are detected, log a message
+    #     if not anomalies_detected:
+    #         self.logger.info("No adjust_difficulty anomalies detected")
 
 
     def log_difficulty_anomalies(self) -> None:
-        """
-        Логирование аномалий в корректировке сложности.
-        Анализирует среднее время майнинга по интервалу и ожидаемое изменение сложности.
-        """
         interval = self.adjustment_block_interval
-        anomalies_detected = False  # Флаг для отслеживания аномалий
+        anomalies_detected = False
 
         for i in range(interval, len(self.blocks), interval):
-            # Вычисляем среднее время майнинга за предыдущий интервал
             avg_mining_time = sum(self.mining_times[i - interval + 1:i + 1]) / interval
             expected_factor = avg_mining_time / self.target_block_mining_time
 
-            # Получаем фактическую и предыдущую сложности
-            actual_difficulty = self.bit_difficulties[i]
-            previous_difficulty = self.bit_difficulties[i - interval]
+            # Handle invalid expected_factor values
+            if expected_factor <= 0:
+                self.logger.error(f"Invalid expected_factor: {expected_factor}. Skipping log calculation.")
+                continue
 
-            # Рассчитываем ожидаемую сложность
             expected_adjustment = math.log2(expected_factor)
             clamped_adjustment = self.proof_of_work.clamp_bit_adjustment_factor(expected_adjustment, self.clamp_factor)
-            expected_difficulty = max(self.smallest_bit_difficulty, previous_difficulty - clamped_adjustment)
+            expected_difficulty = max(self.smallest_bit_difficulty, self.bit_difficulties[i - interval] - clamped_adjustment)
 
-            # Проверяем на аномалии
-            if abs(actual_difficulty - expected_difficulty) > 1e-6:
+            if abs(self.bit_difficulties[i] - expected_difficulty) > 1e-6:
                 self.logger.critical(
                     f"Anomaly detected for blocks {i - interval + 1} to {i}:\n"
                     f"  Average Mining Time: {avg_mining_time:.6f}s\n"
                     f"  Expected Difficulty: {expected_difficulty:.6f}\n"
-                    f"  Actual Difficulty: {actual_difficulty:.6f}\n"
+                    f"  Actual Difficulty: {self.bit_difficulties[i]:.6f}\n"
                 )
                 anomalies_detected = True
 
-        # Если аномалий не обнаружено, вывести сообщение
         if not anomalies_detected:
             self.logger.info("No adjust_difficulty anomalies detected")
-
 

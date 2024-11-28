@@ -71,106 +71,41 @@ class ProofOfWork:
         # Log the mined block details
         log_mined_block(block)
 
-    # def validate_proof(self, block: Block, bit_difficulty: float) -> bool:
-    #     target_value = pow(BASE, HASH_BIT_LENGTH - bit_difficulty) - 1
-    #     hash_value = int(block.hash, HEXADECIMAL_BASE)
-    #     logger.debug(f"Validating Block {block.index} | Hash: {block.hash} | Target: {target_value}")
-    #     return hash_value < target_value
-
-    # def validate_proof(self, block: Block, bit_difficulty: float) -> bool:
-    #     # Calculate the target value based on bit difficulty
-    #     target_value = pow(BASE, HASH_BIT_LENGTH - bit_difficulty) - 1
-    #
-    #     # Convert the hash from hexadecimal to a numerical value
-    #     hash_value = int(block.hash, 16)  # 16 is the base for hexadecimal
-    #
-    #     # Log the relevant comparison details
-    #     if hash_value < target_value:
-    #         logger.debug(f"Block {block.index} Validation: PASS")
-    #     else:
-    #         logger.critical(f"Block {block.index} Validation: FAIL")
-    #
-    #     # Add clear log comparison
-    #     logger.debug(
-    #         f"Validating Block {block.index}: \n"
-    #         f"  Hash Value: {hash_value} \n"
-    #         f"  Target Value: {target_value} \n"
-    #         f"  Comparison: {'Hash < Target (Valid)' if hash_value < target_value else 'Hash >= Target (Invalid)'}"
-    #     )
-    #
-    #     # Return validation result
-    #     return hash_value < target_value
-
-    # def validate_proof(self, block: Block, bit_difficulty: float) -> bool:
-    #     # Calculate the target value based on bit difficulty
-    #     target_value = pow(BASE, HASH_BIT_LENGTH - bit_difficulty) - 1
-    #
-    #     # Convert the hash from hexadecimal to a numerical value
-    #     hash_value = int(block.hash, 16)
-    #
-    #     # Format values in both exponential and full precision
-    #     target_value_exp = f"{target_value:.2e}"
-    #     hash_value_exp = f"{hash_value:.2e}"
-    #
-    #     logger.debug(
-    #         f"Validating Block {block.index}:\n"
-    #         f"  Hash Value: {hash_value} ({hash_value_exp})\n"
-    #         f"  Target Value: {target_value} ({target_value_exp})\n"
-    #         f"  Comparison: {'Hash < Target (Valid)' if hash_value < target_value else 'Hash >= Target (Invalid)'}"
-    #     )
-    #
-    #     # Return validation result
-    #     return hash_value < target_value
-
-    # def validate_proof(self, block: Block, bit_difficulty: float) -> bool:
-    #     # Calculate the target value based on bit difficulty
-    #     target_value = pow(BASE, HASH_BIT_LENGTH - bit_difficulty) - 1
-    #
-    #     # Convert the hash from hexadecimal to a numerical value
-    #     hash_value = int(block.hash, 16)
-    #
-    #     # Prepare values for aligned output
-    #     hash_value_full = f"{hash_value:,}"  # Add commas for readability
-    #     target_value_full = f"{int(target_value):,}"
-    #     hash_value_exp = f"{hash_value:.3e}"  # Use exponential format with 3 decimal places
-    #     target_value_exp = f"{target_value:.3e}"
-    #
-    #     # Log comparison
-    #     logger.debug(
-    #         f"Validating Block {block.index}:\n"
-    #         f"  Hash Value:   {hash_value_full}\n"
-    #         f"  Target Value: {target_value_full}\n"
-    #         f"  Comparison: {'Hash < Target (Valid)' if hash_value < target_value else 'Hash >= Target (Invalid)'}"
-    #     )
-    #
-    #     # Return validation result
-    #     return hash_value < target_value
 
     def validate_proof(self, block: Block, bit_difficulty: float) -> bool:
+        """
+        Validate the proof of work for a given block.
+
+        Args:
+            block (Block): The block to validate.
+            bit_difficulty (float): The difficulty level for the block's proof of work.
+
+        Returns:
+            bool: True if the block's hash meets the required difficulty, False otherwise.
+        """
         # Calculate the target value based on bit difficulty
-        target_value = pow(BASE, HASH_BIT_LENGTH - bit_difficulty) - 1
+        target_value: float = pow(BASE, HASH_BIT_LENGTH - bit_difficulty) - 1
 
         # Convert the hash from hexadecimal to a numerical value
-        hash_value = int(block.hash, 16)
+        hash_value: int = int(block.hash, HEXADECIMAL_BASE)
 
         # Format values with commas and ensure equal padding
-        hash_value_str = f"{hash_value:,}"
-        target_value_str = f"{int(target_value):,}"
+        hash_value_str: str = f"{hash_value:,}"
+        target_value_str: str = f"{int(target_value):,}"
 
         # Find the length of the longest string for alignment
-        max_length = max(len(hash_value_str), len(target_value_str))
+        max_length: int = max(len(hash_value_str), len(target_value_str))
 
         # Add padding to align values
-        hash_value_padded = hash_value_str.rjust(max_length)
-        target_value_padded = target_value_str.rjust(max_length)
+        hash_value_padded: str = hash_value_str.rjust(max_length)
+        target_value_padded: str = target_value_str.rjust(max_length)
 
         # Log the values
-        is_valid = hash_value < target_value
+        is_valid: bool = hash_value < target_value
         logger.debug(
             f"Validating Block {block.index}:\n"
             f"  Hash Value (int):   {hash_value_padded}\n"
             f"  Target Value (int): {target_value_padded}"
-            # f"  Comparison:   {'Hash < Target (Valid)' if is_valid else 'Hash >= Target (Invalid)'}"
         )
         if is_valid:
             logger.info(f"Block {block.index} Validation: PASS\n")

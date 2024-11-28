@@ -1,19 +1,18 @@
 #   Copyright (c) 2024, Anton Gorshkov
 #   All rights reserved.
-#
 #   This code is for a logging_utils.py and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
 
 import logging
-# from statistics import variance, covariance
 
 from statistics import variance
+from typing import List, Dict
+
 import numpy as np
 
 from src.model.block import Block
 from src.constants import (
-    # SLICE_FACTOR,
     INITIAL_BIT_DIFFICULTY_KEY,
     NUMBER_BLOCKS_TO_ADD_KEY,
 
@@ -28,8 +27,6 @@ from src.constants import (
     RELATIVE_DEVIATION_MINING_TIME_AVERAGE_FROM_TARGET_SLICE_KEY,
 
     AVERAGE_BIT_DIFFICULTY_SLICE_KEY,
-    # ABSOLUTE_DEVIATION_BIT_DIFFICULTY_SLICE_FROM_INITIAL_KEY,
-    # RELATIVE_DEVIATION_BIT_DIFFICULTY_SLICE_FROM_INITIAL_KEY,
     ABSOLUTE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY,
     RELATIVE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY,
 
@@ -50,68 +47,39 @@ from src.constants import (
     RELATIVE_DEVIATION_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY, VARIANCE_DIFFICULTY_SLICE_KEY,
     STANDARD_DEVIATION_DIFFICULTY_SLICE_KEY, COVARIANCE_MINING_TIME_DIFFICULTY_SLICE_KEY,
     CORRELATION_MINING_TIME_DIFFICULTY_SLICE_KEY,
-
 )
 
 
-# class LogLevelCounterHandler(logging.Handler):
-#     def __init__(self):
-#         super().__init__()
-#         self.notset_count = 0
-#         self.info_count = 0
-#         self.debug_count = 0
-#         self.warning_count = 0
-#         self.error_count = 0
-#         self.critical_count = 0
-#         self.log_contents = []  # Add this attribute to store log entries
-#
-#     def emit(self, record):
-#         if record.levelno == logging.NOTSET:
-#             self.notset_count += 1
-#         elif record.levelno == logging.INFO:
-#             self.info_count += 1
-#         elif record.levelno == logging.DEBUG:
-#             self.debug_count += 1
-#         elif record.levelno == logging.WARNING:
-#             self.warning_count += 1
-#         elif record.levelno == logging.ERROR:
-#             self.error_count += 1
-#         elif record.levelno == logging.CRITICAL:
-#             self.critical_count += 1
-#
-#         log_entry = self.format(record)
-#         self.log_contents.append(log_entry)  # Store the log entry
-#
-#
-#
-#     def print_log_counts(self):
-#         logger = logging.getLogger()
-#         logger.info(f"Log levels:")
-#         logger.info(f"NotSet messages: {self.notset_count}")
-#         logger.info(f"Info messages: {self.info_count}")
-#         logger.debug(f"Debug messages: {self.debug_count}")
-#         logger.warning(f"Warning messages: {self.warning_count}")
-#         logger.error(f"Error messages: {self.error_count}")
-#         logger.critical(f"Critical messages: {self.critical_count}")
-#         logger.info(f"")
-
-
-
-
-
 class LogLevelCounterHandler(logging.Handler):
-    def __init__(self):
-        super().__init__()
-        self.notset_count = 0
-        self.info_count = 0
-        self.debug_count = 0
-        self.warning_count = 0
-        self.error_count = 0
-        self.critical_count = 0
-        self.difficulty_anomalies_count = 0  # Добавлено поле для подсчёта аномалий
-        self.log_contents = []  # Добавлено поле для хранения записей лога
+    def __init__(self) -> None:
+        """
+        Initialize a new LogLevelCounterHandler.
 
-    def emit(self, record):
+        Sets all log level counters to 0.
+        """
+        super().__init__()
+        self.notset_count: int = 0
+        self.info_count: int = 0
+        self.debug_count: int = 0
+        self.warning_count: int = 0
+        self.error_count: int = 0
+        self.critical_count: int = 0
+        self.difficulty_anomalies_count: int = 0
+        self.log_contents: List[str] = []
+
+    def emit(self, record: logging.LogRecord) -> None:
+        """
+        Emit a record.
+
+        Increment the counter for the log level of the record. If the record is a difficulty anomaly,
+        increment the difficulty anomaly counter.
+
+        Args:
+        record: The record to emit.
+
+        Returns:
+        None
+        """
         if record.levelno == logging.NOTSET:
             self.notset_count += 1
         elif record.levelno == logging.INFO:
@@ -125,38 +93,51 @@ class LogLevelCounterHandler(logging.Handler):
         elif record.levelno == logging.CRITICAL:
             self.critical_count += 1
 
-        # Увеличиваем счётчик аномалий при ERROR-уровне и соответствующем сообщении
         if "Anomaly detected for blocks" in record.msg:
             self.difficulty_anomalies_count += 1
 
         log_entry = self.format(record)
         self.log_contents.append(log_entry)
 
-    def print_log_counts(self):
-        logger = logging.getLogger()
+    def print_log_counts(self) -> None:
+        """
+        Print the counts of log messages with different log levels.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
+        logger: logging.Logger = logging.getLogger()
         logger.info(f"Log levels:")
         logger.info(f"NotSet messages: {self.notset_count}")
         logger.info(f"Info messages: {self.info_count}")
         logger.debug(f"Debug messages: {self.debug_count}")
         logger.warning(f"Warning messages: {self.warning_count}")
         logger.error(f"Error messages: {self.error_count}")
-        logger.critical(f"Critical messages: {self.critical_count}")
-        logger.info(f"Difficulty adjustment anomalies: {self.difficulty_anomalies_count}")  # Выводим количество аномалий
-        logger.info(f"")
-
-    # def get_log_contents(self):
-    #     return "\n".join(self.log_contents)
-
-
+        logger.critical(f"Critical messages: {self.critical_count}\n")
+        logger.info(f"Difficulty adjustment anomalies: {self.difficulty_anomalies_count}")
 
 class ColorFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
-        # Check for null pointer references and other potential issues
-        assert record is not None, "Record cannot be null"
+        """
+        Format a logging record.
+
+        This formatting is the same as the standard logging format, but with
+        colors added for the different log levels.
+
+        Args:
+            record: The logging record to format
+
+        Returns:
+            The formatted string
+        """
+        assert isinstance(record, logging.LogRecord), "Record must be of type logging.LogRecord"
         assert record.msg is not None, "Record message cannot be null"
         assert record.levelname is not None, "Record level name cannot be null"
 
-        log_colors: dict = {
+        log_colors: Dict[str, str] = {
             'DEBUG': '\033[94m',  # Blue
             'INFO': '\033[92m',  # Green
             'WARNING': '\033[93m',  # Yellow
@@ -170,6 +151,11 @@ class ColorFormatter(logging.Formatter):
 
 
 def log_mined_block(block: Block) -> None:
+    """Log the details of a mined block.
+
+    Args:
+        block: The block that was mined
+    """
     assert block is not None, "Block cannot be null"
     assert block.index is not None, "Block index cannot be null"
     assert block.hash is not None, "Block hash cannot be null"
@@ -185,11 +171,16 @@ def log_mined_block(block: Block) -> None:
     logger.info(f"Hash: {block.hash}")
 
 
-def log_blockchain_statistics(logger, blockchain):
+def log_blockchain_statistics(logger: logging.Logger, blockchain) -> None:
+    """
+    Log the blockchain statistics.
+
+    Args:
+        logger: The logger to use
+        blockchain: The blockchain to get the statistics from
+    """
     blockchain_stats = get_blockchain_statistics(
         blockchain=blockchain,
-        # slice_factor=SLICE_FACTOR,  # todo remove it
-        # number_blocks_slice=NUMBER_BLOCKS_SLICE, # todo use it
         number_blocks_slice=blockchain.number_blocks_slice,
     )
 
@@ -205,11 +196,8 @@ def log_blockchain_statistics(logger, blockchain):
 
     logger.info(create_log_message(NUMBER_BLOCKS_TO_ADD_KEY, blockchain_stats, "block", precision=0))
 
-    # logger.info(create_log_message(SLICE_FACTOR_KEY, blockchain_stats, ""))
     logger.info(create_log_message(NUMBER_BLOCKS_SLICE_KEY, blockchain_stats, "block", precision=0))
     logger.info(f"")
-
-    #####################################################################################################
 
     # for the number of blocks mined with 0.0 seconds (anomalies)
     logger.info(create_log_message(ZERO_MINING_TIME_BLOCKS_NUMBER_KEY, blockchain_stats, ""))
@@ -226,41 +214,7 @@ def log_blockchain_statistics(logger, blockchain):
     logger.info(create_log_message(STANDARD_DEVIATION_MINING_TIME_SLICE_KEY, blockchain_stats, "second"))
     logger.info(f"")
 
-    # for the statistical partition of the bit difficulty # todo comment it out when the difficulty statistics are added.
-    # logger.info(create_log_message(AVERAGE_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, "bit"))
-    # logger.info(create_log_message(ABSOLUTE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY, blockchain_stats, "bit")) # commented out, because they are not a blockchain properties
-    # logger.info(create_log_message(RELATIVE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY, blockchain_stats, "%")) # commented out, because they are not a blockchain properties
-    # logger.info(create_log_message(VARIANCE_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, "bit*bit"))
-    # logger.info(create_log_message(STANDARD_DEVIATION_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, "bits"))
-    # logger.info(f"")
-
-    # for the linear relation between the mining time and the bit difficulty
-    # logger.info(create_log_message(COVARIANCE_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, "second*bit"))
-    # logger.info(create_log_message(CORRELATION_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, ""))
-    # logger.info(f"")
-
-    #####################################################################################################
-
-    # # for the statistical partition of the difficulty
-    # logger.info(create_log_message(AVERAGE_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, "bit")) # todo change constants to difficulties, "bit" to ""
-    # logger.info(create_log_message(ABSOLUTE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY, blockchain_stats, "bit"))
-    # logger.info(create_log_message(RELATIVE_DEVIATION_BIT_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY, blockchain_stats, "%"))
-    # logger.info(create_log_message(VARIANCE_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, "bit*bit"))
-    # logger.info(create_log_message(STANDARD_DEVIATION_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, "bits"))
-    # logger.info(f"")
-    #
-    # # for the linear relation between the mining time and the difficulty
-    # logger.info(create_log_message(COVARIANCE_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, "second*bit"))
-    # logger.info(create_log_message(CORRELATION_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY, blockchain_stats, ""))
-    # logger.info(f"")
-
-    #####################################################################################################
-
-    # for the statistical partition of the difficulty
-    logger.info(create_log_message(AVERAGE_DIFFICULTY_SLICE_KEY, blockchain_stats,
-                                   ""))  # todo change constants to difficulties, "bit" to ""
-    # logger.info(create_log_message(ABSOLUTE_DEVIATION_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY, blockchain_stats, "")) # commented out, because they are not a blockchain properties
-    # logger.info(create_log_message(RELATIVE_DEVIATION_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY, blockchain_stats, "%")) # commented out, because they are not a blockchain properties
+    logger.info(create_log_message(AVERAGE_DIFFICULTY_SLICE_KEY, blockchain_stats, ""))
     logger.info(create_log_message(VARIANCE_DIFFICULTY_SLICE_KEY, blockchain_stats, ""))
     logger.info(create_log_message(STANDARD_DEVIATION_DIFFICULTY_SLICE_KEY, blockchain_stats, ""))
     logger.info(f"")
@@ -271,50 +225,65 @@ def log_blockchain_statistics(logger, blockchain):
     logger.info(f"")
 
 
-
-
 def create_log_message(
-        key: str, blockchain_stats: dict[str, float], unit: str,
+        key: str, blockchain_stats: Dict[str, float], unit: str,
         precision: int = DEFAULT_PRECISION
 ) -> str:
+    """
+    Create a log message with the given key, value, unit and precision.
+
+    Args:
+        key (str): The key to use in the log message.
+        blockchain_stats (Dict[str, float]): The dictionary containing the value associated with the key.
+        unit (str): The unit of the value.
+        precision (int, optional): The precision of the value. Defaults to DEFAULT_PRECISION.
+
+    Returns:
+        str: The log message.
+    """
     return f"{key}: {blockchain_stats[key]:.{precision}f} {unit}"
 
 
 def get_blockchain_statistics(
-        blockchain,
-        # slice_factor,
-        number_blocks_slice,
-):
-    # num_blocks_slice = int(len(blockchain.mining_times) / slice_factor)
-    # Slice the lists to the num_blocks_slice length
+        blockchain: 'Blockchain',
+        number_blocks_slice: int,
+) -> Dict[str, float]:
+    """
+    Compute and return the statistics for the blockchain.
 
+    Args:
+        blockchain (Blockchain): The blockchain to compute the statistics for.
+        number_blocks_slice (int): The number of last blocks to consider for the statistics.
+
+    Returns:
+        Dict[str, float]: A dictionary containing the statistics. The keys are defined in the constants.py module.
+    """
     # Statistics for the mining time
     mining_times_slice = blockchain.mining_times[:number_blocks_slice]
 
     average_mining_time_slice = blockchain.get_average_mining_time(num_last_blocks=number_blocks_slice)
     absolute_deviation_mining_time_average_from_target_slice = abs(
         average_mining_time_slice - blockchain.target_block_mining_time)
-    relative_deviation_mining_time_average_from_target_slice = (
-                                                                           absolute_deviation_mining_time_average_from_target_slice / blockchain.target_block_mining_time) * 100.0
+    relative_deviation_mining_time_average_from_target_slice = (absolute_deviation_mining_time_average_from_target_slice / blockchain.target_block_mining_time) * 100.0
 
     variance_mining_time_slice = variance(mining_times_slice)
     standard_deviation_mining_time_slice = variance_mining_time_slice ** 0.5
 
     # Statistics for the bit_difficulty
-    bit_difficulties_slice = blockchain.bit_difficulties[:number_blocks_slice]  # todo change to difficulties
+    bit_difficulties_slice = blockchain.bit_difficulties[:number_blocks_slice]
 
-    average_bit_difficulty_slice = sum(bit_difficulties_slice) / number_blocks_slice  # todo change to difficulties
+    average_bit_difficulty_slice = sum(bit_difficulties_slice) / number_blocks_slice
     absolute_deviation_bit_difficulty_average_from_initial_slice = abs(
-        average_bit_difficulty_slice - blockchain.initial_bit_difficulty)  # todo change to difficulties
+        average_bit_difficulty_slice - blockchain.initial_bit_difficulty)
     relative_deviation_bit_difficulty_average_from_initial_slice = (
-                                                                               absolute_deviation_bit_difficulty_average_from_initial_slice / blockchain.initial_bit_difficulty) * 100.0  # todo change to difficulties
+                                                                               absolute_deviation_bit_difficulty_average_from_initial_slice / blockchain.initial_bit_difficulty) * 100.0
 
-    variance_bit_difficulty_slice = variance(bit_difficulties_slice)  # todo change to difficulties
-    standard_deviation_bit_difficulty_slice = variance_bit_difficulty_slice ** 0.5  # todo change to difficulties
+    variance_bit_difficulty_slice = variance(bit_difficulties_slice)
+    standard_deviation_bit_difficulty_slice = variance_bit_difficulty_slice ** 0.5
 
     # covariance_mining_time_bit_difficulty_slice = covariance(mining_times_slice, bit_difficulties_slice)
     covariance_mining_time_bit_difficulty_slice = np.cov(mining_times_slice, bit_difficulties_slice)[
-        0, 1]  # todo change to difficulties
+        0, 1]
 
     if standard_deviation_mining_time_slice == 0 or standard_deviation_bit_difficulty_slice == 0:
         correlation_mining_time_bit_difficulty_slice = 0  # todo is it correct from the math point of view?
@@ -326,9 +295,6 @@ def get_blockchain_statistics(
     zero_mining_time_blocks_number = sum(
         1 for time in blockchain.mining_times if time == 0.0) - 1  # -1 for the Genesis Block
     relative_zero_mining_time_blocks_number = (zero_mining_time_blocks_number / blockchain.number_blocks_to_add) * 100.0
-
-    # todo do the same for difficulties:
-    # Statistics for the difficulty:
 
     # create difficulties from blockchain.bit_difficulties
     difficulties = [BASE ** bit_difficulty for bit_difficulty in
@@ -387,19 +353,7 @@ def get_blockchain_statistics(
         COVARIANCE_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY: covariance_mining_time_bit_difficulty_slice,
         CORRELATION_MINING_TIME_BIT_DIFFICULTY_SLICE_KEY: correlation_mining_time_bit_difficulty_slice,
 
-        # # difficulty todo implement it, uncomment when the difficulty is implemented
-        # AVERAGE_DIFFICULTY_SLICE_KEY: blockchain.average_difficulty,
-        # ABSOLUTE_DEVIATION_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY: blockchain.absolute_deviation_difficulty_average_from_initial,
-        # RELATIVE_DEVIATION_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY: blockchain.relative_deviation_difficulty_average_from_initial,
-        #
-        # VARIANCE_DIFFICULTY_SLICE_KEY: blockchain.variance_difficulty,
-        # STANDARD_DEVIATION_DIFFICULTY_SLICE_KEY: blockchain.standard_deviation_difficulty,
-        #
-        # # mining time and difficulty
-        # COVARIANCE_MINING_TIME_DIFFICULTY_SLICE_KEY: blockchain.covariance_mining_time_difficulty,
-        # CORRELATION_MINING_TIME_DIFFICULTY_SLICE_KEY: blockchain.correlation_mining_time_difficulty,
-
-        # difficulty todo implement it, uncomment when the difficulty is implemented
+        # difficulty
         AVERAGE_DIFFICULTY_SLICE_KEY: average_difficulty_slice,
         ABSOLUTE_DEVIATION_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY: absolute_deviation_difficulty_average_from_initial_slice,
         RELATIVE_DEVIATION_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY: relative_deviation_difficulty_average_from_initial_slice,

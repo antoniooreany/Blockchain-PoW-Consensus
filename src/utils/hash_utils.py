@@ -6,7 +6,6 @@
 import hashlib
 from src.constants import ENCODING
 
-
 def calculate_block_hash(
     index: int, timestamp: float, data: str, previous_block_hash: str, nonce: int
 ) -> str:
@@ -43,13 +42,20 @@ def validate_block_attributes(
 ) -> None:
     """Validate that all block attributes are not null or empty.
 
+    Validate that all block attributes are not null or empty.
+    This ensures that all blocks have valid attributes.
+
     Args:
         index: int: The position of the block in the blockchain.
         timestamp: float: The time at which the block was created.
         data: str: The data contained within the block.
         previous_block_hash: str: The hash of the previous block in the chain.
         nonce: int: The nonce for the proof of work algorithm.
+
+    Returns:
+        None
     """
+    # Validate each attribute
     for attribute, name in [
         (index, "index"),
         (timestamp, "timestamp"),
@@ -57,7 +63,9 @@ def validate_block_attributes(
         (previous_block_hash, "previous_block_hash"),
         (nonce, "nonce"),
     ]:
+        # Check if the attribute is None
         if attribute is None:
             raise ValueError(f"{name}: {attribute!r} cannot be null")
+        # Check if the attribute is an empty string
         if isinstance(attribute, str) and not attribute:
             raise ValueError(f"{name}: {attribute!r} cannot be empty")
