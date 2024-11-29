@@ -52,7 +52,3 @@ def add_blocks(
         )
         # 2. Add the block to the blockchain.
         blockchain.add_block(block, blockchain.clamp_factor, blockchain.smallest_bit_difficulty)
-
-    # for i in range(1, len(blockchain.blocks)):
-    #     mining_time = blockchain.blocks[i].timestamp - blockchain.blocks[i-1].timestamp
-    #     logger.info(f"Block {i} mining time: {mining_time:.4f} seconds")

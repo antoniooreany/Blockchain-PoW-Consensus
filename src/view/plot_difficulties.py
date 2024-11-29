@@ -10,9 +10,20 @@ from matplotlib import pyplot as plt
 from src.constants import DIFFICULTY_COLOR, SCALING_FACTOR, BASE, BAR_WIDTH, LABEL_DIFFICULTY_COLOR, AX2_Y_LABEL_TEXT, \
     FONT_SIZE, GRID_LINE_WIDTH, INFINITY_0_DIFFICULTY_LABEL
 
-def plot_difficulties(ax1, blockchain, color=DIFFICULTY_COLOR, scaling_factor=SCALING_FACTOR):
+from typing import List
+
+def plot_difficulties(ax1: plt.Axes, blockchain: 'Blockchain', color: str = DIFFICULTY_COLOR, scaling_factor: float = SCALING_FACTOR) -> None:
+    """
+    Plot the bit difficulties of the blockchain using a bar chart.
+
+    Parameters:
+        ax1 (plt.Axes): The first axis to plot the mining times
+        blockchain (Blockchain): The blockchain to plot the difficulties from
+        color (str): The color of the bar chart (default: DIFFICULTY_COLOR)
+        scaling_factor (float): The factor to scale the y-axis of the bar chart (default: SCALING_FACTOR)
+    """
     ax2 = ax1.twinx()  # Create a second y-axis
-    difficulty_values = [(BASE ** difficulty) * scaling_factor for difficulty in blockchain.bit_difficulties]
+    difficulty_values: List[float] = [(BASE ** difficulty) * scaling_factor for difficulty in blockchain.bit_difficulties]
 
     # Prepend 0 for Genesis Block difficulty
     difficulty_values.insert(0, 0)
@@ -29,7 +40,7 @@ def plot_difficulties(ax1, blockchain, color=DIFFICULTY_COLOR, scaling_factor=SC
     ax2.set_xlim(left=-0.5)
 
     # Custom y-axis formatter for difficulties
-    def custom_y_formatter(value, _):
+    def custom_y_formatter(value: float, _) -> str:
         if value == 0:
             # return "-INF / 00_000"
             return INFINITY_0_DIFFICULTY_LABEL

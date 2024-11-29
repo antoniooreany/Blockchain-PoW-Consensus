@@ -15,7 +15,6 @@ from src.utils.logging_utils import log_validity
 from src.controller.proof_of_work import ProofOfWork
 from src.constants import GENESIS_BLOCK_PREVIOUS_HASH, GENESIS_BLOCK_DATA
 from src.utils.logging_utils import log_mined_block
-from src.utils.hash_utils import calculate_block_hash
 
 
 class Blockchain:
@@ -46,10 +45,9 @@ class Blockchain:
             The number of blocks slice is the number of blocks to slice the list of blocks to calculate the statistics.
         """
 
-        self.logger = configure_logging()
+        self.logger: logging.Logger = configure_logging()
 
         self.initial_bit_difficulty: float = initial_bit_difficulty  # The initial difficulty level of the blockchain.
-        # self.genesis_block_bit_difficulty: float = GENESIS_BLOCK_BIT_DIFFICULTY  # The bit difficulty of the Genesis Block.
         self.target_block_mining_time: float = target_block_mining_time  # The target time to mine a block in seconds.
         self.adjustment_block_interval: int = adjustment_block_interval  # The number of blocks to wait before adjusting the difficulty.
         self.number_blocks_to_add: int = number_blocks_to_add  # The number of blocks to add to the blockchain.
@@ -57,10 +55,10 @@ class Blockchain:
         self.smallest_bit_difficulty: float = smallest_bit_difficulty  # The smallest bit difficulty that we can adjust to.
         self.number_blocks_slice: int = number_blocks_slice  # The number of blocks to slice the list of blocks to calculate the statistics.
         self.bit_difficulties: list[float] = [initial_bit_difficulty]  # The list of bit difficulties in the blockchain.
-        self.proof_of_work = ProofOfWork()  # Create an instance of ProofOfWork
+        self.proof_of_work: ProofOfWork = ProofOfWork()  # Create an instance of ProofOfWork
 
         # Create the Genesis Block
-        start_time = time.time()
+        start_time: float = time.time()
         genesis_block: Block = Block(
             bit_difficulty=GENESIS_BLOCK_BIT_DIFFICULTY,  # todo it might be initial_bit_difficulty
             index=0,
@@ -71,7 +69,6 @@ class Blockchain:
 
         log_mined_block(genesis_block)
         log_validity(self)
-
 
         self.mining_times: list[float] = [genesis_block.timestamp - start_time]  # avoid the check for the Genesis Block
         # todo ugly, calculate the mining time for the Genesis Block in generic way.
@@ -161,68 +158,6 @@ class Blockchain:
             self.mining_times[-num_last_blocks:])  # sum the mining times of the last `num_last_blocks` blocks
         return total_time / num_last_blocks  # calculate the average mining time
 
-    # @property
-    # def is_chain_valid(self) -> bool:
-    #     """
-    #     Validate the blockchain by checking each block's integrity and proof of work.
-    #
-    #     This function checks each block in the chain to ensure that its hash matches its calculated hash,
-    #     its previous hash matches the hash of the previous block, and its proof of work is valid.
-    #
-    #     Returns:
-    #         bool: True if the blockchain is valid, False otherwise.
-    #     """
-    #
-    #     # Iterate over each block in the blocks, starting from the second block
-    #     for i in range(1, len(self.blocks)):
-    #         # Get the current block and the previous block
-    #         current_block: Block = self.blocks[i]
-    #         previous_block: Block = self.blocks[i - 1]
-    #
-    #         # Check if the current block's hash matches its calculated hash
-    #         expected_hash: str = calculate_block_hash(
-    #             index=current_block.index,
-    #             timestamp=current_block.timestamp,
-    #             data=current_block.data,
-    #             previous_block_hash=current_block.previous_hash,
-    #             nonce=current_block.nonce,
-    #         )
-    #         if current_block.hash != expected_hash:
-    #             logging.critical(
-    #                 f"Block with index {current_block.index} "
-    #                 f"has an invalid hash: {current_block.hash}, "
-    #             )
-    #             logging.critical(f"expected_hash: {expected_hash}")
-    #             logging.critical(f"current_block.index: {current_block.index}")
-    #             logging.critical(f"current_block.timestamp: {current_block.timestamp}")
-    #             # logging.critical(f"current_block.data: {current_block.data}")
-    #             # logging.critical(f"current_block.previous_hash: {current_block.previous_hash}")
-    #             logging.critical(f"current_block.nonce: {current_block.nonce}")
-    #
-    #             # If the hash does not match, return False
-    #             return False
-    #
-    #         # Check if the current block's previous hash matches the hash of the previous block
-    #         if current_block.previous_hash != previous_block.hash:
-    #             logging.critical(
-    #                 f"Block with index {current_block.index} "
-    #                 f"has an invalid previous hash: {current_block.previous_hash}, "
-    #                 f"expected previous hash: {previous_block.hash}",
-    #             )
-    #             # If the previous hash does not match, return False
-    #             return False
-    #
-    #         # Validate the proof of work for the current block
-    #         if not self.proof_of_work.validate_proof(current_block, self.bit_difficulties[i]):
-    #             logging.critical(
-    #                 f"Block with index {current_block.index} "
-    #                 f"has an invalid proof of work",
-    #             )
-    #             # If the proof of work is invalid, return False
-    #             return False
-    #
-    #     # All blocks are valid
-    #     return True
 
     def adjust_difficulty(self, bit_clamp_factor: float, smallest_bit_difficulty: float) -> None:
         """
@@ -270,7 +205,6 @@ class Blockchain:
 
             # Update the last bit difficulty in the blockchain
             self.bit_difficulties[-1] = new_bit_difficulty
-
 
 
     def log_difficulty_anomalies(self) -> None:

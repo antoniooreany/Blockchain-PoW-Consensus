@@ -8,6 +8,8 @@ import logging
 import re
 import time
 import tkinter as tk
+from tkinter import messagebox
+from typing import Optional
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
@@ -27,11 +29,26 @@ from src.view.plotting import plot_blockchain_statistics  # todo why isn't used?
 class TextHandler(logging.Handler):
     """This class allows you to log to a Tkinter Text or ScrolledText widget"""
 
-    def __init__(self, text_widget):
-        logging.Handler.__init__(self)
-        self.text_widget = text_widget
+    def __init__(self, text_widget: tk.Text) -> None:
+        """
+        Initialize the TextHandler with a text widget.
 
-    def emit(self, record):
+        Args:
+            text_widget (tk.Text): The Tkinter text widget for displaying log messages.
+        """
+        super().__init__()
+        self.text_widget: tk.Text = text_widget
+
+    def emit(self, record: logging.LogRecord) -> None:
+        """
+        Emit a log record to the GUI text widget.
+
+        Args:
+            record (logging.LogRecord): The log record to emit.
+
+        Returns:
+            None
+        """
         msg = self.format(record)
         # Remove ANSI escape codes
         msg = re.sub(r'\x1b\[[0-9;]*m', '', msg)
@@ -42,7 +59,13 @@ class TextHandler(logging.Handler):
 
 
 class GUI:
-    def __init__(self, root):
+    def __init__(self, root: tk.Tk) -> None:
+        """
+        Initialize the GUI application.
+
+        Args:
+            root (tk.Tk): The root window of the application.
+        """
         self.root = root
         self.root.title(GUI_TITLE)
         self.root.geometry(f"{WIDTH}x{HIGHT}")  # Adjust window size
@@ -60,8 +83,7 @@ class GUI:
         # Handle window close event
         self.root.protocol(CLOSE_TYPE, self.on_closing)
 
-        # todo extract all literals to the constants.py
-        # Define main frame with padding
+        # Create main frame with padding
         main_frame = tk.Frame(self.root, padx=10, pady=10)
         main_frame.pack(side=tk.LEFT, fill="both", expand=True)
 
@@ -70,7 +92,7 @@ class GUI:
         config_frame.pack(fill="x", pady=10)
 
         # Create a dictionary to store the configuration parameters
-        self.config_params = {
+        self.config_params: dict[str, tk.Variable] = {
             INITIAL_BIT_DIFFICULTY_KEY: tk.DoubleVar(value=INITIAL_BIT_DIFFICULTY),
             TARGET_BLOCK_MINING_TIME_KEY: tk.DoubleVar(value=TARGET_BLOCK_MINING_TIME),
             ADJUSTMENT_BLOCK_INTERVAL_KEY: tk.IntVar(value=ADJUSTMENT_BLOCK_INTERVAL),
@@ -129,16 +151,36 @@ class GUI:
         self.text_handler.setFormatter(formatter)
         logging.basicConfig(level=logging.DEBUG, handlers=[self.text_handler])
 
-    def auto_press_run_button(self):
-        """Automatically press the Run Blockchain button if auto-run is enabled."""
+    def auto_press_run_button(self) -> None:
+        """Automatically press the Run Blockchain button if auto-run is enabled.
+
+        :return: None
+        """
         if self.auto_run_enabled.get():  # Check if auto-run is enabled
             self.run_blockchain()
 
-    def on_closing(self):
-        # if messagebox.askokcancel("Quit", "Do you want to quit?"): # todo uncomment if the confirmation is needed
+    def on_closing(self) -> None:
+        """Handle the window close event.
+
+        :return: None
+        """
+        if messagebox.askokcancel("Quit", "Do you want to quit?"):  # todo uncomment if the confirmation is needed
             self.root.destroy()
 
-    def run_blockchain(self, event=None):
+    def run_blockchain(self, event: Optional[tk.Event] = None) -> None:
+        """Run the blockchain with the parameters specified in the configuration UI.
+
+        This function runs the blockchain with the parameters specified in the
+        configuration UI, logs the blockchain statistics, and plots the blockchain
+        statistics on the canvas.
+
+        Args:
+            event (Optional[tk.Event], optional): The event that triggered the
+                function call. Defaults to None.
+
+        Returns:
+            None
+        """
         # logging.info("New blockchain is running...")
         logging.info("NEW BLOCKCHAIN JUST CREATED AND RUNNING...")
 
@@ -154,17 +196,15 @@ class GUI:
         logger.addHandler(log_level_counter_handler)
 
         # Get the configuration parameters from the GUI
-        # todo init once, generalize in the loop
-        # todo don't allow to pass the wrong values (e.g. negative, zero, any non-digits etc.)
-        initial_bit_difficulty = self.config_params[
-            INITIAL_BIT_DIFFICULTY_KEY].get()  # todo init once, generalize in the loop
-        target_block_mining_time = self.config_params[TARGET_BLOCK_MINING_TIME_KEY].get()
-        adjustment_block_interval = self.config_params[ADJUSTMENT_BLOCK_INTERVAL_KEY].get()
-        clamp_factor = self.config_params[CLAMP_FACTOR_KEY].get()
-        smallest_bit_difficulty = self.config_params[SMALLEST_BIT_DIFFICULTY_KEY].get()
-        number_blocks_to_add = self.config_params[NUMBER_BLOCKS_TO_ADD_KEY].get()
-        number_blocks_slice = self.config_params[
-            NUMBER_BLOCKS_SLICE_KEY].get()  # todo if changed in the GUI, it should be changed for the next run, but not changed.
+        initial_bit_difficulty = float(self.config_params[
+            INITIAL_BIT_DIFFICULTY_KEY].get())  # todo init once, generalize in the loop
+        target_block_mining_time = float(self.config_params[TARGET_BLOCK_MINING_TIME_KEY].get())
+        adjustment_block_interval = int(self.config_params[ADJUSTMENT_BLOCK_INTERVAL_KEY].get())
+        clamp_factor = float(self.config_params[CLAMP_FACTOR_KEY].get())
+        smallest_bit_difficulty = float(self.config_params[SMALLEST_BIT_DIFFICULTY_KEY].get())
+        number_blocks_to_add = int(self.config_params[NUMBER_BLOCKS_TO_ADD_KEY].get())
+        number_blocks_slice = int(self.config_params[
+            NUMBER_BLOCKS_SLICE_KEY].get())  # todo if changed in the GUI, it should be changed for the next run, but not changed.
 
         blockchain = Blockchain(
             initial_bit_difficulty=initial_bit_difficulty,
@@ -200,14 +240,23 @@ class GUI:
         # Re-enable the button after the blockchain has been run
         self.run_button.config(state=tk.NORMAL)
 
-    def exit_app(self):
+    def exit_app(self) -> None:
+        """Exit the application by quitting and destroying the root window.
+
+        Returns:
+            None
+        """
         self.root.quit()
         self.root.destroy()
 
 
-def config_gui():
-    """Function to initialize and run the configuration UI."""
-    root = tk.Tk()
+def config_gui() -> None:
+    """Function to initialize and run the configuration UI.
+
+    Returns:
+        None
+    """
+    root: tk.Tk = tk.Tk()
     root.attributes('-fullscreen', True)  # Start the GUI in full screen
-    app = GUI(root)
+    app: GUI = GUI(root)
     root.mainloop()

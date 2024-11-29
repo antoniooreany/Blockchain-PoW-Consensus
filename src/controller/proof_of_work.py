@@ -4,11 +4,10 @@
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
 import math
-import random
 from venv import logger
 
 from src.model.block import Block
-from src.constants import HASH_BIT_LENGTH, NONCE_BIT_LENGTH, BASE, HEXADECIMAL_BASE
+from src.constants import HASH_BIT_LENGTH, BASE, HEXADECIMAL_BASE, NONCE_INCREMENT
 from src.utils.hash_utils import calculate_block_hash
 from src.utils.logging_utils import log_mined_block
 
@@ -29,6 +28,16 @@ class ProofOfWork:
 
 
     def find_nonce(self, block: Block, bit_difficulty: float) -> None:
+        """
+        Finds a nonce for a given block such that its hash is smaller than the target value.
+
+        Args:
+            block (Block): The block to find a nonce for.
+            bit_difficulty (float): The difficulty level of the block.
+
+        Returns:
+            None
+        """
         if block is None:
             raise ValueError("Block cannot be None")
 
@@ -46,8 +55,8 @@ class ProofOfWork:
                 logger.debug(f"Found nonce for block {block.index}: {block.nonce}, Hash: {block.hash}")
                 break
             block.nonce += 1
-            if block.nonce % 10_000 == 0:
-                logger.debug(f"Trying nonce {block.nonce} for block {block.index}: {block.hash}")
+            if block.nonce % NONCE_INCREMENT == 0:
+                logger.debug(f"Trying another {NONCE_INCREMENT} nonce {block.nonce} for block {block.index}, Hash: {block.hash}")
 
 
     def validate_proof(self, block: Block, bit_difficulty: float) -> bool:
@@ -91,7 +100,6 @@ class ProofOfWork:
         else:
             logger.critical(f"Block {block.index} Validation: FAIL\n")
 
-
         # Return validation result
         return is_valid
 
@@ -114,8 +122,6 @@ class ProofOfWork:
         Returns:
             float: The clamped bit adjustment factor.
         """
-        if bit_adjustment_factor is None or bit_clamp_factor is None:
-            raise ValueError("bit_adjustment_factor or bit_clamp_factor cannot be None")
         if not isinstance(bit_adjustment_factor, (int, float)) or not isinstance(bit_clamp_factor, (int, float)):
             raise TypeError("bit_adjustment_factor and bit_clamp_factor must be numbers")
         if bit_clamp_factor < 0:

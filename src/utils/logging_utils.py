@@ -42,11 +42,11 @@ from src.constants import (
     ZERO_MINING_TIME_BLOCKS_NUMBER_KEY,
     RELATIVE_ZERO_MINING_TIME_BLOCKS_NUMBER_KEY,
 
-    DEFAULT_PRECISION, NUMBER_BLOCKS_SLICE, BASE, AVERAGE_DIFFICULTY_SLICE_KEY,
+    DEFAULT_PRECISION, BASE, AVERAGE_DIFFICULTY_SLICE_KEY,
     ABSOLUTE_DEVIATION_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY,
     RELATIVE_DEVIATION_DIFFICULTY_AVERAGE_FROM_INITIAL_SLICE_KEY, VARIANCE_DIFFICULTY_SLICE_KEY,
     STANDARD_DEVIATION_DIFFICULTY_SLICE_KEY, COVARIANCE_MINING_TIME_DIFFICULTY_SLICE_KEY,
-    CORRELATION_MINING_TIME_DIFFICULTY_SLICE_KEY,
+    CORRELATION_MINING_TIME_DIFFICULTY_SLICE_KEY, ZERO_MINING_TIME_BLOCKS_INDEXES_KEY,
 )
 
 
@@ -56,6 +56,16 @@ class LogLevelCounterHandler(logging.Handler):
         Initialize a new LogLevelCounterHandler.
 
         Sets all log level counters to 0.
+
+        Attributes:
+            notset_count (int): Counter for logs with level NOTSET.
+            info_count (int): Counter for logs with level INFO.
+            debug_count (int): Counter for logs with level DEBUG.
+            warning_count (int): Counter for logs with level WARNING.
+            error_count (int): Counter for logs with level ERROR.
+            critical_count (int): Counter for logs with level CRITICAL.
+            difficulty_anomalies_count (int): Counter for difficulty anomaly logs.
+            log_contents (List[str]): List to store log messages.
         """
         super().__init__()
         self.notset_count: int = 0
@@ -69,17 +79,14 @@ class LogLevelCounterHandler(logging.Handler):
 
     def emit(self, record: logging.LogRecord) -> None:
         """
-        Emit a record.
+        Handle a log record.
 
-        Increment the counter for the log level of the record. If the record is a difficulty anomaly,
-        increment the difficulty anomaly counter.
+        The method increments the corresponding log level counter and stores the log message in log_contents.
 
         Args:
-        record: The record to emit.
-
-        Returns:
-        None
+            record: The log record to handle.
         """
+        # Increment the corresponding log level counter
         if record.levelno == logging.NOTSET:
             self.notset_count += 1
         elif record.levelno == logging.INFO:
@@ -93,10 +100,12 @@ class LogLevelCounterHandler(logging.Handler):
         elif record.levelno == logging.CRITICAL:
             self.critical_count += 1
 
+        # Count difficulty anomalies
         if "Anomaly detected for blocks" in record.msg:
             self.difficulty_anomalies_count += 1
 
-        log_entry = self.format(record)
+        # Store the log message
+        log_entry: str = self.format(record)
         self.log_contents.append(log_entry)
 
     def print_log_counts(self) -> None:
@@ -122,6 +131,7 @@ class LogLevelCounterHandler(logging.Handler):
         else:
             logger.info(f"No anomalies detected for blocks.")
 
+
 class ColorFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
         """
@@ -131,10 +141,10 @@ class ColorFormatter(logging.Formatter):
         colors added for the different log levels.
 
         Args:
-            record: The logging record to format
+            record (logging.LogRecord): The logging record to format
 
         Returns:
-            The formatted string
+            str: The formatted string
         """
         assert isinstance(record, logging.LogRecord), "Record must be of type logging.LogRecord"
         assert record.msg is not None, "Record message cannot be null"
@@ -150,14 +160,15 @@ class ColorFormatter(logging.Formatter):
         reset_color: str = '\033[0m'  # Reset color
         log_color: str = log_colors.get(record.levelname, reset_color)
         record.msg = f"{log_color}{record.msg}{reset_color}"
-        return super().format(record)
+        return super().format(record)  # type: ignore[no-any-return]
 
 
 def log_mined_block(block: Block) -> None:
-    """Log the details of a mined block.
+    """
+    Log the details of a mined block.
 
     Args:
-        block: The block that was mined
+        block: The block that was mined (Block)
     """
     assert block is not None, "Block cannot be null"
     assert block.index is not None, "Block index cannot be null"
@@ -174,39 +185,38 @@ def log_mined_block(block: Block) -> None:
     logger.info(f"Hash: {block.hash}")
 
 
-def log_blockchain_statistics(logger: logging.Logger, blockchain) -> None:
+def log_blockchain_statistics(logger: logging.Logger, blockchain: 'Blockchain') -> None:
     """
     Log the blockchain statistics.
 
     Args:
-        logger: The logger to use
-        blockchain: The blockchain to get the statistics from
+        logger (logging.Logger): The logger to use.
+        blockchain (Blockchain): The blockchain to get the statistics from.
     """
-    blockchain_stats = get_blockchain_statistics(
+    blockchain_stats: Dict[str, float] = get_blockchain_statistics(
         blockchain=blockchain,
         number_blocks_slice=blockchain.number_blocks_slice,
     )
 
-    logger.info(f"Blockchain statistics:")
-    logger.info(f"")
+    logger.info("Blockchain statistics:")
+    logger.info("")
 
     logger.info(create_log_message(INITIAL_BIT_DIFFICULTY_KEY, blockchain_stats, "bit"))
     logger.info(create_log_message(TARGET_BLOCK_MINING_TIME_KEY, blockchain_stats, "second"))
     logger.info(create_log_message(ADJUSTMENT_BLOCK_INTERVAL_KEY, blockchain_stats, "block", precision=0))
     logger.info(create_log_message(CLAMP_FACTOR_KEY, blockchain_stats, "bit"))
     logger.info(create_log_message(SMALLEST_BIT_DIFFICULTY_KEY, blockchain_stats, "bit"))
-    logger.info(f"")
+    logger.info("")
 
     logger.info(create_log_message(NUMBER_BLOCKS_TO_ADD_KEY, blockchain_stats, "block", precision=0))
-
     logger.info(create_log_message(NUMBER_BLOCKS_SLICE_KEY, blockchain_stats, "block", precision=0))
-    logger.info(f"")
+    logger.info("")
 
     # for the number of blocks mined with 0.0 seconds (anomalies)
+    logger.info(create_log_message(ZERO_MINING_TIME_BLOCKS_INDEXES_KEY, blockchain_stats, ""))  # todo ?
     logger.info(create_log_message(ZERO_MINING_TIME_BLOCKS_NUMBER_KEY, blockchain_stats, ""))
     logger.info(create_log_message(RELATIVE_ZERO_MINING_TIME_BLOCKS_NUMBER_KEY, blockchain_stats, "%"))
-    logger.info(f"")
-
+    logger.info("")
 
     # for the statistical partition of the mining time
     logger.info(create_log_message(AVERAGE_MINING_TIME_SLICE_KEY, blockchain_stats, "second"))
@@ -215,25 +225,27 @@ def log_blockchain_statistics(logger: logging.Logger, blockchain) -> None:
     logger.info(create_log_message(RELATIVE_DEVIATION_MINING_TIME_AVERAGE_FROM_TARGET_SLICE_KEY, blockchain_stats, "%"))
     logger.info(create_log_message(VARIANCE_MINING_TIME_SLICE_KEY, blockchain_stats, "second*second"))
     logger.info(create_log_message(STANDARD_DEVIATION_MINING_TIME_SLICE_KEY, blockchain_stats, "second"))
-    logger.info(f"")
+    logger.info("")
 
     logger.info(create_log_message(AVERAGE_DIFFICULTY_SLICE_KEY, blockchain_stats, ""))
     logger.info(create_log_message(VARIANCE_DIFFICULTY_SLICE_KEY, blockchain_stats, ""))
     logger.info(create_log_message(STANDARD_DEVIATION_DIFFICULTY_SLICE_KEY, blockchain_stats, ""))
-    logger.info(f"")
+    logger.info("")
 
     # for the linear relation between the mining time and the difficulty
     logger.info(create_log_message(COVARIANCE_MINING_TIME_DIFFICULTY_SLICE_KEY, blockchain_stats, "second*1"))
-    logger.info(create_log_message(CORRELATION_MINING_TIME_DIFFICULTY_SLICE_KEY, blockchain_stats, ""))
-    logger.info(f"")
+    logger.info(create_log_message(CORRELATION_MINING_TIME_DIFFICULTY_SLICE_KEY, blockchain_stats, "\n"))
 
 
 def create_log_message(
-        key: str, blockchain_stats: Dict[str, float], unit: str,
-        precision: int = DEFAULT_PRECISION
+        key: str, blockchain_stats: Dict[str, float], unit: str, precision: int = DEFAULT_PRECISION
 ) -> str:
     """
-    Create a log message with the given key, value, unit and precision.
+    Creates a log message with the given key, value, unit and precision.
+
+    The function takes a key, a dictionary containing the value associated with the key,
+    a unit and an optional precision. The function returns a log message in the form:
+    "<key>: <value> <unit>".
 
     Args:
         key (str): The key to use in the log message.
@@ -244,7 +256,11 @@ def create_log_message(
     Returns:
         str: The log message.
     """
-    return f"{key}: {blockchain_stats[key]:.{precision}f} {unit}"
+    value: float = blockchain_stats[key]
+    if isinstance(value, (int, float)):
+        return f"{key}: {value:.{precision}f} {unit}"
+    else:
+        return f"{key}: {value} {unit}"
 
 
 def get_blockchain_statistics(
@@ -261,28 +277,57 @@ def get_blockchain_statistics(
     Returns:
         Dict[str, float]: A dictionary containing the statistics. The keys are defined in the constants.py module.
     """
-    # Statistics for the mining time
+    assert blockchain is not None
+    assert number_blocks_slice > 0
+
     mining_times_slice = blockchain.mining_times[:number_blocks_slice]
+    assert mining_times_slice is not None
+    assert mining_times_slice != []
+
+    bit_difficulties_slice = blockchain.bit_difficulties[:number_blocks_slice]
+    assert bit_difficulties_slice is not None
+    assert bit_difficulties_slice != []
 
     average_mining_time_slice = blockchain.get_average_mining_time(num_last_blocks=number_blocks_slice)
+    assert average_mining_time_slice is not None
+    assert average_mining_time_slice >= 0
+
     absolute_deviation_mining_time_average_from_target_slice = abs(
         average_mining_time_slice - blockchain.target_block_mining_time)
-    relative_deviation_mining_time_average_from_target_slice = (absolute_deviation_mining_time_average_from_target_slice / blockchain.target_block_mining_time) * 100.0
+    assert absolute_deviation_mining_time_average_from_target_slice >= 0
+
+    relative_deviation_mining_time_average_from_target_slice = (
+                                                                       absolute_deviation_mining_time_average_from_target_slice / blockchain.target_block_mining_time) * 100.0
+    assert relative_deviation_mining_time_average_from_target_slice >= 0
 
     variance_mining_time_slice = variance(mining_times_slice)
+    assert variance_mining_time_slice is not None
+    assert variance_mining_time_slice >= 0
+
     standard_deviation_mining_time_slice = variance_mining_time_slice ** 0.5
+    assert standard_deviation_mining_time_slice is not None
+    assert standard_deviation_mining_time_slice >= 0
 
     # Statistics for the bit_difficulty
-    bit_difficulties_slice = blockchain.bit_difficulties[:number_blocks_slice]
-
     average_bit_difficulty_slice = sum(bit_difficulties_slice) / number_blocks_slice
+    assert average_bit_difficulty_slice is not None
+    assert average_bit_difficulty_slice >= 0
+
     absolute_deviation_bit_difficulty_average_from_initial_slice = abs(
         average_bit_difficulty_slice - blockchain.initial_bit_difficulty)
+    assert absolute_deviation_bit_difficulty_average_from_initial_slice >= 0
+
     relative_deviation_bit_difficulty_average_from_initial_slice = (
-                                                                               absolute_deviation_bit_difficulty_average_from_initial_slice / blockchain.initial_bit_difficulty) * 100.0
+                                                                           absolute_deviation_bit_difficulty_average_from_initial_slice / blockchain.initial_bit_difficulty) * 100.0
+    assert relative_deviation_bit_difficulty_average_from_initial_slice >= 0
 
     variance_bit_difficulty_slice = variance(bit_difficulties_slice)
+    assert variance_bit_difficulty_slice is not None
+    assert variance_bit_difficulty_slice >= 0
+
     standard_deviation_bit_difficulty_slice = variance_bit_difficulty_slice ** 0.5
+    assert standard_deviation_bit_difficulty_slice is not None
+    assert standard_deviation_bit_difficulty_slice >= 0
 
     # covariance_mining_time_bit_difficulty_slice = covariance(mining_times_slice, bit_difficulties_slice)
     covariance_mining_time_bit_difficulty_slice = np.cov(mining_times_slice, bit_difficulties_slice)[
@@ -292,26 +337,43 @@ def get_blockchain_statistics(
         correlation_mining_time_bit_difficulty_slice = 0  # todo is it correct from the math point of view?
     else:
         correlation_mining_time_bit_difficulty_slice = (covariance_mining_time_bit_difficulty_slice / (
-                    standard_deviation_mining_time_slice * standard_deviation_bit_difficulty_slice))
+                standard_deviation_mining_time_slice * standard_deviation_bit_difficulty_slice))
 
-    # Number of blocks mined with 0.0 seconds:
-    zero_mining_time_blocks_number = sum(
-        1 for time in blockchain.mining_times if time == 0.0) - 1  # -1 for the Genesis Block
+    zero_mining_time_blocks_indexes = [index for index, time in enumerate(blockchain.mining_times) if time == 0.0]
+    # zero_mining_time_blocks_number = sum(1 for time in blockchain.mining_times if time == 0.0)  # todo should be a property?
+    zero_mining_time_blocks_number = len(zero_mining_time_blocks_indexes)
+    assert zero_mining_time_blocks_number >= 0
+
     relative_zero_mining_time_blocks_number = (zero_mining_time_blocks_number / blockchain.number_blocks_to_add) * 100.0
+    assert relative_zero_mining_time_blocks_number >= 0
 
     # create difficulties from blockchain.bit_difficulties
     difficulties = [BASE ** bit_difficulty for bit_difficulty in
                     blockchain.bit_difficulties]  # todo should a blockchain.difficulties or block.difficulty be created?
+    assert difficulties is not None
+    assert difficulties != []
+
     difficulties_slice = difficulties[:number_blocks_slice]
 
     average_difficulty_slice = sum(difficulties_slice) / number_blocks_slice
+    assert average_difficulty_slice is not None
+    assert average_difficulty_slice >= 0
+
     absolute_deviation_difficulty_average_from_initial_slice = abs(
         average_difficulty_slice - BASE ** blockchain.initial_bit_difficulty)
+    assert absolute_deviation_difficulty_average_from_initial_slice >= 0
+
     relative_deviation_difficulty_average_from_initial_slice = (
-                                                                           absolute_deviation_difficulty_average_from_initial_slice / BASE ** blockchain.initial_bit_difficulty) * 100.0
+                                                                       absolute_deviation_difficulty_average_from_initial_slice / BASE ** blockchain.initial_bit_difficulty) * 100.0
+    assert relative_deviation_difficulty_average_from_initial_slice >= 0
 
     variance_difficulty_slice = variance(difficulties_slice)
+    assert variance_difficulty_slice is not None
+    assert variance_difficulty_slice >= 0
+
     standard_deviation_difficulty_slice = variance_difficulty_slice ** 0.5
+    assert standard_deviation_difficulty_slice is not None
+    assert standard_deviation_difficulty_slice >= 0
 
     # covariance_mining_time_difficulty_slice = covariance(mining_times_slice, difficulties_slice)
     covariance_mining_time_difficulty_slice = np.cov(mining_times_slice, difficulties_slice)[0, 1]
@@ -320,7 +382,11 @@ def get_blockchain_statistics(
         correlation_mining_time_difficulty_slice = 0  # todo is it correct from the math point of view?
     else:
         correlation_mining_time_difficulty_slice = (covariance_mining_time_difficulty_slice / (
-                    standard_deviation_mining_time_slice * standard_deviation_difficulty_slice))
+                standard_deviation_mining_time_slice * standard_deviation_difficulty_slice))
+
+    assert correlation_mining_time_difficulty_slice is not None
+    assert correlation_mining_time_difficulty_slice >= -1
+    assert correlation_mining_time_difficulty_slice <= 1
 
     return {
         INITIAL_BIT_DIFFICULTY_KEY: blockchain.initial_bit_difficulty,
@@ -329,7 +395,6 @@ def get_blockchain_statistics(
         NUMBER_BLOCKS_TO_ADD_KEY: blockchain.number_blocks_to_add,
         CLAMP_FACTOR_KEY: blockchain.clamp_factor,
         SMALLEST_BIT_DIFFICULTY_KEY: blockchain.smallest_bit_difficulty,
-        # SLICE_FACTOR_KEY: blockchain.slice_factor,
         NUMBER_BLOCKS_SLICE_KEY: number_blocks_slice,
         # todo should blockchain.num_blocks_slice,
         #  blockchain.average_mining_time_slice,
@@ -369,6 +434,7 @@ def get_blockchain_statistics(
         CORRELATION_MINING_TIME_DIFFICULTY_SLICE_KEY: correlation_mining_time_difficulty_slice,
 
         # zero mining time
+        ZERO_MINING_TIME_BLOCKS_INDEXES_KEY: zero_mining_time_blocks_indexes,
         ZERO_MINING_TIME_BLOCKS_NUMBER_KEY: zero_mining_time_blocks_number,
         RELATIVE_ZERO_MINING_TIME_BLOCKS_NUMBER_KEY: relative_zero_mining_time_blocks_number,
     }

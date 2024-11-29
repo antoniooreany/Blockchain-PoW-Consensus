@@ -238,3 +238,5 @@ LEGEND_TITLE = "Input Information"
 REVERSED_ADJUSTMENT_FACTOR_KEY = "reversed_adjustment_factor"
 MAX_NONCE = BASE ** NONCE_BIT_LENGTH - 1
 GENESIS_BLOCK_BIT_DIFFICULTY: float = 0.0  # The bit difficulty of the Genesis Block
+NONCE_INCREMENT = 10_000
+ZERO_MINING_TIME_BLOCKS_INDEXES_KEY = "zero_mining_time_blocks_indexes"
