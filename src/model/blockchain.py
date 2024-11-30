@@ -77,7 +77,6 @@ class Blockchain:
 
         logging.debug("\n")
 
-
     def add_block(self, new_block: Block, clamp_factor: float, smallest_bit_difficulty: float) -> None:
         """
         Add a new block to the blockchain, validate it and update the blockchain state.
@@ -160,7 +159,6 @@ class Blockchain:
             self.mining_times[-num_last_blocks:])  # sum the mining times of the last `num_last_blocks` blocks
         return total_time / num_last_blocks  # calculate the average mining time
 
-
     def adjust_difficulty(self, bit_clamp_factor: float, smallest_bit_difficulty: float) -> None:
         """
         Adjust the difficulty of the blockchain.
@@ -187,8 +185,10 @@ class Blockchain:
 
             # Log the average mining time and the reversed adjustment factor
             self.logger.debug(f"{AVERAGE_MINING_TIME_ADJUSTMENT_INTERVAL_KEY}: "
-                              f"{average_mining_time_adjustment_interval:.{DEFAULT_PRECISION}f} seconds")
-            self.logger.debug(f"{REVERSED_ADJUSTMENT_FACTOR_KEY}: {reversed_adjustment_factor:.{DEFAULT_PRECISION}f}")
+                f"{average_mining_time_adjustment_interval:.{DEFAULT_PRECISION}f}"
+                              f" seconds")
+            self.logger.debug(f"{REVERSED_ADJUSTMENT_FACTOR_KEY}: "
+                              f"{reversed_adjustment_factor:.{DEFAULT_PRECISION}f}")
 
             # Get the last bit difficulty
             last_bit_difficulty: float = self.bit_difficulties[-1]
@@ -197,17 +197,18 @@ class Blockchain:
                 # Calculate the bit adjustment factor
                 bit_adjustment_factor: float = math.log2(reversed_adjustment_factor)
                 # Clamp the bit adjustment factor
-                clamped_bit_adjustment_factor: float = self.proof_of_work.clamp_bit_adjustment_factor(bit_adjustment_factor, bit_clamp_factor)
+                clamped_bit_adjustment_factor: float = self.proof_of_work.clamp_bit_adjustment_factor(
+                    bit_adjustment_factor, bit_clamp_factor)
                 # Calculate the new bit difficulty
-                new_bit_difficulty: float = max(smallest_bit_difficulty,
-                                                last_bit_difficulty - clamped_bit_adjustment_factor)
+                new_bit_difficulty: float = max(
+        smallest_bit_difficulty, last_bit_difficulty - clamped_bit_adjustment_factor
+                )
             else:
                 # Set the new bit difficulty to the smallest bit difficulty if the reversed adjustment factor is 0 or negative
                 new_bit_difficulty: float = smallest_bit_difficulty
 
             # Update the last bit difficulty in the blockchain
             self.bit_difficulties[-1] = new_bit_difficulty
-
 
     def log_difficulty_anomalies(self) -> None:
         """
@@ -234,8 +235,10 @@ class Blockchain:
                 continue
 
             expected_adjustment: float = math.log2(expected_factor)
-            clamped_adjustment: float = self.proof_of_work.clamp_bit_adjustment_factor(expected_adjustment, self.clamp_factor)
-            expected_difficulty: float = max(self.smallest_bit_difficulty, self.bit_difficulties[i - interval] - clamped_adjustment)
+            clamped_adjustment: float = self.proof_of_work.clamp_bit_adjustment_factor(expected_adjustment,
+                                                                                       self.clamp_factor)
+            expected_difficulty: float = max(self.smallest_bit_difficulty,
+                self.bit_difficulties[i - interval] - clamped_adjustment)
 
             if abs(self.bit_difficulties[i] - expected_difficulty) > 1e-6:
                 self.logger.critical(
@@ -248,4 +251,3 @@ class Blockchain:
 
         if not anomalies_detected:
             self.logger.info("No adjust_difficulty anomalies detected")
-
