@@ -3,11 +3,13 @@
 #   This code is for a pow and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
+# path: src/utils/hash_utils.py
+
 import hashlib
 from src.constants import ENCODING
 
 def calculate_block_hash(
-    index: int, timestamp: float, data: str, previous_block_hash: str, nonce: int
+        index: int, timestamp: float, data: str, previous_block_hash: str, nonce: int
 ) -> str:
     """Compute the hash of a block by combining its attributes.
 
@@ -22,7 +24,13 @@ def calculate_block_hash(
         str: The hash of the block as a hexadecimal string.
     """
     # Validate the arguments
-    validate_block_attributes(index=index, timestamp=timestamp, data=data, previous_block_hash=previous_block_hash, nonce=nonce)
+    validate_block_attributes(
+        index=index,
+        timestamp=timestamp,
+        data=data,
+        previous_block_hash=previous_block_hash,
+        nonce=nonce
+    )
 
     # Combine the arguments into a single string
     data_to_hash: bytes = (
@@ -38,7 +46,7 @@ def calculate_block_hash(
 
 
 def validate_block_attributes(
-    index: int, timestamp: float, data: str, previous_block_hash: str, nonce: int
+        index: int, timestamp: float, data: str, previous_block_hash: str, nonce: int
 ) -> None:
     """Validate that all block attributes are not null or empty.
 

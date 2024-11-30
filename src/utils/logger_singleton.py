@@ -3,12 +3,17 @@
 #   This code is for a logger_singleton and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
+# path: src/utils/logger_singleton.py
+
 import logging
 
 from src.utils.logging_utils import ColorFormatter
 
-
 class LoggerSingleton(object):
+    """
+    The logger singleton is used to configure the logger for the application
+    and to provide a single instance of the logger to all classes that need it.
+    """
     _instance = None
 
     @staticmethod

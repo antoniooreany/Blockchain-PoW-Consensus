@@ -3,6 +3,8 @@
 #   This code is for a main.py and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
+# path: src/main.py
+
 import logging
 from src.utils.logger_singleton import LoggerSingleton
 from src.utils.logging_utils import LogLevelCounterHandler

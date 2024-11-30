@@ -3,6 +3,8 @@
 #   This code is for a plotting and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
+# path: src/view/plotting.py
+
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 

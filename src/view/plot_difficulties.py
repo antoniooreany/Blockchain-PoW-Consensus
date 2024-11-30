@@ -3,6 +3,8 @@
 #   This code is for a pow and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
+# path: src/view/plot_difficulties.py
+
 import math
 
 from matplotlib import pyplot as plt

@@ -3,6 +3,8 @@
 #   This code is for a constants.py and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
+# path: src/constants.py
+
 HEXADECIMAL_BASE = 16  # base for the hexadecimal numbers
 
 # properties of the execution:

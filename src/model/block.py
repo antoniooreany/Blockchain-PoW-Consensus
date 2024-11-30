@@ -3,6 +3,8 @@
 #   This code is for a block and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
+# path: src/model/block.py
+
 import logging
 import random
 import time

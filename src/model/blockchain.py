@@ -3,6 +3,8 @@
 #   This code is for a blockchain.py and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
+# path: src/model/blockchain.py
+
 import logging
 import math
 import time

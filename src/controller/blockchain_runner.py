@@ -3,8 +3,7 @@
 #   This code is for a main.py and its unit tests.
 #   For any questions or concerns, please contact Anton Gorshkov at antoniooreany@gmail.com
 
-import time
-from venv import logger
+# path: src/controller/blockchain_runner.py
 
 from src.constants import GENESIS_BLOCK_PREVIOUS_HASH
 from src.model.block import Block
