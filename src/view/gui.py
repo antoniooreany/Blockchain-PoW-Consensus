@@ -72,7 +72,8 @@ class GUI:
         self.root.geometry(f"{WIDTH}x{HIGHT}")  # Adjust window size
 
         # Auto-run toggle
-        self.auto_run_enabled = tk.BooleanVar(value=True)  # Auto-run is enabled by default
+        # self.auto_run_enabled = tk.BooleanVar(value=True)  # Auto-run is enabled by default
+        self.auto_run_enabled = tk.BooleanVar(value=False)  # Auto-run is disabled by default
         auto_run_checkbox = tk.Checkbutton(
             root, text="Enable Auto-Run", variable=self.auto_run_enabled
         )
