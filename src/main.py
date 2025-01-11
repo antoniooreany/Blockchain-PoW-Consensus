@@ -16,4 +16,4 @@ if __name__ == "__main__":
     log_level_counter_handler = LogLevelCounterHandler()
     logger.addHandler(log_level_counter_handler)
 
-    config_gui()
+    config_gui() # Start the GUI
